@@ -10,106 +10,52 @@
     content="width=device-width, initial-scale=1.0, user-scalable=no"
   >
 
-
-  <!-- =========================================================
-       A-FRAME
-       ========================================================= -->
-
+  <!-- A-FRAME -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
-
-  <!-- =========================================================
-       MINDAR FACE TRACKING
-       ========================================================= -->
-
+  <!-- MINDAR FACE -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
 
 
-
   <style>
-
-
-    /* =========================================================
-       PAGE
-       ========================================================= */
 
     html,
     body {
 
       margin: 0;
-
       padding: 0;
 
       width: 100%;
-
       height: 100%;
 
       overflow: hidden;
 
-      background: #000;
-
     }
 
 
-
-    /* =========================================================
-       MAKE SURE CAMERA VIDEO FILLS SCREEN
-       ========================================================= */
+    /* IMPORTANT:
+       Do NOT put the video at z-index -1.
+       MindAR needs the camera video visible
+       underneath the AR canvas.
+    */
 
     video {
 
-      position: fixed !important;
-
-      top: 0 !important;
-
-      left: 0 !important;
-
       width: 100% !important;
-
       height: 100% !important;
 
       object-fit: cover !important;
 
-      z-index: -2 !important;
-
-      display: block !important;
-
-      visibility: visible !important;
-
-      opacity: 1 !important;
-
     }
 
 
-
-    canvas {
-
-      position: fixed !important;
-
-      top: 0 !important;
-
-      left: 0 !important;
-
-      width: 100% !important;
-
-      height: 100% !important;
-
-      z-index: 1 !important;
-
-    }
-
-
-
-    /* =========================================================
-       BACK BUTTON
-       ========================================================= */
+    /* BACK BUTTON */
 
     #backButton {
 
       position: fixed;
 
       top: 18px;
-
       left: 18px;
 
       z-index: 99999;
@@ -122,7 +68,7 @@
         1px solid rgba(255,255,255,0.75);
 
       background:
-        rgba(0,0,0,0.65);
+        rgba(0,0,0,0.60);
 
       color: white;
 
@@ -140,17 +86,13 @@
     }
 
 
-
-    /* =========================================================
-       CAMERA SWITCH BUTTON
-       ========================================================= */
+    /* CAMERA SWITCH BUTTON */
 
     #switchCamera {
 
       position: fixed;
 
       top: 18px;
-
       right: 18px;
 
       z-index: 99999;
@@ -163,7 +105,7 @@
         1px solid rgba(255,255,255,0.75);
 
       background:
-        rgba(0,0,0,0.65);
+        rgba(0,0,0,0.60);
 
       color: white;
 
@@ -180,11 +122,6 @@
 
     }
 
-
-
-    /* =========================================================
-       SMALL INSTRUCTION
-       ========================================================= */
 
     #instruction {
 
@@ -199,15 +136,14 @@
 
       z-index: 99999;
 
-      padding: 9px 15px;
+      padding: 8px 14px;
 
-      border-radius: 20px;
+      border-radius: 18px;
 
       background:
-        rgba(0,0,0,0.55);
+        rgba(0,0,0,0.45);
 
-      color:
-        rgba(255,255,255,0.90);
+      color: white;
 
       font-family:
         Arial,
@@ -222,9 +158,7 @@
 
     }
 
-
   </style>
-
 
 </head>
 
@@ -232,10 +166,6 @@
 
 <body>
 
-
-<!-- =========================================================
-     BACK BUTTON
-     ========================================================= -->
 
 <button
   id="backButton"
@@ -245,11 +175,6 @@
 </button>
 
 
-
-<!-- =========================================================
-     CAMERA SWITCH BUTTON
-     ========================================================= -->
-
 <button
   id="switchCamera"
   type="button"
@@ -258,23 +183,13 @@
 </button>
 
 
-
-<!-- =========================================================
-     INSTRUCTION
-     ========================================================= -->
-
 <div id="instruction">
 
-  CAMERA switches front / rear
+  SWITCH FRONT / BACK CAMERA
 
 </div>
 
 
-
-
-<!-- =========================================================
-     FACE AR SCENE
-     ========================================================= -->
 
 <a-scene
 
@@ -306,10 +221,6 @@
 >
 
 
-  <!-- =======================================================
-       ASSETS
-       ======================================================= -->
-
   <a-assets>
 
 
@@ -322,7 +233,6 @@
     >
 
 
-
     <!-- BEARD -->
 
     <img
@@ -330,7 +240,6 @@
       src="./beard.png"
       crossorigin="anonymous"
     >
-
 
 
     <!-- PIPE -->
@@ -346,10 +255,7 @@
 
 
 
-
-  <!-- =======================================================
-       CAMERA
-       ======================================================= -->
+  <!-- CAMERA -->
 
   <a-camera
 
@@ -362,10 +268,9 @@
 
 
 
-
-  <!-- =======================================================
+  <!-- ======================================================
        CAT EARS
-       ======================================================= -->
+       ====================================================== -->
 
   <a-entity
 
@@ -411,10 +316,9 @@
 
 
 
-
-  <!-- =======================================================
+  <!-- ======================================================
        BEARD
-       ======================================================= -->
+       ====================================================== -->
 
   <a-entity
 
@@ -460,19 +364,14 @@
 
 
 
-
-  <!-- =======================================================
+  <!-- ======================================================
        PIPE
 
-       OLD X POSITION:
-       0.36
+       moved 0.30 farther right
 
-       NEW X POSITION:
-       0.66
-
-       So the pipe has moved exactly
-       0.30 farther to the right.
-       ======================================================= -->
+       old x = 0.36
+       new x = 0.66
+       ====================================================== -->
 
   <a-entity
 
@@ -527,13 +426,7 @@
 
 
 
-
 <script>
-
-
-  /* =========================================================
-     PAGE CONTROLS
-     ========================================================= */
 
 
   document.addEventListener(
@@ -564,14 +457,12 @@
         );
 
 
-      let arSystem = null;
+      let arSystem =
+        null;
 
 
 
-      /* =======================================================
-         BACK TO TARGET PAGE
-         ======================================================= */
-
+      /* BACK BUTTON */
 
       backButton.addEventListener(
 
@@ -588,10 +479,7 @@
 
 
 
-      /* =======================================================
-         GET MINDAR FACE SYSTEM
-         ======================================================= */
-
+      /* GET MINDAR FACE SYSTEM */
 
       scene.addEventListener(
 
@@ -613,10 +501,7 @@
 
 
 
-      /* =======================================================
-         SWITCH FRONT / REAR CAMERA
-         ======================================================= */
-
+      /* SWITCH FRONT / REAR CAMERA */
 
       switchButton.addEventListener(
 
@@ -627,11 +512,13 @@
 
           if (!arSystem) {
 
+
             arSystem =
 
               scene.systems[
                 "mindar-face-system"
               ];
+
 
           }
 
@@ -671,81 +558,6 @@
 
 
         }
-
-      );
-
-
-
-      /* =======================================================
-         HELP CAMERA VIDEO SHOW ABOVE BLACK PAGE BACKGROUND
-         ======================================================= */
-
-
-      setTimeout(
-
-        function () {
-
-
-          const videos =
-
-            document.querySelectorAll(
-              "video"
-            );
-
-
-          videos.forEach(
-
-            function (video) {
-
-
-              video.style.display =
-                "block";
-
-
-              video.style.visibility =
-                "visible";
-
-
-              video.style.opacity =
-                "1";
-
-
-              video.style.position =
-                "fixed";
-
-
-              video.style.top =
-                "0";
-
-
-              video.style.left =
-                "0";
-
-
-              video.style.width =
-                "100%";
-
-
-              video.style.height =
-                "100%";
-
-
-              video.style.objectFit =
-                "cover";
-
-
-              video.style.zIndex =
-                "-1";
-
-
-            }
-
-          );
-
-
-        },
-
-        1200
 
       );
 
