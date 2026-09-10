@@ -10,19 +10,35 @@
     content="width=device-width, initial-scale=1.0, user-scalable=no"
   >
 
-  <!-- A-FRAME -->
+
+  <!-- =========================================================
+       A-FRAME
+       ========================================================= -->
+
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
-  <!-- MINDAR FACE TRACKING -->
+
+  <!-- =========================================================
+       MINDAR FACE TRACKING
+       ========================================================= -->
+
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
 
 
+
   <style>
+
+
+    /* =========================================================
+       PAGE
+       ========================================================= */
 
     html,
     body {
 
       margin: 0;
+
+      padding: 0;
 
       width: 100%;
 
@@ -30,10 +46,63 @@
 
       overflow: hidden;
 
-      background: black;
+      background: #000;
 
     }
 
+
+
+    /* =========================================================
+       MAKE SURE CAMERA VIDEO FILLS SCREEN
+       ========================================================= */
+
+    video {
+
+      position: fixed !important;
+
+      top: 0 !important;
+
+      left: 0 !important;
+
+      width: 100% !important;
+
+      height: 100% !important;
+
+      object-fit: cover !important;
+
+      z-index: -2 !important;
+
+      display: block !important;
+
+      visibility: visible !important;
+
+      opacity: 1 !important;
+
+    }
+
+
+
+    canvas {
+
+      position: fixed !important;
+
+      top: 0 !important;
+
+      left: 0 !important;
+
+      width: 100% !important;
+
+      height: 100% !important;
+
+      z-index: 1 !important;
+
+    }
+
+
+
+    /* =========================================================
+       BACK BUTTON
+       ========================================================= */
 
     #backButton {
 
@@ -50,7 +119,7 @@
       border-radius: 22px;
 
       border:
-        1px solid rgba(255,255,255,0.7);
+        1px solid rgba(255,255,255,0.75);
 
       background:
         rgba(0,0,0,0.65);
@@ -66,9 +135,96 @@
 
       letter-spacing: 1px;
 
+      cursor: pointer;
+
     }
 
+
+
+    /* =========================================================
+       CAMERA SWITCH BUTTON
+       ========================================================= */
+
+    #switchCamera {
+
+      position: fixed;
+
+      top: 18px;
+
+      right: 18px;
+
+      z-index: 99999;
+
+      padding: 11px 16px;
+
+      border-radius: 22px;
+
+      border:
+        1px solid rgba(255,255,255,0.75);
+
+      background:
+        rgba(0,0,0,0.65);
+
+      color: white;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      font-size: 14px;
+
+      letter-spacing: 1px;
+
+      cursor: pointer;
+
+    }
+
+
+
+    /* =========================================================
+       SMALL INSTRUCTION
+       ========================================================= */
+
+    #instruction {
+
+      position: fixed;
+
+      bottom: 22px;
+
+      left: 50%;
+
+      transform:
+        translateX(-50%);
+
+      z-index: 99999;
+
+      padding: 9px 15px;
+
+      border-radius: 20px;
+
+      background:
+        rgba(0,0,0,0.55);
+
+      color:
+        rgba(255,255,255,0.90);
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      font-size: 11px;
+
+      letter-spacing: 1px;
+
+      white-space: nowrap;
+
+    }
+
+
   </style>
+
 
 </head>
 
@@ -77,19 +233,56 @@
 <body>
 
 
+<!-- =========================================================
+     BACK BUTTON
+     ========================================================= -->
+
 <button
   id="backButton"
   type="button"
-  onclick="window.location.href='./index.html';"
 >
   ← BACK
 </button>
 
 
 
+<!-- =========================================================
+     CAMERA SWITCH BUTTON
+     ========================================================= -->
+
+<button
+  id="switchCamera"
+  type="button"
+>
+  ↻ CAMERA
+</button>
+
+
+
+<!-- =========================================================
+     INSTRUCTION
+     ========================================================= -->
+
+<div id="instruction">
+
+  CAMERA switches front / rear
+
+</div>
+
+
+
+
+<!-- =========================================================
+     FACE AR SCENE
+     ========================================================= -->
+
 <a-scene
 
-  mindar-face="autoStart: true"
+  id="faceScene"
+
+  mindar-face="
+    autoStart: true;
+  "
 
   embedded
 
@@ -99,21 +292,28 @@
     colorManagement: true;
     physicallyCorrectLights: true;
     alpha: true;
+    antialias: true;
   "
 
-  vr-mode-ui="enabled: false"
+  vr-mode-ui="
+    enabled: false
+  "
 
-  device-orientation-permission-ui="enabled: false"
+  device-orientation-permission-ui="
+    enabled: false
+  "
 
 >
 
 
-  <!-- ======================================================
-       FACE FILTER ASSETS
-       ====================================================== -->
+  <!-- =======================================================
+       ASSETS
+       ======================================================= -->
 
   <a-assets>
 
+
+    <!-- CAT EARS -->
 
     <img
       id="earsImage"
@@ -122,12 +322,18 @@
     >
 
 
+
+    <!-- BEARD -->
+
     <img
       id="beardImage"
       src="./beard.png"
       crossorigin="anonymous"
     >
 
+
+
+    <!-- PIPE -->
 
     <img
       id="pipeImage"
@@ -140,9 +346,10 @@
 
 
 
-  <!-- ======================================================
+
+  <!-- =======================================================
        CAMERA
-       ====================================================== -->
+       ======================================================= -->
 
   <a-camera
 
@@ -155,13 +362,16 @@
 
 
 
-  <!-- ======================================================
+
+  <!-- =======================================================
        CAT EARS
-       ====================================================== -->
+       ======================================================= -->
 
   <a-entity
 
-    mindar-face-target="anchorIndex: 10"
+    mindar-face-target="
+      anchorIndex: 10
+    "
 
   >
 
@@ -170,15 +380,24 @@
 
       src="#earsImage"
 
-      position="0 0.50 0.02"
+      position="
+        0
+        0.50
+        0.02
+      "
 
-      width="1.65"
+      width="
+        1.65
+      "
 
-      height="0.85"
+      height="
+        0.85
+      "
 
       material="
         shader: flat;
         transparent: true;
+        opacity: 1;
         alphaTest: 0.01;
         side: double;
         depthWrite: false;
@@ -192,13 +411,16 @@
 
 
 
-  <!-- ======================================================
+
+  <!-- =======================================================
        BEARD
-       ====================================================== -->
+       ======================================================= -->
 
   <a-entity
 
-    mindar-face-target="anchorIndex: 152"
+    mindar-face-target="
+      anchorIndex: 152
+    "
 
   >
 
@@ -207,15 +429,24 @@
 
       src="#beardImage"
 
-      position="0 -0.04 0.05"
+      position="
+        0
+        -0.04
+        0.05
+      "
 
-      width="1.40"
+      width="
+        1.40
+      "
 
-      height="1.10"
+      height="
+        1.10
+      "
 
       material="
         shader: flat;
         transparent: true;
+        opacity: 1;
         alphaTest: 0.01;
         side: double;
         depthWrite: false;
@@ -229,13 +460,25 @@
 
 
 
-  <!-- ======================================================
+
+  <!-- =======================================================
        PIPE
-       ====================================================== -->
+
+       OLD X POSITION:
+       0.36
+
+       NEW X POSITION:
+       0.66
+
+       So the pipe has moved exactly
+       0.30 farther to the right.
+       ======================================================= -->
 
   <a-entity
 
-    mindar-face-target="anchorIndex: 61"
+    mindar-face-target="
+      anchorIndex: 61
+    "
 
   >
 
@@ -244,17 +487,30 @@
 
       src="#pipeImage"
 
-      position="0.36 -0.04 0.08"
+      position="
+        0.66
+        -0.04
+        0.08
+      "
 
-      width="0.80"
+      width="
+        0.80
+      "
 
-      height="0.40"
+      height="
+        0.40
+      "
 
-      rotation="0 0 -8"
+      rotation="
+        0
+        0
+        -8
+      "
 
       material="
         shader: flat;
         transparent: true;
+        opacity: 1;
         alphaTest: 0.01;
         side: double;
         depthWrite: false;
@@ -268,6 +524,238 @@
 
 
 </a-scene>
+
+
+
+
+<script>
+
+
+  /* =========================================================
+     PAGE CONTROLS
+     ========================================================= */
+
+
+  document.addEventListener(
+
+    "DOMContentLoaded",
+
+    function () {
+
+
+      const scene =
+
+        document.getElementById(
+          "faceScene"
+        );
+
+
+      const backButton =
+
+        document.getElementById(
+          "backButton"
+        );
+
+
+      const switchButton =
+
+        document.getElementById(
+          "switchCamera"
+        );
+
+
+      let arSystem = null;
+
+
+
+      /* =======================================================
+         BACK TO TARGET PAGE
+         ======================================================= */
+
+
+      backButton.addEventListener(
+
+        "click",
+
+        function () {
+
+          window.location.href =
+            "./index.html";
+
+        }
+
+      );
+
+
+
+      /* =======================================================
+         GET MINDAR FACE SYSTEM
+         ======================================================= */
+
+
+      scene.addEventListener(
+
+        "loaded",
+
+        function () {
+
+
+          arSystem =
+
+            scene.systems[
+              "mindar-face-system"
+            ];
+
+
+        }
+
+      );
+
+
+
+      /* =======================================================
+         SWITCH FRONT / REAR CAMERA
+         ======================================================= */
+
+
+      switchButton.addEventListener(
+
+        "click",
+
+        async function () {
+
+
+          if (!arSystem) {
+
+            arSystem =
+
+              scene.systems[
+                "mindar-face-system"
+              ];
+
+          }
+
+
+          if (
+
+            arSystem &&
+
+            typeof arSystem.switchCamera
+              === "function"
+
+          ) {
+
+
+            try {
+
+
+              await arSystem
+                .switchCamera();
+
+
+            }
+
+            catch (error) {
+
+
+              console.log(
+                "Camera switch error:",
+                error
+              );
+
+
+            }
+
+
+          }
+
+
+        }
+
+      );
+
+
+
+      /* =======================================================
+         HELP CAMERA VIDEO SHOW ABOVE BLACK PAGE BACKGROUND
+         ======================================================= */
+
+
+      setTimeout(
+
+        function () {
+
+
+          const videos =
+
+            document.querySelectorAll(
+              "video"
+            );
+
+
+          videos.forEach(
+
+            function (video) {
+
+
+              video.style.display =
+                "block";
+
+
+              video.style.visibility =
+                "visible";
+
+
+              video.style.opacity =
+                "1";
+
+
+              video.style.position =
+                "fixed";
+
+
+              video.style.top =
+                "0";
+
+
+              video.style.left =
+                "0";
+
+
+              video.style.width =
+                "100%";
+
+
+              video.style.height =
+                "100%";
+
+
+              video.style.objectFit =
+                "cover";
+
+
+              video.style.zIndex =
+                "-1";
+
+
+            }
+
+          );
+
+
+        },
+
+        1200
+
+      );
+
+
+    }
+
+  );
+
+
+</script>
 
 
 </body>
