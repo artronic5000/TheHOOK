@@ -1,0 +1,3266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, user-scalable=no"
+  >
+
+  <!-- A-FRAME -->
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+  <!-- MINDAR -->
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+
+  <style>
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+  </style>
+
+
+  <script>
+
+
+    /* ==========================================================
+       TARGET 0
+       MUSIC NOTE EMITTER
+       ========================================================== */
+
+
+    AFRAME.registerComponent("music-emitter", {
+
+      init: function () {
+
+        const target = this.el;
+
+        let noteTimer = null;
+        let running = false;
+
+
+        /* =========================================
+           AMP LOCATION
+           ========================================= */
+
+        const ampX = -0.15;
+        const ampY = -0.30;
+
+
+        /* =========================================
+           MUSIC NOTES
+           ========================================= */
+
+        const notes = [
+
+          `
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100"
+            height="100"
+            viewBox="0 0 100 100"
+          >
+            <text
+              x="50"
+              y="74"
+              text-anchor="middle"
+              font-size="78"
+              font-family="Arial, sans-serif"
+              fill="#2b2b2b"
+            >♪</text>
+          </svg>
+          `,
+
+          `
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100"
+            height="100"
+            viewBox="0 0 100 100"
+          >
+            <text
+              x="50"
+              y="74"
+              text-anchor="middle"
+              font-size="74"
+              font-family="Arial, sans-serif"
+              fill="#2b2b2b"
+            >♫</text>
+          </svg>
+          `,
+
+          `
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100"
+            height="100"
+            viewBox="0 0 100 100"
+          >
+            <text
+              x="50"
+              y="74"
+              text-anchor="middle"
+              font-size="78"
+              font-family="Arial, sans-serif"
+              fill="#2b2b2b"
+            >♩</text>
+          </svg>
+          `
+
+        ];
+
+
+        function svgToDataURL(svg) {
+
+          return (
+            "data:image/svg+xml;charset=utf-8," +
+            encodeURIComponent(svg)
+          );
+
+        }
+
+
+        /* =========================================
+           CREATE ONE MUSIC NOTE
+           ========================================= */
+
+        function createNote() {
+
+          if (!running) return;
+
+
+          const note =
+            document.createElement("a-plane");
+
+
+          const svg =
+            notes[
+              Math.floor(
+                Math.random() * notes.length
+              )
+            ];
+
+
+          const startX =
+            ampX +
+            (Math.random() - 0.5) * 0.025;
+
+
+          const startY =
+            ampY +
+            (Math.random() - 0.5) * 0.020;
+
+
+          const driftX =
+            (Math.random() - 0.5) * 0.45;
+
+
+          const rise =
+            0.32 +
+            Math.random() * 0.42;
+
+
+          const endX =
+            startX + driftX;
+
+
+          const endY =
+            startY + rise;
+
+
+          const duration =
+            1800 +
+            Math.random() * 1300;
+
+
+          const finalScale =
+            1.0 +
+            Math.random() * 0.8;
+
+
+          const rotateAmount =
+            18 +
+            Math.random() * 30;
+
+
+          note.setAttribute(
+            "src",
+            svgToDataURL(svg)
+          );
+
+
+          note.setAttribute(
+            "material",
+            `
+              shader: flat;
+              transparent: true;
+              opacity: 1;
+              side: double;
+              alphaTest: 0.01;
+              depthWrite: false;
+            `
+          );
+
+
+          note.setAttribute(
+            "width",
+            "0.28"
+          );
+
+
+          note.setAttribute(
+            "height",
+            "0.28"
+          );
+
+
+          note.setAttribute(
+            "position",
+            `${startX} ${startY} 0.08`
+          );
+
+
+          note.setAttribute(
+            "scale",
+            "0.35 0.35 0.35"
+          );
+
+
+          note.setAttribute(
+            "animation__move",
+            `
+              property: position;
+              from: ${startX} ${startY} 0.08;
+              to: ${endX} ${endY} 0.08;
+              dur: ${duration};
+              easing: easeOutSine;
+            `
+          );
+
+
+          note.setAttribute(
+            "animation__grow",
+            `
+              property: scale;
+              from: 0.35 0.35 0.35;
+              to: ${finalScale} ${finalScale} ${finalScale};
+              dur: ${duration};
+              easing: easeOutQuad;
+            `
+          );
+
+
+          note.setAttribute(
+            "animation__dance",
+            `
+              property: rotation;
+              from: 0 0 -${rotateAmount};
+              to: 0 0 ${rotateAmount};
+              dur: ${320 + Math.random() * 280};
+              dir: alternate;
+              loop: true;
+              easing: easeInOutSine;
+            `
+          );
+
+
+          note.setAttribute(
+            "animation__fade",
+            `
+              property: material.opacity;
+              from: 1;
+              to: 0;
+              delay: ${duration * 0.65};
+              dur: ${duration * 0.35};
+              easing: easeInQuad;
+            `
+          );
+
+
+          target.appendChild(note);
+
+
+          setTimeout(
+
+            function () {
+
+              if (note.parentNode) {
+
+                note.parentNode.removeChild(note);
+
+              }
+
+            },
+
+            duration + 200
+
+          );
+
+        }
+
+
+        /* =========================================
+           TARGET 0 FOUND
+           ========================================= */
+
+        target.addEventListener(
+          "targetFound",
+
+          function () {
+
+            running = true;
+
+
+            if (!noteTimer) {
+
+              createNote();
+
+              noteTimer =
+                setInterval(
+                  createNote,
+                  350
+                );
+
+            }
+
+          }
+
+        );
+
+
+        /* =========================================
+           TARGET 0 LOST
+           ========================================= */
+
+        target.addEventListener(
+          "targetLost",
+
+          function () {
+
+            running = false;
+
+
+            if (noteTimer) {
+
+              clearInterval(noteTimer);
+
+              noteTimer = null;
+
+            }
+
+          }
+
+        );
+
+      }
+
+    });
+
+
+
+    /* ==========================================================
+       TARGET 1
+       BAND FORMATION NAMES
+       ========================================================== */
+
+
+    AFRAME.registerComponent("spray-names", {
+
+      init: function () {
+
+        const target = this.el;
+
+        let running = false;
+
+        let timers = [];
+
+
+        /* =====================================================
+           BAND FORMATION
+
+                    MICHAEL       RYAN
+
+              GAZ       NICK       SEAN
+
+           Large on arrival, then shrink smaller
+           ===================================================== */
+
+
+        const names = [
+
+          /* GAZ — FRONT LEFT */
+
+          {
+            image: "#gazImage",
+            x: -0.58,
+            y: -0.30,
+            rotation: -4,
+            width: 1.24,
+            height: 0.50,
+            color: "#39ff14"
+          },
+
+
+          /* MICHAEL — BACK / DRUMMER */
+
+          {
+            image: "#michaelImage",
+            x: -0.20,
+            y: 0.38,
+            rotation: -2,
+            width: 1.68,
+            height: 0.50,
+            color: "#bf00ff"
+          },
+
+
+          /* RYAN — BACK RIGHT */
+
+          {
+            image: "#ryanImage",
+            x: 0.58,
+            y: 0.16,
+            rotation: 4,
+            width: 1.30,
+            height: 0.50,
+            color: "#ff1493"
+          },
+
+
+          /* NICK — FRONT CENTRE */
+
+          {
+            image: "#nickImage",
+            x: 0.00,
+            y: -0.38,
+            rotation: 0,
+            width: 1.32,
+            height: 0.50,
+            color: "#ffd700"
+          },
+
+
+          /* SEAN — FRONT RIGHT */
+
+          {
+            image: "#seanImage",
+            x: 0.58,
+            y: -0.30,
+            rotation: 4,
+            width: 1.32,
+            height: 0.50,
+            color: "#ff5a00"
+          }
+
+        ];
+
+
+
+        /* =====================================================
+           CREATE MATCHING SPRAY MIST
+           ===================================================== */
+
+
+        function createSprayMist(
+          x,
+          y,
+          color
+        ) {
+
+          for (
+            let i = 0;
+            i < 18;
+            i++
+          ) {
+
+
+            const dot =
+              document.createElement(
+                "a-circle"
+              );
+
+
+            const offsetX =
+              (Math.random() - 0.5) *
+              0.42;
+
+
+            const offsetY =
+              (Math.random() - 0.5) *
+              0.15;
+
+
+            const dotSize =
+              0.004 +
+              Math.random() *
+              0.012;
+
+
+            dot.classList.add(
+              "spray-effect"
+            );
+
+
+            dot.setAttribute(
+              "radius",
+              dotSize
+            );
+
+
+            dot.setAttribute(
+              "color",
+              color
+            );
+
+
+            dot.setAttribute(
+              "position",
+              `
+                ${x + offsetX}
+                ${y + offsetY}
+                0.10
+              `
+            );
+
+
+            dot.setAttribute(
+              "material",
+              `
+                shader: flat;
+                transparent: true;
+                opacity: 0.85;
+                side: double;
+                depthWrite: false;
+              `
+            );
+
+
+            dot.setAttribute(
+              "scale",
+              "0 0 0"
+            );
+
+
+            dot.setAttribute(
+              "animation__appear",
+              `
+                property: scale;
+                from: 0 0 0;
+                to: 1 1 1;
+                dur: ${100 + Math.random() * 220};
+                easing: easeOutQuad;
+              `
+            );
+
+
+            dot.setAttribute(
+              "animation__fade",
+              `
+                property: material.opacity;
+                from: 0.85;
+                to: 0;
+                delay: 250;
+                dur: 650;
+                easing: easeOutQuad;
+              `
+            );
+
+
+            target.appendChild(dot);
+
+
+            setTimeout(
+
+              function () {
+
+                if (dot.parentNode) {
+
+                  dot.parentNode.removeChild(dot);
+
+                }
+
+              },
+
+              1000
+
+            );
+
+          }
+
+        }
+
+
+
+        /* =====================================================
+           CREATE ONE NAME
+           ===================================================== */
+
+
+        function createName(
+          info,
+          index
+        ) {
+
+
+          if (!running) return;
+
+
+          createSprayMist(
+            info.x,
+            info.y,
+            info.color
+          );
+
+
+          const name =
+            document.createElement(
+              "a-image"
+            );
+
+
+          name.classList.add(
+            "spray-name"
+          );
+
+
+          name.setAttribute(
+            "src",
+            info.image
+          );
+
+
+          name.setAttribute(
+            "position",
+            `
+              ${info.x}
+              ${info.y}
+              ${0.15 + index * 0.01}
+            `
+          );
+
+
+          name.setAttribute(
+            "rotation",
+            `
+              0 0 ${info.rotation}
+            `
+          );
+
+
+          name.setAttribute(
+            "width",
+            info.width
+          );
+
+
+          name.setAttribute(
+            "height",
+            info.height
+          );
+
+
+          name.setAttribute(
+            "material",
+            `
+              shader: flat;
+              transparent: true;
+              opacity: 1;
+              alphaTest: 0.05;
+              side: double;
+              depthWrite: false;
+            `
+          );
+
+
+          /* START VERY SMALL */
+
+          name.setAttribute(
+            "scale",
+            "0.05 0.05 0.05"
+          );
+
+
+          /* POP UP LARGE */
+
+          name.setAttribute(
+            "animation__grow",
+            `
+              property: scale;
+              from: 0.05 0.05 0.05;
+              to: 1 1 1;
+              dur: 450;
+              easing: easeOutBack;
+            `
+          );
+
+
+          /* SHRINK TO RESTING SIZE */
+
+          name.setAttribute(
+            "animation__shrink",
+            `
+              property: scale;
+              from: 1 1 1;
+              to: 0.52 0.52 0.52;
+              delay: 850;
+              dur: 500;
+              easing: easeInOutQuad;
+            `
+          );
+
+
+          target.appendChild(
+            name
+          );
+
+        }
+
+
+
+        /* =====================================================
+           CLEAR OLD EFFECTS
+           ===================================================== */
+
+
+        function clearEffects() {
+
+
+          const effects =
+            target.querySelectorAll(
+              ".spray-name, .spray-effect"
+            );
+
+
+          effects.forEach(
+
+            function (item) {
+
+              if (item.parentNode) {
+
+                item.parentNode
+                  .removeChild(item);
+
+              }
+
+            }
+
+          );
+
+        }
+
+
+
+        /* =====================================================
+           TARGET 1 FOUND
+
+           ONE AT A TIME:
+
+           MICHAEL
+           RYAN
+           GAZ
+           NICK
+           SEAN
+           ===================================================== */
+
+
+        target.addEventListener(
+          "targetFound",
+
+          function () {
+
+
+            running = true;
+
+
+            clearEffects();
+
+
+            timers.forEach(
+              clearTimeout
+            );
+
+
+            timers = [];
+
+
+            /* MICHAEL */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[1],
+                    1
+                  );
+
+                },
+
+                200
+
+              )
+
+            );
+
+
+            /* RYAN */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[2],
+                    2
+                  );
+
+                },
+
+                1600
+
+              )
+
+            );
+
+
+            /* GAZ */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[0],
+                    0
+                  );
+
+                },
+
+                3000
+
+              )
+
+            );
+
+
+            /* NICK */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[3],
+                    3
+                  );
+
+                },
+
+                4400
+
+              )
+
+            );
+
+
+            /* SEAN */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[4],
+                    4
+                  );
+
+                },
+
+                5800
+
+              )
+
+            );
+
+          }
+
+        );
+
+
+
+        /* =====================================================
+           TARGET 1 LOST
+           ===================================================== */
+
+
+        target.addEventListener(
+          "targetLost",
+
+          function () {
+
+
+            running = false;
+
+
+            timers.forEach(
+              clearTimeout
+            );
+
+
+            timers = [];
+
+
+            clearEffects();
+
+          }
+
+        );
+
+      }
+
+    });
+
+
+  </script>
+
+</head>
+
+
+
+<body>
+
+
+<a-scene
+
+  mindar-image="
+    imageTargetSrc: ./targets.mind;
+    autoStart: true;
+  "
+
+  embedded
+
+  vr-mode-ui="enabled: false"
+
+  device-orientation-permission-ui="enabled: false"
+
+  renderer="
+    colorManagement: true;
+    physicallyCorrectLights: true;
+    alpha: true;
+  "
+
+>
+
+
+  <!-- ====================================================== -->
+  <!-- ASSETS -->
+  <!-- ====================================================== -->
+
+
+  <a-assets>
+
+
+    <!-- BLACK HEART -->
+
+    <img
+
+      id="blackHeart"
+
+      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%232b2b2b' d='M50 87 C44 80 14 60 14 35 C14 19 34 12 50 29 C66 12 86 19 86 35 C86 60 56 80 50 87 Z'/%3E%3C/svg%3E"
+
+    >
+
+
+    <!-- BAND NAME PNGS -->
+
+    <img
+      id="seanImage"
+      src="./sean.png"
+      crossorigin="anonymous"
+    >
+
+    <img
+      id="nickImage"
+      src="./nick.png"
+      crossorigin="anonymous"
+    >
+
+    <img
+      id="ryanImage"
+      src="./ryan.png"
+      crossorigin="anonymous"
+    >
+
+    <img
+      id="gazImage"
+      src="./gaz.png"
+      crossorigin="anonymous"
+    >
+
+    <img
+      id="michaelImage"
+      src="./michael.png"
+      crossorigin="anonymous"
+    >
+
+
+  </a-assets>
+
+
+
+  <!-- ====================================================== -->
+  <!-- CAMERA -->
+  <!-- ====================================================== -->
+
+
+  <a-camera
+
+    position="0 0 0"
+
+    look-controls="enabled: false"
+
+  >
+
+  </a-camera>
+
+
+
+  <!-- ====================================================== -->
+  <!-- TARGET 0 -->
+  <!-- MUSIC NOTES + HEART -->
+  <!-- ====================================================== -->
+
+
+  <a-entity
+
+    id="hookedTarget"
+
+    mindar-image-target="targetIndex: 0"
+
+    music-emitter
+
+  >
+
+
+    <a-image
+
+      src="#blackHeart"
+
+      position="0 0 -0.04"
+
+      width="1.35"
+
+      height="1.35"
+
+      material="
+        shader: flat;
+        transparent: true;
+        opacity: 0.78;
+        side: double;
+        depthWrite: false;
+      "
+
+      scale="1 1 1"
+
+      animation__pulse="
+        property: scale;
+        from: 0.90 0.90 0.90;
+        to: 1.14 1.14 1.14;
+        dur: 650;
+        dir: alternate;
+        loop: true;
+        easing: easeInOutQuad;
+      "
+
+      animation__fadepulse="
+        property: material.opacity;
+        from: 0.58;
+        to: 0.88;
+        dur: 650;
+        dir: alternate;
+        loop: true;
+        easing: easeInOutQuad;
+      "
+
+    >
+
+    </a-image>
+
+
+  </a-entity>
+
+
+
+  <!-- ====================================================== -->
+  <!-- TARGET 1 -->
+  <!-- BAND FORMATION -->
+  <!-- ====================================================== -->
+
+
+  <a-entity
+
+    id="hookCatTarget"
+
+    mindar-image-target="targetIndex: 1"
+
+    spray-names
+
+  >
+
+  </a-entity>
+
+
+
+</a-scene>
+
+
+</body>
+
+</html>        const notes = [
+
+          `
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100"
+            height="100"
+            viewBox="0 0 100 100"
+          >
+            <text
+              x="50"
+              y="74"
+              text-anchor="middle"
+              font-size="78"
+              font-family="Arial, sans-serif"
+              fill="#2b2b2b"
+            >♪</text>
+          </svg>
+          `,
+
+          `
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100"
+            height="100"
+            viewBox="0 0 100 100"
+          >
+            <text
+              x="50"
+              y="74"
+              text-anchor="middle"
+              font-size="74"
+              font-family="Arial, sans-serif"
+              fill="#2b2b2b"
+            >♫</text>
+          </svg>
+          `,
+
+          `
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100"
+            height="100"
+            viewBox="0 0 100 100"
+          >
+            <text
+              x="50"
+              y="74"
+              text-anchor="middle"
+              font-size="78"
+              font-family="Arial, sans-serif"
+              fill="#2b2b2b"
+            >♩</text>
+          </svg>
+          `
+
+        ];
+
+
+        function svgToDataURL(svg) {
+
+          return (
+            "data:image/svg+xml;charset=utf-8," +
+            encodeURIComponent(svg)
+          );
+
+        }
+
+
+        /* =========================================
+           CREATE ONE MUSIC NOTE
+           ========================================= */
+
+        function createNote() {
+
+          if (!running) return;
+
+
+          const note =
+            document.createElement("a-plane");
+
+
+          const svg =
+            notes[
+              Math.floor(
+                Math.random() * notes.length
+              )
+            ];
+
+
+          const startX =
+            ampX +
+            (Math.random() - 0.5) * 0.025;
+
+
+          const startY =
+            ampY +
+            (Math.random() - 0.5) * 0.020;
+
+
+          const driftX =
+            (Math.random() - 0.5) * 0.45;
+
+
+          const rise =
+            0.32 +
+            Math.random() * 0.42;
+
+
+          const endX =
+            startX + driftX;
+
+
+          const endY =
+            startY + rise;
+
+
+          const duration =
+            1800 +
+            Math.random() * 1300;
+
+
+          const finalScale =
+            1.0 +
+            Math.random() * 0.8;
+
+
+          const rotateAmount =
+            18 +
+            Math.random() * 30;
+
+
+          note.setAttribute(
+            "src",
+            svgToDataURL(svg)
+          );
+
+
+          note.setAttribute(
+            "material",
+            `
+              shader: flat;
+              transparent: true;
+              opacity: 1;
+              side: double;
+              alphaTest: 0.01;
+              depthWrite: false;
+            `
+          );
+
+
+          note.setAttribute(
+            "width",
+            "0.28"
+          );
+
+
+          note.setAttribute(
+            "height",
+            "0.28"
+          );
+
+
+          note.setAttribute(
+            "position",
+            `${startX} ${startY} 0.08`
+          );
+
+
+          note.setAttribute(
+            "scale",
+            "0.35 0.35 0.35"
+          );
+
+
+          note.setAttribute(
+            "animation__move",
+            `
+              property: position;
+              from: ${startX} ${startY} 0.08;
+              to: ${endX} ${endY} 0.08;
+              dur: ${duration};
+              easing: easeOutSine;
+            `
+          );
+
+
+          note.setAttribute(
+            "animation__grow",
+            `
+              property: scale;
+              from: 0.35 0.35 0.35;
+              to: ${finalScale} ${finalScale} ${finalScale};
+              dur: ${duration};
+              easing: easeOutQuad;
+            `
+          );
+
+
+          note.setAttribute(
+            "animation__dance",
+            `
+              property: rotation;
+              from: 0 0 -${rotateAmount};
+              to: 0 0 ${rotateAmount};
+              dur: ${320 + Math.random() * 280};
+              dir: alternate;
+              loop: true;
+              easing: easeInOutSine;
+            `
+          );
+
+
+          note.setAttribute(
+            "animation__fade",
+            `
+              property: material.opacity;
+              from: 1;
+              to: 0;
+              delay: ${duration * 0.65};
+              dur: ${duration * 0.35};
+              easing: easeInQuad;
+            `
+          );
+
+
+          target.appendChild(note);
+
+
+          setTimeout(
+
+            function () {
+
+              if (note.parentNode) {
+
+                note.parentNode.removeChild(note);
+
+              }
+
+            },
+
+            duration + 200
+
+          );
+
+        }
+
+
+        /* =========================================
+           TARGET 0 FOUND
+           ========================================= */
+
+        target.addEventListener(
+          "targetFound",
+
+          function () {
+
+            running = true;
+
+
+            if (!noteTimer) {
+
+              createNote();
+
+              noteTimer =
+                setInterval(
+                  createNote,
+                  350
+                );
+
+            }
+
+          }
+
+        );
+
+
+        /* =========================================
+           TARGET 0 LOST
+           ========================================= */
+
+        target.addEventListener(
+          "targetLost",
+
+          function () {
+
+            running = false;
+
+
+            if (noteTimer) {
+
+              clearInterval(noteTimer);
+
+              noteTimer = null;
+
+            }
+
+          }
+
+        );
+
+      }
+
+    });
+
+
+
+    /* ==========================================================
+       TARGET 1
+       BAND FORMATION NAMES
+       ========================================================== */
+
+
+    AFRAME.registerComponent("spray-names", {
+
+      init: function () {
+
+        const target = this.el;
+
+        let running = false;
+
+        let timers = [];
+
+
+        /* =====================================================
+           BAND FORMATION
+
+                    MICHAEL       RYAN
+
+              GAZ       NICK       SEAN
+
+           Names are approximately 200% larger
+           ===================================================== */
+
+
+        const names = [
+
+          /* GAZ — FRONT LEFT */
+
+          {
+            image: "#gazImage",
+            x: -0.58,
+            y: -0.30,
+            rotation: -4,
+            width: 1.24,
+            height: 0.50,
+            color: "#39ff14"
+          },
+
+
+          /* MICHAEL — BACK / DRUMMER */
+
+          {
+            image: "#michaelImage",
+            x: -0.20,
+            y: 0.38,
+            rotation: -2,
+            width: 1.68,
+            height: 0.50,
+            color: "#bf00ff"
+          },
+
+
+          /* RYAN — BACK RIGHT */
+
+          {
+            image: "#ryanImage",
+            x: 0.58,
+            y: 0.16,
+            rotation: 4,
+            width: 1.30,
+            height: 0.50,
+            color: "#ff1493"
+          },
+
+
+          /* NICK — FRONT CENTRE */
+
+          {
+            image: "#nickImage",
+            x: 0.00,
+            y: -0.38,
+            rotation: 0,
+            width: 1.32,
+            height: 0.50,
+            color: "#ffd700"
+          },
+
+
+          /* SEAN — FRONT RIGHT */
+
+          {
+            image: "#seanImage",
+            x: 0.58,
+            y: -0.30,
+            rotation: 4,
+            width: 1.32,
+            height: 0.50,
+            color: "#ff5a00"
+          }
+
+        ];
+
+
+
+        /* =====================================================
+           CREATE MATCHING SPRAY MIST
+           ===================================================== */
+
+
+        function createSprayMist(
+          x,
+          y,
+          color
+        ) {
+
+          for (
+            let i = 0;
+            i < 18;
+            i++
+          ) {
+
+
+            const dot =
+              document.createElement(
+                "a-circle"
+              );
+
+
+            const offsetX =
+              (Math.random() - 0.5) *
+              0.42;
+
+
+            const offsetY =
+              (Math.random() - 0.5) *
+              0.15;
+
+
+            const dotSize =
+              0.004 +
+              Math.random() *
+              0.012;
+
+
+            dot.classList.add(
+              "spray-effect"
+            );
+
+
+            dot.setAttribute(
+              "radius",
+              dotSize
+            );
+
+
+            dot.setAttribute(
+              "color",
+              color
+            );
+
+
+            dot.setAttribute(
+              "position",
+              `
+                ${x + offsetX}
+                ${y + offsetY}
+                0.10
+              `
+            );
+
+
+            dot.setAttribute(
+              "material",
+              `
+                shader: flat;
+                transparent: true;
+                opacity: 0.85;
+                side: double;
+                depthWrite: false;
+              `
+            );
+
+
+            dot.setAttribute(
+              "scale",
+              "0 0 0"
+            );
+
+
+            dot.setAttribute(
+              "animation__appear",
+              `
+                property: scale;
+                from: 0 0 0;
+                to: 1 1 1;
+                dur: ${100 + Math.random() * 220};
+                easing: easeOutQuad;
+              `
+            );
+
+
+            dot.setAttribute(
+              "animation__fade",
+              `
+                property: material.opacity;
+                from: 0.85;
+                to: 0;
+                delay: 250;
+                dur: 650;
+                easing: easeOutQuad;
+              `
+            );
+
+
+            target.appendChild(dot);
+
+
+            setTimeout(
+
+              function () {
+
+                if (dot.parentNode) {
+
+                  dot.parentNode.removeChild(dot);
+
+                }
+
+              },
+
+              1000
+
+            );
+
+          }
+
+        }
+
+
+
+        /* =====================================================
+           CREATE ONE NAME
+           ===================================================== */
+
+
+        function createName(
+          info,
+          index
+        ) {
+
+
+          if (!running) return;
+
+
+          createSprayMist(
+            info.x,
+            info.y,
+            info.color
+          );
+
+
+          const name =
+            document.createElement(
+              "a-image"
+            );
+
+
+          name.classList.add(
+            "spray-name"
+          );
+
+
+          name.setAttribute(
+            "src",
+            info.image
+          );
+
+
+          name.setAttribute(
+            "position",
+            `
+              ${info.x}
+              ${info.y}
+              ${0.15 + index * 0.01}
+            `
+          );
+
+
+          name.setAttribute(
+            "rotation",
+            `
+              0 0 ${info.rotation}
+            `
+          );
+
+
+          name.setAttribute(
+            "width",
+            info.width
+          );
+
+
+          name.setAttribute(
+            "height",
+            info.height
+          );
+
+
+          name.setAttribute(
+            "material",
+            `
+              shader: flat;
+              transparent: true;
+              opacity: 1;
+              alphaTest: 0.05;
+              side: double;
+              depthWrite: false;
+            `
+          );
+
+
+          /* START VERY SMALL */
+
+          name.setAttribute(
+            "scale",
+            "0.05 0.05 0.05"
+          );
+
+
+          /* POP INTO PLACE */
+
+          name.setAttribute(
+            "animation__spray",
+            `
+              property: scale;
+              from: 0.05 0.05 0.05;
+              to: 1 1 1;
+              dur: 500;
+              easing: easeOutBack;
+            `
+          );
+
+
+          target.appendChild(
+            name
+          );
+
+        }
+
+
+
+        /* =====================================================
+           CLEAR OLD EFFECTS
+           ===================================================== */
+
+
+        function clearEffects() {
+
+
+          const effects =
+            target.querySelectorAll(
+              ".spray-name, .spray-effect"
+            );
+
+
+          effects.forEach(
+
+            function (item) {
+
+              if (item.parentNode) {
+
+                item.parentNode
+                  .removeChild(item);
+
+              }
+
+            }
+
+          );
+
+        }
+
+
+
+        /* =====================================================
+           TARGET 1 FOUND
+
+           ONE AT A TIME:
+
+           MICHAEL
+           RYAN
+           GAZ
+           NICK
+           SEAN
+           ===================================================== */
+
+
+        target.addEventListener(
+          "targetFound",
+
+          function () {
+
+
+            running = true;
+
+
+            clearEffects();
+
+
+            timers.forEach(
+              clearTimeout
+            );
+
+
+            timers = [];
+
+
+            /* MICHAEL */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[1],
+                    1
+                  );
+
+                },
+
+                200
+
+              )
+
+            );
+
+
+            /* RYAN */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[2],
+                    2
+                  );
+
+                },
+
+                850
+
+              )
+
+            );
+
+
+            /* GAZ */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[0],
+                    0
+                  );
+
+                },
+
+                1500
+
+              )
+
+            );
+
+
+            /* NICK */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[3],
+                    3
+                  );
+
+                },
+
+                2150
+
+              )
+
+            );
+
+
+            /* SEAN */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[4],
+                    4
+                  );
+
+                },
+
+                2800
+
+              )
+
+            );
+
+          }
+
+        );
+
+
+
+        /* =====================================================
+           TARGET 1 LOST
+           ===================================================== */
+
+
+        target.addEventListener(
+          "targetLost",
+
+          function () {
+
+
+            running = false;
+
+
+            timers.forEach(
+              clearTimeout
+            );
+
+
+            timers = [];
+
+
+            clearEffects();
+
+          }
+
+        );
+
+      }
+
+    });
+
+
+  </script>
+
+</head>
+
+
+
+<body>
+
+
+<a-scene
+
+  mindar-image="
+    imageTargetSrc: ./targets.mind;
+    autoStart: true;
+  "
+
+  embedded
+
+  vr-mode-ui="enabled: false"
+
+  device-orientation-permission-ui="enabled: false"
+
+  renderer="
+    colorManagement: true;
+    physicallyCorrectLights: true;
+    alpha: true;
+  "
+
+>
+
+
+  <!-- ====================================================== -->
+  <!-- ASSETS -->
+  <!-- ====================================================== -->
+
+
+  <a-assets>
+
+
+    <!-- BLACK HEART -->
+
+    <img
+
+      id="blackHeart"
+
+      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%232b2b2b' d='M50 87 C44 80 14 60 14 35 C14 19 34 12 50 29 C66 12 86 19 86 35 C86 60 56 80 50 87 Z'/%3E%3C/svg%3E"
+
+    >
+
+
+    <!-- BAND NAME PNGS -->
+
+    <img
+      id="seanImage"
+      src="./sean.png"
+      crossorigin="anonymous"
+    >
+
+    <img
+      id="nickImage"
+      src="./nick.png"
+      crossorigin="anonymous"
+    >
+
+    <img
+      id="ryanImage"
+      src="./ryan.png"
+      crossorigin="anonymous"
+    >
+
+    <img
+      id="gazImage"
+      src="./gaz.png"
+      crossorigin="anonymous"
+    >
+
+    <img
+      id="michaelImage"
+      src="./michael.png"
+      crossorigin="anonymous"
+    >
+
+
+  </a-assets>
+
+
+
+  <!-- ====================================================== -->
+  <!-- CAMERA -->
+  <!-- ====================================================== -->
+
+
+  <a-camera
+
+    position="0 0 0"
+
+    look-controls="enabled: false"
+
+  >
+
+  </a-camera>
+
+
+
+  <!-- ====================================================== -->
+  <!-- TARGET 0 -->
+  <!-- MUSIC NOTES + HEART -->
+  <!-- ====================================================== -->
+
+
+  <a-entity
+
+    id="hookedTarget"
+
+    mindar-image-target="targetIndex: 0"
+
+    music-emitter
+
+  >
+
+
+    <a-image
+
+      src="#blackHeart"
+
+      position="0 0 -0.04"
+
+      width="1.35"
+
+      height="1.35"
+
+      material="
+        shader: flat;
+        transparent: true;
+        opacity: 0.78;
+        side: double;
+        depthWrite: false;
+      "
+
+      scale="1 1 1"
+
+      animation__pulse="
+        property: scale;
+        from: 0.90 0.90 0.90;
+        to: 1.14 1.14 1.14;
+        dur: 650;
+        dir: alternate;
+        loop: true;
+        easing: easeInOutQuad;
+      "
+
+      animation__fadepulse="
+        property: material.opacity;
+        from: 0.58;
+        to: 0.88;
+        dur: 650;
+        dir: alternate;
+        loop: true;
+        easing: easeInOutQuad;
+      "
+
+    >
+
+    </a-image>
+
+
+  </a-entity>
+
+
+
+  <!-- ====================================================== -->
+  <!-- TARGET 1 -->
+  <!-- BAND FORMATION -->
+  <!-- ====================================================== -->
+
+
+  <a-entity
+
+    id="hookCatTarget"
+
+    mindar-image-target="targetIndex: 1"
+
+    spray-names
+
+  >
+
+  </a-entity>
+
+
+
+</a-scene>
+
+
+</body>
+
+</html>        const notes = [
+
+          `
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100"
+            height="100"
+            viewBox="0 0 100 100"
+          >
+            <text
+              x="50"
+              y="74"
+              text-anchor="middle"
+              font-size="78"
+              font-family="Arial, sans-serif"
+              fill="#2b2b2b"
+            >♪</text>
+          </svg>
+          `,
+
+          `
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100"
+            height="100"
+            viewBox="0 0 100 100"
+          >
+            <text
+              x="50"
+              y="74"
+              text-anchor="middle"
+              font-size="74"
+              font-family="Arial, sans-serif"
+              fill="#2b2b2b"
+            >♫</text>
+          </svg>
+          `,
+
+          `
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100"
+            height="100"
+            viewBox="0 0 100 100"
+          >
+            <text
+              x="50"
+              y="74"
+              text-anchor="middle"
+              font-size="78"
+              font-family="Arial, sans-serif"
+              fill="#2b2b2b"
+            >♩</text>
+          </svg>
+          `
+
+        ];
+
+
+        function svgToDataURL(svg) {
+
+          return (
+            "data:image/svg+xml;charset=utf-8," +
+            encodeURIComponent(svg)
+          );
+
+        }
+
+
+        /* =========================================
+           CREATE ONE MUSIC NOTE
+           ========================================= */
+
+        function createNote() {
+
+          if (!running) return;
+
+
+          const note =
+            document.createElement("a-plane");
+
+
+          const svg =
+            notes[
+              Math.floor(
+                Math.random() * notes.length
+              )
+            ];
+
+
+          const startX =
+            ampX +
+            (Math.random() - 0.5) * 0.025;
+
+
+          const startY =
+            ampY +
+            (Math.random() - 0.5) * 0.020;
+
+
+          const driftX =
+            (Math.random() - 0.5) * 0.45;
+
+
+          const rise =
+            0.32 +
+            Math.random() * 0.42;
+
+
+          const endX =
+            startX + driftX;
+
+
+          const endY =
+            startY + rise;
+
+
+          const duration =
+            1800 +
+            Math.random() * 1300;
+
+
+          const finalScale =
+            1.0 +
+            Math.random() * 0.8;
+
+
+          const rotateAmount =
+            18 +
+            Math.random() * 30;
+
+
+          note.setAttribute(
+            "src",
+            svgToDataURL(svg)
+          );
+
+
+          note.setAttribute(
+            "material",
+            `
+              shader: flat;
+              transparent: true;
+              opacity: 1;
+              side: double;
+              alphaTest: 0.01;
+              depthWrite: false;
+            `
+          );
+
+
+          note.setAttribute(
+            "width",
+            "0.28"
+          );
+
+
+          note.setAttribute(
+            "height",
+            "0.28"
+          );
+
+
+          note.setAttribute(
+            "position",
+            `${startX} ${startY} 0.08`
+          );
+
+
+          note.setAttribute(
+            "scale",
+            "0.35 0.35 0.35"
+          );
+
+
+          note.setAttribute(
+            "animation__move",
+            `
+              property: position;
+              from: ${startX} ${startY} 0.08;
+              to: ${endX} ${endY} 0.08;
+              dur: ${duration};
+              easing: easeOutSine;
+            `
+          );
+
+
+          note.setAttribute(
+            "animation__grow",
+            `
+              property: scale;
+              from: 0.35 0.35 0.35;
+              to: ${finalScale} ${finalScale} ${finalScale};
+              dur: ${duration};
+              easing: easeOutQuad;
+            `
+          );
+
+
+          note.setAttribute(
+            "animation__dance",
+            `
+              property: rotation;
+              from: 0 0 -${rotateAmount};
+              to: 0 0 ${rotateAmount};
+              dur: ${320 + Math.random() * 280};
+              dir: alternate;
+              loop: true;
+              easing: easeInOutSine;
+            `
+          );
+
+
+          note.setAttribute(
+            "animation__fade",
+            `
+              property: material.opacity;
+              from: 1;
+              to: 0;
+              delay: ${duration * 0.65};
+              dur: ${duration * 0.35};
+              easing: easeInQuad;
+            `
+          );
+
+
+          target.appendChild(note);
+
+
+          setTimeout(
+
+            function () {
+
+              if (note.parentNode) {
+
+                note.parentNode.removeChild(note);
+
+              }
+
+            },
+
+            duration + 200
+
+          );
+
+        }
+
+
+        /* =========================================
+           TARGET 0 FOUND
+           ========================================= */
+
+        target.addEventListener(
+          "targetFound",
+
+          function () {
+
+            running = true;
+
+
+            if (!noteTimer) {
+
+              createNote();
+
+              noteTimer =
+                setInterval(
+                  createNote,
+                  350
+                );
+
+            }
+
+          }
+
+        );
+
+
+        /* =========================================
+           TARGET 0 LOST
+           ========================================= */
+
+        target.addEventListener(
+          "targetLost",
+
+          function () {
+
+            running = false;
+
+
+            if (noteTimer) {
+
+              clearInterval(noteTimer);
+
+              noteTimer = null;
+
+            }
+
+          }
+
+        );
+
+      }
+
+    });
+
+
+
+    /* ==========================================================
+       TARGET 1
+       BAND FORMATION NAMES
+       ========================================================== */
+
+
+    AFRAME.registerComponent("spray-names", {
+
+      init: function () {
+
+        const target = this.el;
+
+        let running = false;
+
+        let timers = [];
+
+
+        /* =====================================================
+           BAND FORMATION
+
+                       MICHAEL
+                       drummer
+
+              GAZ                 RYAN
+
+                    NICK     SEAN
+
+           x = left / right
+           y = up / down
+           ===================================================== */
+
+
+        const names = [
+
+          /* GAZ — LEFT */
+
+          {
+            image: "#gazImage",
+            x: -0.58,
+            y: 0.03,
+            rotation: -7,
+            width: 0.62,
+            height: 0.25,
+            color: "#39ff14"
+          },
+
+
+          /* MICHAEL — BACK / DRUMMER */
+
+          {
+            image: "#michaelImage",
+            x: 0.00,
+            y: 0.43,
+            rotation: 0,
+            width: 0.84,
+            height: 0.25,
+            color: "#bf00ff"
+          },
+
+
+          /* RYAN — RIGHT BESIDE MICHAEL */
+
+          {
+            image: "#ryanImage",
+            x: 0.52,
+            y: 0.08,
+            rotation: 6,
+            width: 0.65,
+            height: 0.25,
+            color: "#ff1493"
+          },
+
+
+          /* NICK — FRONT */
+
+          {
+            image: "#nickImage",
+            x: -0.22,
+            y: -0.34,
+            rotation: -4,
+            width: 0.66,
+            height: 0.25,
+            color: "#ffd700"
+          },
+
+
+          /* SEAN — FRONT RIGHT */
+
+          {
+            image: "#seanImage",
+            x: 0.34,
+            y: -0.32,
+            rotation: 4,
+            width: 0.66,
+            height: 0.25,
+            color: "#ff5a00"
+          }
+
+        ];
+
+
+
+        /* =====================================================
+           CREATE MATCHING SPRAY MIST
+           ===================================================== */
+
+
+        function createSprayMist(
+          x,
+          y,
+          color
+        ) {
+
+          for (
+            let i = 0;
+            i < 18;
+            i++
+          ) {
+
+
+            const dot =
+              document.createElement(
+                "a-circle"
+              );
+
+
+            const offsetX =
+              (Math.random() - 0.5) *
+              0.32;
+
+
+            const offsetY =
+              (Math.random() - 0.5) *
+              0.11;
+
+
+            const dotSize =
+              0.003 +
+              Math.random() *
+              0.010;
+
+
+            dot.classList.add(
+              "spray-effect"
+            );
+
+
+            dot.setAttribute(
+              "radius",
+              dotSize
+            );
+
+
+            dot.setAttribute(
+              "color",
+              color
+            );
+
+
+            dot.setAttribute(
+              "position",
+              `
+                ${x + offsetX}
+                ${y + offsetY}
+                0.10
+              `
+            );
+
+
+            dot.setAttribute(
+              "material",
+              `
+                shader: flat;
+                transparent: true;
+                opacity: 0.85;
+                side: double;
+                depthWrite: false;
+              `
+            );
+
+
+            dot.setAttribute(
+              "scale",
+              "0 0 0"
+            );
+
+
+            dot.setAttribute(
+              "animation__appear",
+              `
+                property: scale;
+                from: 0 0 0;
+                to: 1 1 1;
+                dur: ${100 + Math.random() * 220};
+                easing: easeOutQuad;
+              `
+            );
+
+
+            dot.setAttribute(
+              "animation__fade",
+              `
+                property: material.opacity;
+                from: 0.85;
+                to: 0;
+                delay: 250;
+                dur: 650;
+                easing: easeOutQuad;
+              `
+            );
+
+
+            target.appendChild(dot);
+
+
+            setTimeout(
+
+              function () {
+
+                if (dot.parentNode) {
+
+                  dot.parentNode.removeChild(dot);
+
+                }
+
+              },
+
+              1000
+
+            );
+
+          }
+
+        }
+
+
+
+        /* =====================================================
+           CREATE ONE NAME
+           ===================================================== */
+
+
+        function createName(
+          info,
+          index
+        ) {
+
+
+          if (!running) return;
+
+
+          createSprayMist(
+            info.x,
+            info.y,
+            info.color
+          );
+
+
+          const name =
+            document.createElement(
+              "a-image"
+            );
+
+
+          name.classList.add(
+            "spray-name"
+          );
+
+
+          name.setAttribute(
+            "src",
+            info.image
+          );
+
+
+          name.setAttribute(
+            "position",
+            `
+              ${info.x}
+              ${info.y}
+              ${0.15 + index * 0.01}
+            `
+          );
+
+
+          name.setAttribute(
+            "rotation",
+            `
+              0 0 ${info.rotation}
+            `
+          );
+
+
+          name.setAttribute(
+            "width",
+            info.width
+          );
+
+
+          name.setAttribute(
+            "height",
+            info.height
+          );
+
+
+          name.setAttribute(
+            "material",
+            `
+              shader: flat;
+              transparent: true;
+              opacity: 1;
+              alphaTest: 0.05;
+              side: double;
+              depthWrite: false;
+            `
+          );
+
+
+          /* START SMALL */
+
+          name.setAttribute(
+            "scale",
+            "0.05 0.05 0.05"
+          );
+
+
+          /* POP / SPRAY INTO POSITION */
+
+          name.setAttribute(
+            "animation__spray",
+            `
+              property: scale;
+              from: 0.05 0.05 0.05;
+              to: 1 1 1;
+              dur: 500;
+              easing: easeOutBack;
+            `
+          );
+
+
+          target.appendChild(
+            name
+          );
+
+        }
+
+
+
+        /* =====================================================
+           CLEAR OLD EFFECTS
+           ===================================================== */
+
+
+        function clearEffects() {
+
+
+          const effects =
+            target.querySelectorAll(
+              ".spray-name, .spray-effect"
+            );
+
+
+          effects.forEach(
+
+            function (item) {
+
+              if (item.parentNode) {
+
+                item.parentNode
+                  .removeChild(item);
+
+              }
+
+            }
+
+          );
+
+        }
+
+
+
+        /* =====================================================
+           TARGET 1 FOUND
+
+           Formation appears from back to front:
+
+           Michael
+           Gaz + Ryan
+           Nick + Sean
+           ===================================================== */
+
+
+        target.addEventListener(
+          "targetFound",
+
+          function () {
+
+
+            running = true;
+
+
+            clearEffects();
+
+
+            timers.forEach(
+              clearTimeout
+            );
+
+
+            timers = [];
+
+
+            /* MICHAEL — BACK */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[1],
+                    1
+                  );
+
+                },
+
+                200
+
+              )
+
+            );
+
+
+            /* GAZ — LEFT */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[0],
+                    0
+                  );
+
+                },
+
+                850
+
+              )
+
+            );
+
+
+            /* RYAN — RIGHT */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[2],
+                    2
+                  );
+
+                },
+
+                1100
+
+              )
+
+            );
+
+
+            /* NICK — FRONT */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[3],
+                    3
+                  );
+
+                },
+
+                1750
+
+              )
+
+            );
+
+
+            /* SEAN — FRONT RIGHT */
+
+            timers.push(
+
+              setTimeout(
+
+                function () {
+
+                  createName(
+                    names[4],
+                    4
+                  );
+
+                },
+
+                2000
+
+              )
+
+            );
+
+          }
+
+        );
+
+
+
+        /* =====================================================
+           TARGET 1 LOST
+           ===================================================== */
+
+
+        target.addEventListener(
+          "targetLost",
+
+          function () {
+
+
+            running = false;
+
+
+            timers.forEach(
+              clearTimeout
+            );
+
+
+            timers = [];
+
+
+            clearEffects();
+
+          }
+
+        );
+
+      }
+
+    });
+
+
+  </script>
+
+</head>
+
+
+
+<body>
+
+
+<a-scene
+
+  mindar-image="
+    imageTargetSrc: ./targets.mind;
+    autoStart: true;
+  "
+
+  embedded
+
+  vr-mode-ui="enabled: false"
+
+  device-orientation-permission-ui="enabled: false"
+
+  renderer="
+    colorManagement: true;
+    physicallyCorrectLights: true;
+    alpha: true;
+  "
+
+>
+
+
+  <!-- ====================================================== -->
+  <!-- ASSETS -->
+  <!-- ====================================================== -->
+
+
+  <a-assets>
+
+
+    <!-- BLACK HEART -->
+
+    <img
+
+      id="blackHeart"
+
+      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%232b2b2b' d='M50 87 C44 80 14 60 14 35 C14 19 34 12 50 29 C66 12 86 19 86 35 C86 60 56 80 50 87 Z'/%3E%3C/svg%3E"
+
+    >
+
+
+    <!-- BAND NAME PNGS -->
+
+
+    <img
+      id="seanImage"
+      src="./sean.png"
+      crossorigin="anonymous"
+    >
+
+
+    <img
+      id="nickImage"
+      src="./nick.png"
+      crossorigin="anonymous"
+    >
+
+
+    <img
+      id="ryanImage"
+      src="./ryan.png"
+      crossorigin="anonymous"
+    >
+
+
+    <img
+      id="gazImage"
+      src="./gaz.png"
+      crossorigin="anonymous"
+    >
+
+
+    <img
+      id="michaelImage"
+      src="./michael.png"
+      crossorigin="anonymous"
+    >
+
+
+  </a-assets>
+
+
+
+  <!-- ====================================================== -->
+  <!-- CAMERA -->
+  <!-- ====================================================== -->
+
+
+  <a-camera
+
+    position="0 0 0"
+
+    look-controls="enabled: false"
+
+  >
+
+  </a-camera>
+
+
+
+  <!-- ====================================================== -->
+  <!-- TARGET 0 -->
+  <!-- MUSIC NOTES + HEART -->
+  <!-- ====================================================== -->
+
+
+  <a-entity
+
+    id="hookedTarget"
+
+    mindar-image-target="targetIndex: 0"
+
+    music-emitter
+
+  >
+
+
+    <a-image
+
+      src="#blackHeart"
+
+      position="0 0 -0.04"
+
+      width="1.35"
+
+      height="1.35"
+
+      material="
+        shader: flat;
+        transparent: true;
+        opacity: 0.78;
+        side: double;
+        depthWrite: false;
+      "
+
+      scale="1 1 1"
+
+      animation__pulse="
+        property: scale;
+        from: 0.90 0.90 0.90;
+        to: 1.14 1.14 1.14;
+        dur: 650;
+        dir: alternate;
+        loop: true;
+        easing: easeInOutQuad;
+      "
+
+      animation__fadepulse="
+        property: material.opacity;
+        from: 0.58;
+        to: 0.88;
+        dur: 650;
+        dir: alternate;
+        loop: true;
+        easing: easeInOutQuad;
+      "
+
+    >
+
+    </a-image>
+
+
+  </a-entity>
+
+
+
+  <!-- ====================================================== -->
+  <!-- TARGET 1 -->
+  <!-- BAND FORMATION -->
+  <!-- ====================================================== -->
+
+
+  <a-entity
+
+    id="hookCatTarget"
+
+    mindar-image-target="targetIndex: 1"
+
+    spray-names
+
+  >
+
+  </a-entity>
+
+
+
+</a-scene>
+
+
+</body>
+
+</html>
