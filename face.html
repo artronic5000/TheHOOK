@@ -30,6 +30,8 @@
 
       overflow: hidden;
 
+      background: black;
+
     }
 
 
@@ -41,17 +43,24 @@
 
       left: 18px;
 
-      z-index: 9999;
+      z-index: 99999;
 
-      padding: 10px 15px;
+      padding: 11px 16px;
 
       border-radius: 22px;
 
-      border: 1px solid rgba(255,255,255,0.7);
+      border:
+        1px solid rgba(255,255,255,0.7);
 
-      background: rgba(0,0,0,0.60);
+      background:
+        rgba(0,0,0,0.65);
 
       color: white;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
       font-size: 14px;
 
@@ -70,10 +79,12 @@
 
 <button
   id="backButton"
+  type="button"
   onclick="window.location.href='./index.html';"
 >
   ← BACK
 </button>
+
 
 
 <a-scene
@@ -96,6 +107,10 @@
 
 >
 
+
+  <!-- ======================================================
+       FACE FILTER ASSETS
+       ====================================================== -->
 
   <a-assets>
 
@@ -125,20 +140,29 @@
 
 
 
-  <!-- FACE CAMERA -->
+  <!-- ======================================================
+       CAMERA
+       ====================================================== -->
 
   <a-camera
+
     active="false"
+
     position="0 0 0"
+
   >
   </a-camera>
 
 
 
-  <!-- CAT EARS -->
+  <!-- ======================================================
+       CAT EARS
+       ====================================================== -->
 
   <a-entity
+
     mindar-face-target="anchorIndex: 10"
+
   >
 
 
@@ -168,10 +192,14 @@
 
 
 
-  <!-- BEARD -->
+  <!-- ======================================================
+       BEARD
+       ====================================================== -->
 
   <a-entity
+
     mindar-face-target="anchorIndex: 152"
+
   >
 
 
@@ -201,10 +229,14 @@
 
 
 
-  <!-- PIPE -->
+  <!-- ======================================================
+       PIPE
+       ====================================================== -->
 
   <a-entity
+
     mindar-face-target="anchorIndex: 61"
+
   >
 
 
