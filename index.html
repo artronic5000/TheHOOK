@@ -26,6 +26,100 @@
       overflow: hidden;
     }
 
+
+    /* ======================================================
+       THE HOOK BUTTON
+       ====================================================== */
+
+    #hookButton {
+
+      position: fixed;
+
+      left: 50%;
+      top: 50%;
+
+      transform:
+        translate(-50%, -50%)
+        scale(0.82);
+
+      z-index: 99999;
+
+      display: none;
+
+      width: 82%;
+      max-width: 420px;
+
+      padding: 30px 20px;
+
+      background:
+        rgba(0, 0, 0, 0.96);
+
+      border:
+        2px solid #f4f8ff;
+
+      border-radius: 8px;
+
+      color:
+        #f4f8ff;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      font-size: 38px;
+
+      font-weight: bold;
+
+      letter-spacing: 8px;
+
+      text-align: center;
+
+      cursor: pointer;
+
+      opacity: 0;
+
+      box-shadow:
+        0 0 12px rgba(255,255,255,0.45),
+        0 0 30px rgba(210,230,255,0.20);
+
+      transition:
+        opacity 0.5s ease,
+        transform 0.5s ease;
+
+    }
+
+
+    #hookButton.show {
+
+      display: block;
+
+      opacity: 1;
+
+      transform:
+        translate(-50%, -50%)
+        scale(1);
+
+    }
+
+
+    #hookButton small {
+
+      display: block;
+
+      margin-top: 12px;
+
+      font-size: 11px;
+
+      font-weight: normal;
+
+      letter-spacing: 3px;
+
+      color:
+        #d8e3ef;
+
+    }
+
   </style>
 
 
@@ -38,301 +132,364 @@
        ========================================================== */
 
 
-    AFRAME.registerComponent("music-emitter", {
+    AFRAME.registerComponent(
+      "music-emitter",
+      {
 
-      init: function () {
+        init: function () {
 
-        const target = this.el;
+          const target =
+            this.el;
 
-        let noteTimer = null;
-        let running = false;
+          let noteTimer =
+            null;
 
-
-        const ampX = -0.15;
-        const ampY = -0.30;
-
-
-        const notes = [
-
-          `
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="100"
-            height="100"
-            viewBox="0 0 100 100"
-          >
-            <text
-              x="50"
-              y="74"
-              text-anchor="middle"
-              font-size="78"
-              font-family="Arial, sans-serif"
-              fill="#2b2b2b"
-            >♪</text>
-          </svg>
-          `,
-
-          `
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="100"
-            height="100"
-            viewBox="0 0 100 100"
-          >
-            <text
-              x="50"
-              y="74"
-              text-anchor="middle"
-              font-size="74"
-              font-family="Arial, sans-serif"
-              fill="#2b2b2b"
-            >♫</text>
-          </svg>
-          `,
-
-          `
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="100"
-            height="100"
-            viewBox="0 0 100 100"
-          >
-            <text
-              x="50"
-              y="74"
-              text-anchor="middle"
-              font-size="78"
-              font-family="Arial, sans-serif"
-              fill="#2b2b2b"
-            >♩</text>
-          </svg>
-          `
-
-        ];
+          let running =
+            false;
 
 
-        function svgToDataURL(svg) {
+          /* =========================================
+             AMP LOCATION
+             ========================================= */
 
-          return (
-            "data:image/svg+xml;charset=utf-8," +
-            encodeURIComponent(svg)
-          );
+          const ampX =
+            -0.15;
 
-        }
-
-
-        function createNote() {
-
-          if (!running) return;
+          const ampY =
+            -0.30;
 
 
-          const note =
-            document.createElement("a-plane");
+          /* =========================================
+             MUSIC NOTES
+             ========================================= */
 
+          const notes = [
 
-          const svg =
-            notes[
-              Math.floor(
-                Math.random() * notes.length
-              )
-            ];
-
-
-          const startX =
-            ampX +
-            (Math.random() - 0.5) * 0.025;
-
-
-          const startY =
-            ampY +
-            (Math.random() - 0.5) * 0.020;
-
-
-          const driftX =
-            (Math.random() - 0.5) * 0.45;
-
-
-          const rise =
-            0.32 +
-            Math.random() * 0.42;
-
-
-          const endX =
-            startX + driftX;
-
-
-          const endY =
-            startY + rise;
-
-
-          const duration =
-            1800 +
-            Math.random() * 1300;
-
-
-          const finalScale =
-            1.0 +
-            Math.random() * 0.8;
-
-
-          const rotateAmount =
-            18 +
-            Math.random() * 30;
-
-
-          note.setAttribute(
-            "src",
-            svgToDataURL(svg)
-          );
-
-
-          note.setAttribute(
-            "material",
             `
-              shader: flat;
-              transparent: true;
-              opacity: 1;
-              side: double;
-              alphaTest: 0.01;
-              depthWrite: false;
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="100"
+              height="100"
+              viewBox="0 0 100 100"
+            >
+              <text
+                x="50"
+                y="74"
+                text-anchor="middle"
+                font-size="78"
+                font-family="Arial, sans-serif"
+                fill="#2b2b2b"
+              >♪</text>
+            </svg>
+            `,
+
             `
-          );
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="100"
+              height="100"
+              viewBox="0 0 100 100"
+            >
+              <text
+                x="50"
+                y="74"
+                text-anchor="middle"
+                font-size="74"
+                font-family="Arial, sans-serif"
+                fill="#2b2b2b"
+              >♫</text>
+            </svg>
+            `,
 
-
-          note.setAttribute(
-            "width",
-            "0.28"
-          );
-
-
-          note.setAttribute(
-            "height",
-            "0.28"
-          );
-
-
-          note.setAttribute(
-            "position",
-            `${startX} ${startY} 0.08`
-          );
-
-
-          note.setAttribute(
-            "scale",
-            "0.35 0.35 0.35"
-          );
-
-
-          note.setAttribute(
-            "animation__move",
             `
-              property: position;
-              from: ${startX} ${startY} 0.08;
-              to: ${endX} ${endY} 0.08;
-              dur: ${duration};
-              easing: easeOutSine;
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="100"
+              height="100"
+              viewBox="0 0 100 100"
+            >
+              <text
+                x="50"
+                y="74"
+                text-anchor="middle"
+                font-size="78"
+                font-family="Arial, sans-serif"
+                fill="#2b2b2b"
+              >♩</text>
+            </svg>
             `
-          );
+
+          ];
 
 
-          note.setAttribute(
-            "animation__grow",
-            `
-              property: scale;
-              from: 0.35 0.35 0.35;
-              to: ${finalScale} ${finalScale} ${finalScale};
-              dur: ${duration};
-              easing: easeOutQuad;
-            `
-          );
+          function svgToDataURL(svg) {
+
+            return (
+
+              "data:image/svg+xml;charset=utf-8," +
+
+              encodeURIComponent(svg)
+
+            );
+
+          }
 
 
-          note.setAttribute(
-            "animation__dance",
-            `
-              property: rotation;
-              from: 0 0 -${rotateAmount};
-              to: 0 0 ${rotateAmount};
-              dur: ${320 + Math.random() * 280};
-              dir: alternate;
-              loop: true;
-              easing: easeInOutSine;
-            `
-          );
+          function createNote() {
+
+            if (!running)
+              return;
 
 
-          note.setAttribute(
-            "animation__fade",
-            `
-              property: material.opacity;
-              from: 1;
-              to: 0;
-              delay: ${duration * 0.65};
-              dur: ${duration * 0.35};
-              easing: easeInQuad;
-            `
-          );
+            const note =
+              document.createElement(
+                "a-plane"
+              );
 
 
-          target.appendChild(note);
+            const svg =
+
+              notes[
+                Math.floor(
+                  Math.random() *
+                  notes.length
+                )
+              ];
 
 
-          setTimeout(
+            const startX =
+
+              ampX +
+
+              (Math.random() - 0.5) *
+              0.025;
+
+
+            const startY =
+
+              ampY +
+
+              (Math.random() - 0.5) *
+              0.020;
+
+
+            const driftX =
+
+              (Math.random() - 0.5) *
+              0.45;
+
+
+            const rise =
+
+              0.32 +
+
+              Math.random() *
+              0.42;
+
+
+            const endX =
+              startX + driftX;
+
+
+            const endY =
+              startY + rise;
+
+
+            const duration =
+
+              1800 +
+
+              Math.random() *
+              1300;
+
+
+            const finalScale =
+
+              1.0 +
+
+              Math.random() *
+              0.8;
+
+
+            const rotateAmount =
+
+              18 +
+
+              Math.random() *
+              30;
+
+
+            note.setAttribute(
+              "src",
+              svgToDataURL(svg)
+            );
+
+
+            note.setAttribute(
+              "material",
+              `
+                shader: flat;
+                transparent: true;
+                opacity: 1;
+                side: double;
+                alphaTest: 0.01;
+                depthWrite: false;
+              `
+            );
+
+
+            note.setAttribute(
+              "width",
+              "0.28"
+            );
+
+
+            note.setAttribute(
+              "height",
+              "0.28"
+            );
+
+
+            note.setAttribute(
+              "position",
+              `${startX} ${startY} 0.08`
+            );
+
+
+            note.setAttribute(
+              "scale",
+              "0.35 0.35 0.35"
+            );
+
+
+            note.setAttribute(
+              "animation__move",
+              `
+                property: position;
+                from: ${startX} ${startY} 0.08;
+                to: ${endX} ${endY} 0.08;
+                dur: ${duration};
+                easing: easeOutSine;
+              `
+            );
+
+
+            note.setAttribute(
+              "animation__grow",
+              `
+                property: scale;
+                from: 0.35 0.35 0.35;
+                to: ${finalScale} ${finalScale} ${finalScale};
+                dur: ${duration};
+                easing: easeOutQuad;
+              `
+            );
+
+
+            note.setAttribute(
+              "animation__dance",
+              `
+                property: rotation;
+                from: 0 0 -${rotateAmount};
+                to: 0 0 ${rotateAmount};
+                dur: ${320 + Math.random() * 280};
+                dir: alternate;
+                loop: true;
+                easing: easeInOutSine;
+              `
+            );
+
+
+            note.setAttribute(
+              "animation__fade",
+              `
+                property: material.opacity;
+                from: 1;
+                to: 0;
+                delay: ${duration * 0.65};
+                dur: ${duration * 0.35};
+                easing: easeInQuad;
+              `
+            );
+
+
+            target.appendChild(
+              note
+            );
+
+
+            setTimeout(
+              function () {
+
+                if (note.parentNode) {
+
+                  note.parentNode
+                    .removeChild(
+                      note
+                    );
+
+                }
+
+              },
+
+              duration + 200
+
+            );
+
+          }
+
+
+          target.addEventListener(
+            "targetFound",
             function () {
 
-              if (note.parentNode) {
-                note.parentNode.removeChild(note);
+              running =
+                true;
+
+
+              if (!noteTimer) {
+
+                createNote();
+
+                noteTimer =
+                  setInterval(
+                    createNote,
+                    350
+                  );
+
               }
 
-            },
-            duration + 200
+            }
+          );
+
+
+          target.addEventListener(
+            "targetLost",
+            function () {
+
+              running =
+                false;
+
+
+              if (noteTimer) {
+
+                clearInterval(
+                  noteTimer
+                );
+
+                noteTimer =
+                  null;
+
+              }
+
+            }
           );
 
         }
-
-
-        target.addEventListener(
-          "targetFound",
-          function () {
-
-            running = true;
-
-            if (!noteTimer) {
-
-              createNote();
-
-              noteTimer =
-                setInterval(
-                  createNote,
-                  350
-                );
-
-            }
-
-          }
-        );
-
-
-        target.addEventListener(
-          "targetLost",
-          function () {
-
-            running = false;
-
-            if (noteTimer) {
-
-              clearInterval(noteTimer);
-
-              noteTimer = null;
-
-            }
-
-          }
-        );
 
       }
 
-    });
+    );
 
 
 
@@ -340,744 +497,652 @@
 
     /* ==========================================================
        TARGET 1
-       BAND NAMES + THE HOOK FINALE
+       BAND FORMATION NAMES
        ========================================================== */
 
 
-    AFRAME.registerComponent("spray-names", {
+    AFRAME.registerComponent(
+      "spray-names",
+      {
 
-      init: function () {
+        init: function () {
 
-        const target = this.el;
+          const target =
+            this.el;
 
-        let running = false;
+          let running =
+            false;
 
-        let timers = [];
-
-
-        const names = [
-
-          /* GAZ */
-          {
-            image: "#gazImage",
-            x: -0.58,
-            y: -0.30,
-            rotation: -4,
-            width: 1.24,
-            height: 0.50,
-            color: "#39ff14"
-          },
-
-          /* MICHAEL */
-          {
-            image: "#michaelImage",
-            x: -0.20,
-            y: 0.38,
-            rotation: -2,
-            width: 1.68,
-            height: 0.50,
-            color: "#bf00ff"
-          },
-
-          /* RYAN */
-          {
-            image: "#ryanImage",
-            x: 0.58,
-            y: 0.16,
-            rotation: 4,
-            width: 1.30,
-            height: 0.50,
-            color: "#ff1493"
-          },
-
-          /* NICK */
-          {
-            image: "#nickImage",
-            x: 0.00,
-            y: -0.38,
-            rotation: 0,
-            width: 1.32,
-            height: 0.50,
-            color: "#ffd700"
-          },
-
-          /* SEAN */
-          {
-            image: "#seanImage",
-            x: 0.58,
-            y: -0.30,
-            rotation: 4,
-            width: 1.32,
-            height: 0.50,
-            color: "#ff5a00"
-          }
-
-        ];
+          let timers =
+            [];
 
 
+          const names = [
 
-        function createSprayMist(
-          x,
-          y,
-          color
-        ) {
+            /* GAZ */
 
-          for (
-            let i = 0;
-            i < 18;
-            i++
+            {
+              image: "#gazImage",
+              x: -0.58,
+              y: -0.30,
+              rotation: -4,
+              width: 1.24,
+              height: 0.50,
+              color: "#39ff14"
+            },
+
+
+            /* MICHAEL */
+
+            {
+              image: "#michaelImage",
+              x: -0.20,
+              y: 0.38,
+              rotation: -2,
+              width: 1.68,
+              height: 0.50,
+              color: "#bf00ff"
+            },
+
+
+            /* RYAN */
+
+            {
+              image: "#ryanImage",
+              x: 0.58,
+              y: 0.16,
+              rotation: 4,
+              width: 1.30,
+              height: 0.50,
+              color: "#ff1493"
+            },
+
+
+            /* NICK */
+
+            {
+              image: "#nickImage",
+              x: 0.00,
+              y: -0.38,
+              rotation: 0,
+              width: 1.32,
+              height: 0.50,
+              color: "#ffd700"
+            },
+
+
+            /* SEAN */
+
+            {
+              image: "#seanImage",
+              x: 0.58,
+              y: -0.30,
+              rotation: 4,
+              width: 1.32,
+              height: 0.50,
+              color: "#ff5a00"
+            }
+
+          ];
+
+
+
+          /* =====================================================
+             SPRAY MIST
+             ===================================================== */
+
+          function createSprayMist(
+            x,
+            y,
+            color
           ) {
 
-            const dot =
-              document.createElement(
-                "a-circle"
+            for (
+              let i = 0;
+              i < 18;
+              i++
+            ) {
+
+              const dot =
+                document.createElement(
+                  "a-circle"
+                );
+
+
+              const offsetX =
+
+                (Math.random() - 0.5) *
+                0.42;
+
+
+              const offsetY =
+
+                (Math.random() - 0.5) *
+                0.15;
+
+
+              const dotSize =
+
+                0.004 +
+
+                Math.random() *
+                0.012;
+
+
+              dot.classList.add(
+                "spray-effect"
               );
 
 
-            const offsetX =
-              (Math.random() - 0.5) *
-              0.42;
+              dot.setAttribute(
+                "radius",
+                dotSize
+              );
 
 
-            const offsetY =
-              (Math.random() - 0.5) *
-              0.15;
+              dot.setAttribute(
+                "color",
+                color
+              );
 
 
-            const dotSize =
-              0.004 +
-              Math.random() *
-              0.012;
+              dot.setAttribute(
+                "position",
+                `
+                  ${x + offsetX}
+                  ${y + offsetY}
+                  0.10
+                `
+              );
 
 
-            dot.classList.add(
-              "spray-effect"
+              dot.setAttribute(
+                "material",
+                `
+                  shader: flat;
+                  transparent: true;
+                  opacity: 0.85;
+                  side: double;
+                  depthWrite: false;
+                `
+              );
+
+
+              dot.setAttribute(
+                "scale",
+                "0 0 0"
+              );
+
+
+              dot.setAttribute(
+                "animation__appear",
+                `
+                  property: scale;
+                  from: 0 0 0;
+                  to: 1 1 1;
+                  dur: ${100 + Math.random() * 220};
+                  easing: easeOutQuad;
+                `
+              );
+
+
+              dot.setAttribute(
+                "animation__fade",
+                `
+                  property: material.opacity;
+                  from: 0.85;
+                  to: 0;
+                  delay: 250;
+                  dur: 650;
+                  easing: easeOutQuad;
+                `
+              );
+
+
+              target.appendChild(
+                dot
+              );
+
+
+              setTimeout(
+                function () {
+
+                  if (dot.parentNode) {
+
+                    dot.parentNode
+                      .removeChild(
+                        dot
+                      );
+
+                  }
+
+                },
+
+                1000
+
+              );
+
+            }
+
+          }
+
+
+
+          /* =====================================================
+             CREATE NAME
+             ===================================================== */
+
+          function createName(
+            info,
+            index
+          ) {
+
+            if (!running)
+              return;
+
+
+            createSprayMist(
+              info.x,
+              info.y,
+              info.color
             );
 
 
-            dot.setAttribute(
-              "radius",
-              dotSize
+            const name =
+              document.createElement(
+                "a-image"
+              );
+
+
+            name.classList.add(
+              "spray-name"
             );
 
 
-            dot.setAttribute(
-              "color",
-              color
+            name.setAttribute(
+              "src",
+              info.image
             );
 
 
-            dot.setAttribute(
+            name.setAttribute(
               "position",
               `
-                ${x + offsetX}
-                ${y + offsetY}
-                0.10
+                ${info.x}
+                ${info.y}
+                ${0.15 + index * 0.01}
               `
             );
 
 
-            dot.setAttribute(
+            name.setAttribute(
+              "rotation",
+              `
+                0 0 ${info.rotation}
+              `
+            );
+
+
+            name.setAttribute(
+              "width",
+              info.width
+            );
+
+
+            name.setAttribute(
+              "height",
+              info.height
+            );
+
+
+            name.setAttribute(
               "material",
               `
                 shader: flat;
                 transparent: true;
-                opacity: 0.85;
+                opacity: 1;
+                alphaTest: 0.05;
                 side: double;
                 depthWrite: false;
               `
             );
 
 
-            dot.setAttribute(
+            name.setAttribute(
               "scale",
-              "0 0 0"
+              "0.05 0.05 0.05"
             );
 
 
-            dot.setAttribute(
-              "animation__appear",
+            name.setAttribute(
+              "animation__grow",
               `
                 property: scale;
-                from: 0 0 0;
+                from: 0.05 0.05 0.05;
                 to: 1 1 1;
-                dur: ${100 + Math.random() * 220};
-                easing: easeOutQuad;
+                dur: 450;
+                easing: easeOutBack;
               `
             );
 
 
-            dot.setAttribute(
-              "animation__fade",
+            name.setAttribute(
+              "animation__shrink",
               `
-                property: material.opacity;
-                from: 0.85;
-                to: 0;
-                delay: 250;
-                dur: 650;
-                easing: easeOutQuad;
+                property: scale;
+                from: 1 1 1;
+                to: 0.52 0.52 0.52;
+                delay: 850;
+                dur: 500;
+                easing: easeInOutQuad;
               `
             );
 
 
-            target.appendChild(dot);
+            target.appendChild(
+              name
+            );
+
+          }
 
 
-            setTimeout(
+
+          /* =====================================================
+             SHOW THE HOOK BUTTON
+             ===================================================== */
+
+          function showHookButton() {
+
+            if (!running)
+              return;
+
+
+            const button =
+              document.getElementById(
+                "hookButton"
+              );
+
+
+            button.style.display =
+              "block";
+
+
+            requestAnimationFrame(
               function () {
 
-                if (dot.parentNode) {
-                  dot.parentNode.removeChild(dot);
-                }
-
-              },
-              1000
-            );
-
-          }
-
-        }
-
-
-
-        function createName(
-          info,
-          index
-        ) {
-
-          if (!running) return;
-
-
-          createSprayMist(
-            info.x,
-            info.y,
-            info.color
-          );
-
-
-          const name =
-            document.createElement(
-              "a-image"
-            );
-
-
-          name.classList.add(
-            "spray-name"
-          );
-
-
-          name.setAttribute(
-            "src",
-            info.image
-          );
-
-
-          name.setAttribute(
-            "position",
-            `
-              ${info.x}
-              ${info.y}
-              ${0.15 + index * 0.01}
-            `
-          );
-
-
-          name.setAttribute(
-            "rotation",
-            `
-              0 0 ${info.rotation}
-            `
-          );
-
-
-          name.setAttribute(
-            "width",
-            info.width
-          );
-
-
-          name.setAttribute(
-            "height",
-            info.height
-          );
-
-
-          name.setAttribute(
-            "material",
-            `
-              shader: flat;
-              transparent: true;
-              opacity: 1;
-              alphaTest: 0.05;
-              side: double;
-              depthWrite: false;
-            `
-          );
-
-
-          name.setAttribute(
-            "scale",
-            "0.05 0.05 0.05"
-          );
-
-
-          name.setAttribute(
-            "animation__grow",
-            `
-              property: scale;
-              from: 0.05 0.05 0.05;
-              to: 1 1 1;
-              dur: 450;
-              easing: easeOutBack;
-            `
-          );
-
-
-          name.setAttribute(
-            "animation__shrink",
-            `
-              property: scale;
-              from: 1 1 1;
-              to: 0.52 0.52 0.52;
-              delay: 850;
-              dur: 500;
-              easing: easeInOutQuad;
-            `
-          );
-
-
-          target.appendChild(
-            name
-          );
-
-        }
-
-
-
-        function createHookFinale() {
-
-          if (!running) return;
-
-
-          const finale =
-            document.createElement(
-              "a-entity"
-            );
-
-
-          finale.classList.add(
-            "hook-finale"
-          );
-
-
-
-          /* BLACK BACKGROUND */
-
-          const panel =
-            document.createElement(
-              "a-plane"
-            );
-
-
-          panel.setAttribute(
-            "position",
-            "0 0 0.35"
-          );
-
-
-          panel.setAttribute(
-            "width",
-            "1.65"
-          );
-
-
-          panel.setAttribute(
-            "height",
-            "0.78"
-          );
-
-
-          panel.setAttribute(
-            "material",
-            `
-              shader: flat;
-              color: #000000;
-              transparent: true;
-              opacity: 0.94;
-              side: double;
-              depthWrite: false;
-            `
-          );
-
-
-          panel.setAttribute(
-            "scale",
-            "0 0 0"
-          );
-
-
-          panel.setAttribute(
-            "animation__appear",
-            `
-              property: scale;
-              from: 0 0 0;
-              to: 1 1 1;
-              dur: 650;
-              easing: easeOutBack;
-            `
-          );
-
-
-          finale.appendChild(
-            panel
-          );
-
-
-
-          /* THE HOOK TEXT */
-
-          const text =
-            document.createElement(
-              "a-text"
-            );
-
-
-          text.setAttribute(
-            "value",
-            "THE HOOK"
-          );
-
-
-          text.setAttribute(
-            "align",
-            "center"
-          );
-
-
-          text.setAttribute(
-            "anchor",
-            "center"
-          );
-
-
-          text.setAttribute(
-            "baseline",
-            "center"
-          );
-
-
-          text.setAttribute(
-            "position",
-            "0 0.05 0.40"
-          );
-
-
-          text.setAttribute(
-            "width",
-            "2.7"
-          );
-
-
-          text.setAttribute(
-            "color",
-            "#f3f7ff"
-          );
-
-
-          text.setAttribute(
-            "letter-spacing",
-            "6"
-          );
-
-
-          text.setAttribute(
-            "scale",
-            "0.1 0.1 0.1"
-          );
-
-
-          text.setAttribute(
-            "animation__grow",
-            `
-              property: scale;
-              from: 0.1 0.1 0.1;
-              to: 1 1 1;
-              dur: 700;
-              easing: easeOutBack;
-            `
-          );
-
-
-          finale.appendChild(
-            text
-          );
-
-
-
-          /* SMALL TAP TEXT */
-
-          const tap =
-            document.createElement(
-              "a-text"
-            );
-
-
-          tap.setAttribute(
-            "value",
-            "TAP FOR FACE FILTER"
-          );
-
-
-          tap.setAttribute(
-            "align",
-            "center"
-          );
-
-
-          tap.setAttribute(
-            "anchor",
-            "center"
-          );
-
-
-          tap.setAttribute(
-            "position",
-            "0 -0.24 0.41"
-          );
-
-
-          tap.setAttribute(
-            "width",
-            "1.35"
-          );
-
-
-          tap.setAttribute(
-            "color",
-            "#d8e2ee"
-          );
-
-
-          finale.appendChild(
-            tap
-          );
-
-
-
-          /* CLICK AREA */
-
-          const clickArea =
-            document.createElement(
-              "a-plane"
-            );
-
-
-          clickArea.classList.add(
-            "clickable"
-          );
-
-
-          clickArea.setAttribute(
-            "position",
-            "0 0 0.45"
-          );
-
-
-          clickArea.setAttribute(
-            "width",
-            "1.65"
-          );
-
-
-          clickArea.setAttribute(
-            "height",
-            "0.78"
-          );
-
-
-          clickArea.setAttribute(
-            "material",
-            `
-              transparent: true;
-              opacity: 0;
-              depthWrite: false;
-            `
-          );
-
-
-          clickArea.addEventListener(
-            "click",
-            function () {
-
-              window.location.href =
-                "./face.html";
-
-            }
-          );
-
-
-          finale.appendChild(
-            clickArea
-          );
-
-
-          target.appendChild(
-            finale
-          );
-
-        }
-
-
-
-        function clearEffects() {
-
-          const effects =
-            target.querySelectorAll(
-              ".spray-name, .spray-effect, .hook-finale"
-            );
-
-
-          effects.forEach(
-            function (item) {
-
-              if (item.parentNode) {
-
-                item.parentNode
-                  .removeChild(item);
+                button.classList.add(
+                  "show"
+                );
 
               }
+            );
+
+          }
+
+
+
+          /* =====================================================
+             HIDE THE HOOK BUTTON
+             ===================================================== */
+
+          function hideHookButton() {
+
+            const button =
+              document.getElementById(
+                "hookButton"
+              );
+
+
+            if (!button)
+              return;
+
+
+            button.classList.remove(
+              "show"
+            );
+
+
+            button.style.display =
+              "none";
+
+          }
+
+
+
+          /* =====================================================
+             CLEAR EFFECTS
+             ===================================================== */
+
+          function clearEffects() {
+
+            const effects =
+              target.querySelectorAll(
+                ".spray-name, .spray-effect"
+              );
+
+
+            effects.forEach(
+              function (item) {
+
+                if (item.parentNode) {
+
+                  item.parentNode
+                    .removeChild(
+                      item
+                    );
+
+                }
+
+              }
+            );
+
+
+            hideHookButton();
+
+          }
+
+
+
+          /* =====================================================
+             TARGET FOUND
+             ===================================================== */
+
+          target.addEventListener(
+            "targetFound",
+            function () {
+
+              running =
+                true;
+
+
+              clearEffects();
+
+
+              timers.forEach(
+                clearTimeout
+              );
+
+
+              timers =
+                [];
+
+
+              /* MICHAEL */
+
+              timers.push(
+                setTimeout(
+                  function () {
+
+                    createName(
+                      names[1],
+                      1
+                    );
+
+                  },
+
+                  200
+
+                )
+              );
+
+
+              /* RYAN */
+
+              timers.push(
+                setTimeout(
+                  function () {
+
+                    createName(
+                      names[2],
+                      2
+                    );
+
+                  },
+
+                  1600
+
+                )
+              );
+
+
+              /* GAZ */
+
+              timers.push(
+                setTimeout(
+                  function () {
+
+                    createName(
+                      names[0],
+                      0
+                    );
+
+                  },
+
+                  3000
+
+                )
+              );
+
+
+              /* NICK */
+
+              timers.push(
+                setTimeout(
+                  function () {
+
+                    createName(
+                      names[3],
+                      3
+                    );
+
+                  },
+
+                  4400
+
+                )
+              );
+
+
+              /* SEAN */
+
+              timers.push(
+                setTimeout(
+                  function () {
+
+                    createName(
+                      names[4],
+                      4
+                    );
+
+                  },
+
+                  5800
+
+                )
+              );
+
+
+              /* THE HOOK BUTTON */
+
+              timers.push(
+                setTimeout(
+                  function () {
+
+                    showHookButton();
+
+                  },
+
+                  7500
+
+                )
+              );
+
+            }
+          );
+
+
+
+          /* =====================================================
+             TARGET LOST
+             ===================================================== */
+
+          target.addEventListener(
+            "targetLost",
+            function () {
+
+              running =
+                false;
+
+
+              timers.forEach(
+                clearTimeout
+              );
+
+
+              timers =
+                [];
+
+
+              clearEffects();
 
             }
           );
 
         }
 
+      }
+
+    );
 
 
-        target.addEventListener(
-          "targetFound",
+
+    /* ==========================================================
+       THE HOOK BUTTON CLICK
+       ========================================================== */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function () {
+
+        const hookButton =
+          document.getElementById(
+            "hookButton"
+          );
+
+
+        hookButton.addEventListener(
+          "click",
           function () {
 
-            running = true;
-
-            clearEffects();
-
-
-            timers.forEach(
-              clearTimeout
-            );
-
-            timers = [];
-
-
-            /* MICHAEL */
-            timers.push(
-              setTimeout(
-                function () {
-                  createName(
-                    names[1],
-                    1
-                  );
-                },
-                200
-              )
-            );
-
-
-            /* RYAN */
-            timers.push(
-              setTimeout(
-                function () {
-                  createName(
-                    names[2],
-                    2
-                  );
-                },
-                1600
-              )
-            );
-
-
-            /* GAZ */
-            timers.push(
-              setTimeout(
-                function () {
-                  createName(
-                    names[0],
-                    0
-                  );
-                },
-                3000
-              )
-            );
-
-
-            /* NICK */
-            timers.push(
-              setTimeout(
-                function () {
-                  createName(
-                    names[3],
-                    3
-                  );
-                },
-                4400
-              )
-            );
-
-
-            /* SEAN */
-            timers.push(
-              setTimeout(
-                function () {
-                  createName(
-                    names[4],
-                    4
-                  );
-                },
-                5800
-              )
-            );
-
-
-            /* THE HOOK */
-            timers.push(
-              setTimeout(
-                function () {
-                  createHookFinale();
-                },
-                7500
-              )
-            );
-
-          }
-        );
-
-
-
-        target.addEventListener(
-          "targetLost",
-          function () {
-
-            running = false;
-
-
-            timers.forEach(
-              clearTimeout
-            );
-
-
-            timers = [];
-
-
-            clearEffects();
+            window.location.href =
+              "./face.html";
 
           }
         );
 
       }
+    );
 
-    });
 
   </script>
 
@@ -1088,2419 +1153,24 @@
 <body>
 
 
-<a-scene
-
-  mindar-image="
-    imageTargetSrc: ./targets.mind;
-    autoStart: true;
-  "
-
-  embedded
-
-  vr-mode-ui="enabled: false"
-
-  device-orientation-permission-ui="enabled: false"
-
-  renderer="
-    colorManagement: true;
-    physicallyCorrectLights: true;
-    alpha: true;
-  "
-
-  cursor="rayOrigin: mouse"
-
-  raycaster="objects: .clickable"
-
->
-
-
-  <a-assets>
-
-
-    <!-- BLACK HEART -->
-
-    <img
-      id="blackHeart"
-      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%232b2b2b' d='M50 87 C44 80 14 60 14 35 C14 19 34 12 50 29 C66 12 86 19 86 35 C86 60 56 80 50 87 Z'/%3E%3C/svg%3E"
-    >
-
-
-    <!-- BAND NAME PNGS -->
-
-    <img
-      id="seanImage"
-      src="./sean.png"
-      crossorigin="anonymous"
-    >
-
-    <img
-      id="nickImage"
-      src="./nick.png"
-      crossorigin="anonymous"
-    >
-
-    <img
-      id="ryanImage"
-      src="./ryan.png"
-      crossorigin="anonymous"
-    >
-
-    <img
-      id="gazImage"
-      src="./gaz.png"
-      crossorigin="anonymous"
-    >
-
-    <img
-      id="michaelImage"
-      src="./michael.png"
-      crossorigin="anonymous"
-    >
-
-
-  </a-assets>
-
-
-
-  <a-camera
-    position="0 0 0"
-    look-controls="enabled: false"
-    cursor="
-      rayOrigin: mouse;
-      fuse: false;
-    "
-    raycaster="
-      objects: .clickable
-    "
-  >
-  </a-camera>
-
-
-
-  <!-- TARGET 0 -->
-
-  <a-entity
-    id="hookedTarget"
-    mindar-image-target="targetIndex: 0"
-    music-emitter
-  >
-
-
-    <a-image
-
-      src="#blackHeart"
-
-      position="0 0 -0.04"
-
-      width="1.35"
-
-      height="1.35"
-
-      material="
-        shader: flat;
-        transparent: true;
-        opacity: 0.78;
-        side: double;
-        depthWrite: false;
-      "
-
-      scale="1 1 1"
-
-      animation__pulse="
-        property: scale;
-        from: 0.90 0.90 0.90;
-        to: 1.14 1.14 1.14;
-        dur: 650;
-        dir: alternate;
-        loop: true;
-        easing: easeInOutQuad;
-      "
-
-      animation__fadepulse="
-        property: material.opacity;
-        from: 0.58;
-        to: 0.88;
-        dur: 650;
-        dir: alternate;
-        loop: true;
-        easing: easeInOutQuad;
-      "
-
-    >
-    </a-image>
-
-
-  </a-entity>
-
-
-
-  <!-- TARGET 1 -->
-
-  <a-entity
-    id="hookCatTarget"
-    mindar-image-target="targetIndex: 1"
-    spray-names
-  >
-  </a-entity>
-
-
-</a-scene>
-
-
-</body>
-
-</html>      height: 100%;
-
-      overflow: hidden;
-
-      background: black;
-
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-    }
-
-
-    #app {
-
-      width: 100%;
-
-      height: 100%;
-
-    }
-
-
-    /* =========================================
-       FACE FILTER EXIT BUTTON
-       ========================================= */
-
-    #exitFace {
-
-      position: fixed;
-
-      top: 18px;
-
-      left: 18px;
-
-      z-index: 9999;
-
-      display: none;
-
-      background: rgba(0,0,0,0.65);
-
-      color: white;
-
-      border: 1px solid rgba(255,255,255,0.7);
-
-      border-radius: 20px;
-
-      padding: 10px 16px;
-
-      font-size: 14px;
-
-      letter-spacing: 1px;
-
-      cursor: pointer;
-
-    }
-
-  </style>
-
-</head>
-
-
-
-<body>
-
-
-<div id="app"></div>
-
+<!-- ======================================================
+     NORMAL HTML BUTTON
+     ====================================================== -->
 
 <button
-  id="exitFace"
-  onclick="window.location.href = window.location.pathname;"
+  id="hookButton"
+  type="button"
 >
-  ← TARGET MODE
+  THE HOOK
+
+  <small>
+    TAP FOR FACE FILTER
+  </small>
+
 </button>
 
 
 
-
-<script>
-
-
-/* ============================================================
-   FACE FILTER MODE
-   ============================================================ */
-
-if (FACE_MODE) {
-
-
-  document.getElementById(
-    "exitFace"
-  ).style.display = "block";
-
-
-
-  document.getElementById(
-    "app"
-  ).innerHTML = `
-
-
-  <a-scene
-
-    mindar-face="autoStart: true"
-
-    embedded
-
-    vr-mode-ui="enabled: false"
-
-    device-orientation-permission-ui="enabled: false"
-
-    renderer="
-      colorManagement: true;
-      physicallyCorrectLights: true;
-      alpha: true;
-    "
-
-  >
-
-
-    <!-- ==================================================
-         FACE FILTER ASSETS
-         ================================================== -->
-
-    <a-assets>
-
-
-      <img
-        id="earsImage"
-        src="./catears.png"
-        crossorigin="anonymous"
-      >
-
-
-      <img
-        id="beardImage"
-        src="./beard.png"
-        crossorigin="anonymous"
-      >
-
-
-      <img
-        id="pipeImage"
-        src="./pipe.png"
-        crossorigin="anonymous"
-      >
-
-
-    </a-assets>
-
-
-
-
-    <!-- ==================================================
-         CAMERA
-         ================================================== -->
-
-    <a-camera
-
-      active="false"
-
-      position="0 0 0"
-
-      look-controls="enabled: false"
-
-    >
-    </a-camera>
-
-
-
-
-    <!-- ==================================================
-         CAT EARS
-
-         Adjust position:
-         X = left/right
-         Y = up/down
-         Z = forward/back
-         ================================================== -->
-
-    <a-entity
-
-      mindar-face-target="anchorIndex: 10"
-
-    >
-
-
-      <a-image
-
-        src="#earsImage"
-
-        position="0 0.48 0.02"
-
-        width="1.60"
-
-        height="0.82"
-
-        material="
-          shader: flat;
-          transparent: true;
-          alphaTest: 0.01;
-          side: double;
-          depthWrite: false;
-        "
-
-      >
-      </a-image>
-
-
-    </a-entity>
-
-
-
-
-    <!-- ==================================================
-         BEARD
-         ================================================== -->
-
-    <a-entity
-
-      mindar-face-target="anchorIndex: 152"
-
-    >
-
-
-      <a-image
-
-        src="#beardImage"
-
-        position="0 -0.03 0.04"
-
-        width="1.38"
-
-        height="1.10"
-
-        material="
-          shader: flat;
-          transparent: true;
-          alphaTest: 0.01;
-          side: double;
-          depthWrite: false;
-        "
-
-      >
-      </a-image>
-
-
-    </a-entity>
-
-
-
-
-    <!-- ==================================================
-         PIPE
-
-         Mouth-side anchor
-         ================================================== -->
-
-    <a-entity
-
-      mindar-face-target="anchorIndex: 61"
-
-    >
-
-
-      <a-image
-
-        src="#pipeImage"
-
-        position="0.33 -0.05 0.08"
-
-        width="0.78"
-
-        height="0.40"
-
-        rotation="0 0 -8"
-
-        material="
-          shader: flat;
-          transparent: true;
-          alphaTest: 0.01;
-          side: double;
-          depthWrite: false;
-        "
-
-      >
-      </a-image>
-
-
-    </a-entity>
-
-
-
-  </a-scene>
-
-  `;
-
-
-}
-
-
-
-/* ============================================================
-   IMAGE TARGET MODE
-   ============================================================ */
-
-else {
-
-
-/* ==========================================================
-   TARGET 0
-
-   MUSIC NOTE EMITTER
-   ========================================================== */
-
-
-AFRAME.registerComponent(
-  "music-emitter",
-  {
-
-
-    init: function () {
-
-
-      const target =
-        this.el;
-
-
-      let noteTimer =
-        null;
-
-
-      let running =
-        false;
-
-
-
-      /* =========================================
-         AMP LOCATION
-         ========================================= */
-
-
-      const ampX =
-        -0.15;
-
-
-      const ampY =
-        -0.30;
-
-
-
-      /* =========================================
-         MUSIC NOTES
-         ========================================= */
-
-
-      const notes = [
-
-
-        `
-
-        <svg
-
-          xmlns="http://www.w3.org/2000/svg"
-
-          width="100"
-
-          height="100"
-
-          viewBox="0 0 100 100"
-
-        >
-
-          <text
-
-            x="50"
-
-            y="74"
-
-            text-anchor="middle"
-
-            font-size="78"
-
-            font-family="Arial, sans-serif"
-
-            fill="#2b2b2b"
-
-          >♪</text>
-
-        </svg>
-
-        `,
-
-
-        `
-
-        <svg
-
-          xmlns="http://www.w3.org/2000/svg"
-
-          width="100"
-
-          height="100"
-
-          viewBox="0 0 100 100"
-
-        >
-
-          <text
-
-            x="50"
-
-            y="74"
-
-            text-anchor="middle"
-
-            font-size="74"
-
-            font-family="Arial, sans-serif"
-
-            fill="#2b2b2b"
-
-          >♫</text>
-
-        </svg>
-
-        `,
-
-
-        `
-
-        <svg
-
-          xmlns="http://www.w3.org/2000/svg"
-
-          width="100"
-
-          height="100"
-
-          viewBox="0 0 100 100"
-
-        >
-
-          <text
-
-            x="50"
-
-            y="74"
-
-            text-anchor="middle"
-
-            font-size="78"
-
-            font-family="Arial, sans-serif"
-
-            fill="#2b2b2b"
-
-          >♩</text>
-
-        </svg>
-
-        `
-
-      ];
-
-
-
-
-      function svgToDataURL(
-        svg
-      ) {
-
-
-        return (
-
-          "data:image/svg+xml;charset=utf-8," +
-
-          encodeURIComponent(
-            svg
-          )
-
-        );
-
-      }
-
-
-
-
-      /* =========================================
-         CREATE ONE MUSIC NOTE
-         ========================================= */
-
-
-      function createNote() {
-
-
-        if (!running) return;
-
-
-        const note =
-          document.createElement(
-            "a-plane"
-          );
-
-
-        const svg =
-
-          notes[
-
-            Math.floor(
-
-              Math.random() *
-
-              notes.length
-
-            )
-
-          ];
-
-
-
-        const startX =
-
-          ampX +
-
-          (Math.random() - 0.5) *
-
-          0.025;
-
-
-
-        const startY =
-
-          ampY +
-
-          (Math.random() - 0.5) *
-
-          0.020;
-
-
-
-        const driftX =
-
-          (Math.random() - 0.5) *
-
-          0.45;
-
-
-
-        const rise =
-
-          0.32 +
-
-          Math.random() *
-
-          0.42;
-
-
-
-        const endX =
-
-          startX +
-
-          driftX;
-
-
-
-        const endY =
-
-          startY +
-
-          rise;
-
-
-
-        const duration =
-
-          1800 +
-
-          Math.random() *
-
-          1300;
-
-
-
-        const finalScale =
-
-          1.0 +
-
-          Math.random() *
-
-          0.8;
-
-
-
-        const rotateAmount =
-
-          18 +
-
-          Math.random() *
-
-          30;
-
-
-
-        note.setAttribute(
-
-          "src",
-
-          svgToDataURL(svg)
-
-        );
-
-
-
-        note.setAttribute(
-
-          "material",
-
-          `
-
-            shader: flat;
-
-            transparent: true;
-
-            opacity: 1;
-
-            side: double;
-
-            alphaTest: 0.01;
-
-            depthWrite: false;
-
-          `
-
-        );
-
-
-
-        note.setAttribute(
-
-          "width",
-
-          "0.28"
-
-        );
-
-
-        note.setAttribute(
-
-          "height",
-
-          "0.28"
-
-        );
-
-
-
-        note.setAttribute(
-
-          "position",
-
-          `${startX} ${startY} 0.08`
-
-        );
-
-
-
-        note.setAttribute(
-
-          "scale",
-
-          "0.35 0.35 0.35"
-
-        );
-
-
-
-        note.setAttribute(
-
-          "animation__move",
-
-          `
-
-            property: position;
-
-            from:
-              ${startX}
-              ${startY}
-              0.08;
-
-            to:
-              ${endX}
-              ${endY}
-              0.08;
-
-            dur:
-              ${duration};
-
-            easing:
-              easeOutSine;
-
-          `
-
-        );
-
-
-
-        note.setAttribute(
-
-          "animation__grow",
-
-          `
-
-            property: scale;
-
-            from:
-              0.35 0.35 0.35;
-
-            to:
-              ${finalScale}
-              ${finalScale}
-              ${finalScale};
-
-            dur:
-              ${duration};
-
-            easing:
-              easeOutQuad;
-
-          `
-
-        );
-
-
-
-        note.setAttribute(
-
-          "animation__dance",
-
-          `
-
-            property: rotation;
-
-            from:
-              0 0 -${rotateAmount};
-
-            to:
-              0 0 ${rotateAmount};
-
-            dur:
-              ${320 + Math.random() * 280};
-
-            dir:
-              alternate;
-
-            loop:
-              true;
-
-            easing:
-              easeInOutSine;
-
-          `
-
-        );
-
-
-
-        note.setAttribute(
-
-          "animation__fade",
-
-          `
-
-            property:
-              material.opacity;
-
-            from:
-              1;
-
-            to:
-              0;
-
-            delay:
-              ${duration * 0.65};
-
-            dur:
-              ${duration * 0.35};
-
-            easing:
-              easeInQuad;
-
-          `
-
-        );
-
-
-
-        target.appendChild(
-          note
-        );
-
-
-
-        setTimeout(
-
-          function () {
-
-
-            if (
-              note.parentNode
-            ) {
-
-
-              note.parentNode
-                .removeChild(
-                  note
-                );
-
-
-            }
-
-
-          },
-
-          duration + 200
-
-        );
-
-      }
-
-
-
-
-      target.addEventListener(
-
-        "targetFound",
-
-        function () {
-
-
-          running =
-            true;
-
-
-          if (!noteTimer) {
-
-
-            createNote();
-
-
-            noteTimer =
-
-              setInterval(
-
-                createNote,
-
-                350
-
-              );
-
-
-          }
-
-
-        }
-
-      );
-
-
-
-
-      target.addEventListener(
-
-        "targetLost",
-
-        function () {
-
-
-          running =
-            false;
-
-
-          if (noteTimer) {
-
-
-            clearInterval(
-              noteTimer
-            );
-
-
-            noteTimer =
-              null;
-
-
-          }
-
-
-        }
-
-      );
-
-
-    }
-
-
-  }
-
-);
-
-
-
-
-
-/* ==========================================================
-   TARGET 1
-
-   BAND NAMES + THE HOOK FINALE
-   ========================================================== */
-
-
-AFRAME.registerComponent(
-  "spray-names",
-  {
-
-
-    init: function () {
-
-
-      const target =
-        this.el;
-
-
-      let running =
-        false;
-
-
-      let timers =
-        [];
-
-
-
-
-      /* =====================================================
-         BAND FORMATION
-         ===================================================== */
-
-
-      const names = [
-
-
-        /* GAZ */
-
-        {
-
-          image:
-            "#gazImage",
-
-          x:
-            -0.58,
-
-          y:
-            -0.30,
-
-          rotation:
-            -4,
-
-          width:
-            1.24,
-
-          height:
-            0.50,
-
-          color:
-            "#39ff14"
-
-        },
-
-
-
-        /* MICHAEL */
-
-        {
-
-          image:
-            "#michaelImage",
-
-          x:
-            -0.20,
-
-          y:
-            0.38,
-
-          rotation:
-            -2,
-
-          width:
-            1.68,
-
-          height:
-            0.50,
-
-          color:
-            "#bf00ff"
-
-        },
-
-
-
-        /* RYAN */
-
-        {
-
-          image:
-            "#ryanImage",
-
-          x:
-            0.58,
-
-          y:
-            0.16,
-
-          rotation:
-            4,
-
-          width:
-            1.30,
-
-          height:
-            0.50,
-
-          color:
-            "#ff1493"
-
-        },
-
-
-
-        /* NICK */
-
-        {
-
-          image:
-            "#nickImage",
-
-          x:
-            0,
-
-          y:
-            -0.38,
-
-          rotation:
-            0,
-
-          width:
-            1.32,
-
-          height:
-            0.50,
-
-          color:
-            "#ffd700"
-
-        },
-
-
-
-        /* SEAN */
-
-        {
-
-          image:
-            "#seanImage",
-
-          x:
-            0.58,
-
-          y:
-            -0.30,
-
-          rotation:
-            4,
-
-          width:
-            1.32,
-
-          height:
-            0.50,
-
-          color:
-            "#ff5a00"
-
-        }
-
-      ];
-
-
-
-
-      /* =====================================================
-         SPRAY MIST
-         ===================================================== */
-
-
-      function createSprayMist(
-        x,
-        y,
-        color
-      ) {
-
-
-        for (
-          let i = 0;
-          i < 18;
-          i++
-        ) {
-
-
-          const dot =
-
-            document.createElement(
-              "a-circle"
-            );
-
-
-
-          const offsetX =
-
-            (Math.random() - 0.5) *
-
-            0.42;
-
-
-
-          const offsetY =
-
-            (Math.random() - 0.5) *
-
-            0.15;
-
-
-
-          const dotSize =
-
-            0.004 +
-
-            Math.random() *
-
-            0.012;
-
-
-
-          dot.classList.add(
-            "spray-effect"
-          );
-
-
-
-          dot.setAttribute(
-            "radius",
-            dotSize
-          );
-
-
-          dot.setAttribute(
-            "color",
-            color
-          );
-
-
-
-          dot.setAttribute(
-
-            "position",
-
-            `${x + offsetX}
-             ${y + offsetY}
-             0.10`
-
-          );
-
-
-
-          dot.setAttribute(
-
-            "material",
-
-            `
-
-              shader: flat;
-
-              transparent: true;
-
-              opacity: 0.85;
-
-              side: double;
-
-              depthWrite: false;
-
-            `
-
-          );
-
-
-
-          dot.setAttribute(
-
-            "scale",
-
-            "0 0 0"
-
-          );
-
-
-
-          dot.setAttribute(
-
-            "animation__appear",
-
-            `
-
-              property:
-                scale;
-
-              from:
-                0 0 0;
-
-              to:
-                1 1 1;
-
-              dur:
-                ${100 + Math.random() * 220};
-
-              easing:
-                easeOutQuad;
-
-            `
-
-          );
-
-
-
-          dot.setAttribute(
-
-            "animation__fade",
-
-            `
-
-              property:
-                material.opacity;
-
-              from:
-                0.85;
-
-              to:
-                0;
-
-              delay:
-                250;
-
-              dur:
-                650;
-
-              easing:
-                easeOutQuad;
-
-            `
-
-          );
-
-
-
-          target.appendChild(
-            dot
-          );
-
-
-
-          setTimeout(
-
-            function () {
-
-
-              if (
-                dot.parentNode
-              ) {
-
-
-                dot.parentNode
-                  .removeChild(
-                    dot
-                  );
-
-
-              }
-
-
-            },
-
-            1000
-
-          );
-
-
-        }
-
-
-      }
-
-
-
-
-      /* =====================================================
-         CREATE NAME
-         ===================================================== */
-
-
-      function createName(
-        info,
-        index
-      ) {
-
-
-        if (!running)
-          return;
-
-
-
-        createSprayMist(
-          info.x,
-          info.y,
-          info.color
-        );
-
-
-
-        const name =
-
-          document.createElement(
-            "a-image"
-          );
-
-
-
-        name.classList.add(
-          "spray-name"
-        );
-
-
-
-        name.setAttribute(
-          "src",
-          info.image
-        );
-
-
-
-        name.setAttribute(
-
-          "position",
-
-          `${info.x}
-           ${info.y}
-           ${0.15 + index * 0.01}`
-
-        );
-
-
-
-        name.setAttribute(
-
-          "rotation",
-
-          `0 0 ${info.rotation}`
-
-        );
-
-
-
-        name.setAttribute(
-          "width",
-          info.width
-        );
-
-
-        name.setAttribute(
-          "height",
-          info.height
-        );
-
-
-
-        name.setAttribute(
-
-          "material",
-
-          `
-
-            shader: flat;
-
-            transparent: true;
-
-            opacity: 1;
-
-            alphaTest: 0.05;
-
-            side: double;
-
-            depthWrite: false;
-
-          `
-
-        );
-
-
-
-        name.setAttribute(
-
-          "scale",
-
-          "0.05 0.05 0.05"
-
-        );
-
-
-
-        name.setAttribute(
-
-          "animation__grow",
-
-          `
-
-            property:
-              scale;
-
-            from:
-              0.05 0.05 0.05;
-
-            to:
-              1 1 1;
-
-            dur:
-              450;
-
-            easing:
-              easeOutBack;
-
-          `
-
-        );
-
-
-
-        name.setAttribute(
-
-          "animation__shrink",
-
-          `
-
-            property:
-              scale;
-
-            from:
-              1 1 1;
-
-            to:
-              0.52 0.52 0.52;
-
-            delay:
-              850;
-
-            dur:
-              500;
-
-            easing:
-              easeInOutQuad;
-
-          `
-
-        );
-
-
-
-        target.appendChild(
-          name
-        );
-
-
-      }
-
-
-
-
-      /* =====================================================
-         THE HOOK FINALE
-
-         Appears after all 5 names.
-
-         Tap it to open the FACE FILTER.
-         ===================================================== */
-
-
-      function createHookFinale() {
-
-
-        if (!running)
-          return;
-
-
-
-        const finale =
-
-          document.createElement(
-            "a-entity"
-          );
-
-
-        finale.classList.add(
-          "hook-finale"
-        );
-
-
-
-        /* BLACK BACKGROUND */
-
-
-        const blackPanel =
-
-          document.createElement(
-            "a-plane"
-          );
-
-
-        blackPanel.setAttribute(
-
-          "position",
-
-          "0 0 0.40"
-
-        );
-
-
-        blackPanel.setAttribute(
-
-          "width",
-
-          "1.70"
-
-        );
-
-
-        blackPanel.setAttribute(
-
-          "height",
-
-          "0.82"
-
-        );
-
-
-        blackPanel.setAttribute(
-
-          "material",
-
-          `
-
-            shader: flat;
-
-            color: #000000;
-
-            transparent: true;
-
-            opacity: 0.94;
-
-            side: double;
-
-            depthWrite: false;
-
-          `
-
-        );
-
-
-        blackPanel.setAttribute(
-
-          "scale",
-
-          "0 0 0"
-
-        );
-
-
-        blackPanel.setAttribute(
-
-          "animation__open",
-
-          `
-
-            property:
-              scale;
-
-            from:
-              0 0 0;
-
-            to:
-              1 1 1;
-
-            dur:
-              650;
-
-            easing:
-              easeOutBack;
-
-          `
-
-        );
-
-
-
-        finale.appendChild(
-          blackPanel
-        );
-
-
-
-
-        /* COOL WHITE THE HOOK */
-
-
-        const hookText =
-
-          document.createElement(
-            "a-text"
-          );
-
-
-        hookText.setAttribute(
-
-          "value",
-
-          "THE HOOK"
-
-        );
-
-
-        hookText.setAttribute(
-
-          "align",
-
-          "center"
-
-        );
-
-
-        hookText.setAttribute(
-
-          "anchor",
-
-          "center"
-
-        );
-
-
-        hookText.setAttribute(
-
-          "baseline",
-
-          "center"
-
-        );
-
-
-        hookText.setAttribute(
-
-          "position",
-
-          "0 0 0.44"
-
-        );
-
-
-        hookText.setAttribute(
-
-          "width",
-
-          "2.8"
-
-        );
-
-
-        hookText.setAttribute(
-
-          "color",
-
-          "#f4f8ff"
-
-        );
-
-
-        hookText.setAttribute(
-
-          "letter-spacing",
-
-          "5"
-
-        );
-
-
-        hookText.setAttribute(
-
-          "scale",
-
-          "0.15 0.15 0.15"
-
-        );
-
-
-        hookText.setAttribute(
-
-          "animation__appear",
-
-          `
-
-            property:
-              scale;
-
-            from:
-              0.15 0.15 0.15;
-
-            to:
-              1 1 1;
-
-            dur:
-              700;
-
-            easing:
-              easeOutBack;
-
-          `
-
-        );
-
-
-        hookText.setAttribute(
-
-          "animation__glow",
-
-          `
-
-            property:
-              opacity;
-
-            from:
-              0.65;
-
-            to:
-              1;
-
-            dur:
-              800;
-
-            dir:
-              alternate;
-
-            loop:
-              true;
-
-            easing:
-              easeInOutSine;
-
-          `
-
-        );
-
-
-
-        finale.appendChild(
-          hookText
-        );
-
-
-
-
-        /* SMALL INSTRUCTION */
-
-
-        const instruction =
-
-          document.createElement(
-            "a-text"
-          );
-
-
-        instruction.setAttribute(
-
-          "value",
-
-          "TAP FOR FACE FILTER"
-
-        );
-
-
-        instruction.setAttribute(
-
-          "align",
-
-          "center"
-
-        );
-
-
-        instruction.setAttribute(
-
-          "anchor",
-
-          "center"
-
-        );
-
-
-        instruction.setAttribute(
-
-          "position",
-
-          "0 -0.25 0.45"
-
-        );
-
-
-        instruction.setAttribute(
-
-          "width",
-
-          "1.45"
-
-        );
-
-
-        instruction.setAttribute(
-
-          "color",
-
-          "#cfd8e6"
-
-        );
-
-
-        finale.appendChild(
-          instruction
-        );
-
-
-
-
-        /* INVISIBLE CLICK AREA */
-
-
-        const clickArea =
-
-          document.createElement(
-            "a-plane"
-          );
-
-
-        clickArea.classList.add(
-          "clickable"
-        );
-
-
-        clickArea.setAttribute(
-
-          "position",
-
-          "0 0 0.48"
-
-        );
-
-
-        clickArea.setAttribute(
-
-          "width",
-
-          "1.70"
-
-        );
-
-
-        clickArea.setAttribute(
-
-          "height",
-
-          "0.82"
-
-        );
-
-
-        clickArea.setAttribute(
-
-          "material",
-
-          `
-
-            transparent: true;
-
-            opacity: 0;
-
-            depthWrite: false;
-
-          `
-
-        );
-
-
-        clickArea.addEventListener(
-
-          "click",
-
-          function () {
-
-
-            window.location.href =
-
-              window.location.pathname +
-
-              "?face=1";
-
-
-          }
-
-        );
-
-
-
-        finale.appendChild(
-          clickArea
-        );
-
-
-
-        target.appendChild(
-          finale
-        );
-
-
-      }
-
-
-
-
-      /* =====================================================
-         CLEAR OLD EFFECTS
-         ===================================================== */
-
-
-      function clearEffects() {
-
-
-        const effects =
-
-          target.querySelectorAll(
-
-            ".spray-name, .spray-effect, .hook-finale"
-
-          );
-
-
-        effects.forEach(
-
-          function (
-            item
-          ) {
-
-
-            if (
-              item.parentNode
-            ) {
-
-
-              item.parentNode
-                .removeChild(
-                  item
-                );
-
-
-            }
-
-
-          }
-
-        );
-
-
-      }
-
-
-
-
-      /* =====================================================
-         TARGET FOUND
-
-         MICHAEL
-         RYAN
-         GAZ
-         NICK
-         SEAN
-         THE HOOK
-         ===================================================== */
-
-
-      target.addEventListener(
-
-        "targetFound",
-
-        function () {
-
-
-          running =
-            true;
-
-
-          clearEffects();
-
-
-          timers.forEach(
-            clearTimeout
-          );
-
-
-          timers = [];
-
-
-
-          /* MICHAEL */
-
-
-          timers.push(
-
-            setTimeout(
-
-              function () {
-
-
-                createName(
-                  names[1],
-                  1
-                );
-
-
-              },
-
-              200
-
-            )
-
-          );
-
-
-
-          /* RYAN */
-
-
-          timers.push(
-
-            setTimeout(
-
-              function () {
-
-
-                createName(
-                  names[2],
-                  2
-                );
-
-
-              },
-
-              1600
-
-            )
-
-          );
-
-
-
-          /* GAZ */
-
-
-          timers.push(
-
-            setTimeout(
-
-              function () {
-
-
-                createName(
-                  names[0],
-                  0
-                );
-
-
-              },
-
-              3000
-
-            )
-
-          );
-
-
-
-          /* NICK */
-
-
-          timers.push(
-
-            setTimeout(
-
-              function () {
-
-
-                createName(
-                  names[3],
-                  3
-                );
-
-
-              },
-
-              4400
-
-            )
-
-          );
-
-
-
-          /* SEAN */
-
-
-          timers.push(
-
-            setTimeout(
-
-              function () {
-
-
-                createName(
-                  names[4],
-                  4
-                );
-
-
-              },
-
-              5800
-
-            )
-
-          );
-
-
-
-          /* =====================================
-             THE HOOK
-
-             Sean appears at 5800 ms.
-
-             His pop/shrink animation finishes
-             around 7150 ms.
-
-             THE HOOK starts at 7500 ms.
-             ===================================== */
-
-
-          timers.push(
-
-            setTimeout(
-
-              function () {
-
-
-                createHookFinale();
-
-
-              },
-
-              7500
-
-            )
-
-          );
-
-
-        }
-
-      );
-
-
-
-
-      /* =====================================================
-         TARGET LOST
-         ===================================================== */
-
-
-      target.addEventListener(
-
-        "targetLost",
-
-        function () {
-
-
-          running =
-            false;
-
-
-          timers.forEach(
-            clearTimeout
-          );
-
-
-          timers = [];
-
-
-          clearEffects();
-
-
-        }
-
-      );
-
-
-    }
-
-
-  }
-
-);
-
-
-
-
-
-/* ============================================================
-   BUILD IMAGE TRACKING SCENE
-   ============================================================ */
-
-
-document.getElementById(
-  "app"
-).innerHTML = `
-
-
 <a-scene
 
   mindar-image="
@@ -3518,12 +1188,6 @@ document.getElementById(
     colorManagement: true;
     physicallyCorrectLights: true;
     alpha: true;
-  "
-
-  cursor="rayOrigin: mouse"
-
-  raycaster="
-    objects: .clickable
   "
 
 >
@@ -3533,24 +1197,13 @@ document.getElementById(
        ASSETS
        ====================================================== -->
 
-
   <a-assets>
 
 
-    <!-- BLACK HEART -->
-
-
     <img
-
       id="blackHeart"
-
       src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%232b2b2b' d='M50 87 C44 80 14 60 14 35 C14 19 34 12 50 29 C66 12 86 19 86 35 C86 60 56 80 50 87 Z'/%3E%3C/svg%3E"
-
     >
-
-
-
-    <!-- BAND NAME PNGS -->
 
 
     <img
@@ -3589,7 +1242,6 @@ document.getElementById(
 
 
   </a-assets>
-
 
 
 
@@ -3597,43 +1249,22 @@ document.getElementById(
        CAMERA
        ====================================================== -->
 
-
   <a-camera
-
     position="0 0 0"
-
     look-controls="enabled: false"
-
-    cursor="
-      rayOrigin: mouse;
-      fuse: false;
-    "
-
-    raycaster="
-      objects: .clickable
-    "
-
   >
   </a-camera>
-
 
 
 
   <!-- ======================================================
        TARGET 0
-
-       MUSIC NOTES + HEART
        ====================================================== -->
 
-
   <a-entity
-
     id="hookedTarget"
-
     mindar-image-target="targetIndex: 0"
-
     music-emitter
-
   >
 
 
@@ -3682,3236 +1313,19 @@ document.getElementById(
 
 
   </a-entity>
-
 
 
 
   <!-- ======================================================
        TARGET 1
-
-       BAND NAMES + THE HOOK
        ====================================================== -->
 
-
   <a-entity
-
     id="hookCatTarget"
-
     mindar-image-target="targetIndex: 1"
-
     spray-names
-
   >
   </a-entity>
-
-
-</a-scene>
-
-`;
-
-
-}
-
-</script>
-
-
-</body>
-
-</html>        const notes = [
-
-          `
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="100"
-            height="100"
-            viewBox="0 0 100 100"
-          >
-            <text
-              x="50"
-              y="74"
-              text-anchor="middle"
-              font-size="78"
-              font-family="Arial, sans-serif"
-              fill="#2b2b2b"
-            >♪</text>
-          </svg>
-          `,
-
-          `
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="100"
-            height="100"
-            viewBox="0 0 100 100"
-          >
-            <text
-              x="50"
-              y="74"
-              text-anchor="middle"
-              font-size="74"
-              font-family="Arial, sans-serif"
-              fill="#2b2b2b"
-            >♫</text>
-          </svg>
-          `,
-
-          `
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="100"
-            height="100"
-            viewBox="0 0 100 100"
-          >
-            <text
-              x="50"
-              y="74"
-              text-anchor="middle"
-              font-size="78"
-              font-family="Arial, sans-serif"
-              fill="#2b2b2b"
-            >♩</text>
-          </svg>
-          `
-
-        ];
-
-
-        function svgToDataURL(svg) {
-
-          return (
-            "data:image/svg+xml;charset=utf-8," +
-            encodeURIComponent(svg)
-          );
-
-        }
-
-
-        /* =========================================
-           CREATE ONE MUSIC NOTE
-           ========================================= */
-
-        function createNote() {
-
-          if (!running) return;
-
-
-          const note =
-            document.createElement("a-plane");
-
-
-          const svg =
-            notes[
-              Math.floor(
-                Math.random() * notes.length
-              )
-            ];
-
-
-          const startX =
-            ampX +
-            (Math.random() - 0.5) * 0.025;
-
-
-          const startY =
-            ampY +
-            (Math.random() - 0.5) * 0.020;
-
-
-          const driftX =
-            (Math.random() - 0.5) * 0.45;
-
-
-          const rise =
-            0.32 +
-            Math.random() * 0.42;
-
-
-          const endX =
-            startX + driftX;
-
-
-          const endY =
-            startY + rise;
-
-
-          const duration =
-            1800 +
-            Math.random() * 1300;
-
-
-          const finalScale =
-            1.0 +
-            Math.random() * 0.8;
-
-
-          const rotateAmount =
-            18 +
-            Math.random() * 30;
-
-
-          note.setAttribute(
-            "src",
-            svgToDataURL(svg)
-          );
-
-
-          note.setAttribute(
-            "material",
-            `
-              shader: flat;
-              transparent: true;
-              opacity: 1;
-              side: double;
-              alphaTest: 0.01;
-              depthWrite: false;
-            `
-          );
-
-
-          note.setAttribute(
-            "width",
-            "0.28"
-          );
-
-
-          note.setAttribute(
-            "height",
-            "0.28"
-          );
-
-
-          note.setAttribute(
-            "position",
-            `${startX} ${startY} 0.08`
-          );
-
-
-          note.setAttribute(
-            "scale",
-            "0.35 0.35 0.35"
-          );
-
-
-          note.setAttribute(
-            "animation__move",
-            `
-              property: position;
-              from: ${startX} ${startY} 0.08;
-              to: ${endX} ${endY} 0.08;
-              dur: ${duration};
-              easing: easeOutSine;
-            `
-          );
-
-
-          note.setAttribute(
-            "animation__grow",
-            `
-              property: scale;
-              from: 0.35 0.35 0.35;
-              to: ${finalScale} ${finalScale} ${finalScale};
-              dur: ${duration};
-              easing: easeOutQuad;
-            `
-          );
-
-
-          note.setAttribute(
-            "animation__dance",
-            `
-              property: rotation;
-              from: 0 0 -${rotateAmount};
-              to: 0 0 ${rotateAmount};
-              dur: ${320 + Math.random() * 280};
-              dir: alternate;
-              loop: true;
-              easing: easeInOutSine;
-            `
-          );
-
-
-          note.setAttribute(
-            "animation__fade",
-            `
-              property: material.opacity;
-              from: 1;
-              to: 0;
-              delay: ${duration * 0.65};
-              dur: ${duration * 0.35};
-              easing: easeInQuad;
-            `
-          );
-
-
-          target.appendChild(note);
-
-
-          setTimeout(
-
-            function () {
-
-              if (note.parentNode) {
-
-                note.parentNode.removeChild(note);
-
-              }
-
-            },
-
-            duration + 200
-
-          );
-
-        }
-
-
-        /* =========================================
-           TARGET 0 FOUND
-           ========================================= */
-
-        target.addEventListener(
-          "targetFound",
-
-          function () {
-
-            running = true;
-
-
-            if (!noteTimer) {
-
-              createNote();
-
-              noteTimer =
-                setInterval(
-                  createNote,
-                  350
-                );
-
-            }
-
-          }
-
-        );
-
-
-        /* =========================================
-           TARGET 0 LOST
-           ========================================= */
-
-        target.addEventListener(
-          "targetLost",
-
-          function () {
-
-            running = false;
-
-
-            if (noteTimer) {
-
-              clearInterval(noteTimer);
-
-              noteTimer = null;
-
-            }
-
-          }
-
-        );
-
-      }
-
-    });
-
-
-
-    /* ==========================================================
-       TARGET 1
-       BAND FORMATION NAMES
-       ========================================================== */
-
-
-    AFRAME.registerComponent("spray-names", {
-
-      init: function () {
-
-        const target = this.el;
-
-        let running = false;
-
-        let timers = [];
-
-
-        /* =====================================================
-           BAND FORMATION
-
-                    MICHAEL       RYAN
-
-              GAZ       NICK       SEAN
-
-           Large on arrival, then shrink smaller
-           ===================================================== */
-
-
-        const names = [
-
-          /* GAZ — FRONT LEFT */
-
-          {
-            image: "#gazImage",
-            x: -0.58,
-            y: -0.30,
-            rotation: -4,
-            width: 1.24,
-            height: 0.50,
-            color: "#39ff14"
-          },
-
-
-          /* MICHAEL — BACK / DRUMMER */
-
-          {
-            image: "#michaelImage",
-            x: -0.20,
-            y: 0.38,
-            rotation: -2,
-            width: 1.68,
-            height: 0.50,
-            color: "#bf00ff"
-          },
-
-
-          /* RYAN — BACK RIGHT */
-
-          {
-            image: "#ryanImage",
-            x: 0.58,
-            y: 0.16,
-            rotation: 4,
-            width: 1.30,
-            height: 0.50,
-            color: "#ff1493"
-          },
-
-
-          /* NICK — FRONT CENTRE */
-
-          {
-            image: "#nickImage",
-            x: 0.00,
-            y: -0.38,
-            rotation: 0,
-            width: 1.32,
-            height: 0.50,
-            color: "#ffd700"
-          },
-
-
-          /* SEAN — FRONT RIGHT */
-
-          {
-            image: "#seanImage",
-            x: 0.58,
-            y: -0.30,
-            rotation: 4,
-            width: 1.32,
-            height: 0.50,
-            color: "#ff5a00"
-          }
-
-        ];
-
-
-
-        /* =====================================================
-           CREATE MATCHING SPRAY MIST
-           ===================================================== */
-
-
-        function createSprayMist(
-          x,
-          y,
-          color
-        ) {
-
-          for (
-            let i = 0;
-            i < 18;
-            i++
-          ) {
-
-
-            const dot =
-              document.createElement(
-                "a-circle"
-              );
-
-
-            const offsetX =
-              (Math.random() - 0.5) *
-              0.42;
-
-
-            const offsetY =
-              (Math.random() - 0.5) *
-              0.15;
-
-
-            const dotSize =
-              0.004 +
-              Math.random() *
-              0.012;
-
-
-            dot.classList.add(
-              "spray-effect"
-            );
-
-
-            dot.setAttribute(
-              "radius",
-              dotSize
-            );
-
-
-            dot.setAttribute(
-              "color",
-              color
-            );
-
-
-            dot.setAttribute(
-              "position",
-              `
-                ${x + offsetX}
-                ${y + offsetY}
-                0.10
-              `
-            );
-
-
-            dot.setAttribute(
-              "material",
-              `
-                shader: flat;
-                transparent: true;
-                opacity: 0.85;
-                side: double;
-                depthWrite: false;
-              `
-            );
-
-
-            dot.setAttribute(
-              "scale",
-              "0 0 0"
-            );
-
-
-            dot.setAttribute(
-              "animation__appear",
-              `
-                property: scale;
-                from: 0 0 0;
-                to: 1 1 1;
-                dur: ${100 + Math.random() * 220};
-                easing: easeOutQuad;
-              `
-            );
-
-
-            dot.setAttribute(
-              "animation__fade",
-              `
-                property: material.opacity;
-                from: 0.85;
-                to: 0;
-                delay: 250;
-                dur: 650;
-                easing: easeOutQuad;
-              `
-            );
-
-
-            target.appendChild(dot);
-
-
-            setTimeout(
-
-              function () {
-
-                if (dot.parentNode) {
-
-                  dot.parentNode.removeChild(dot);
-
-                }
-
-              },
-
-              1000
-
-            );
-
-          }
-
-        }
-
-
-
-        /* =====================================================
-           CREATE ONE NAME
-           ===================================================== */
-
-
-        function createName(
-          info,
-          index
-        ) {
-
-
-          if (!running) return;
-
-
-          createSprayMist(
-            info.x,
-            info.y,
-            info.color
-          );
-
-
-          const name =
-            document.createElement(
-              "a-image"
-            );
-
-
-          name.classList.add(
-            "spray-name"
-          );
-
-
-          name.setAttribute(
-            "src",
-            info.image
-          );
-
-
-          name.setAttribute(
-            "position",
-            `
-              ${info.x}
-              ${info.y}
-              ${0.15 + index * 0.01}
-            `
-          );
-
-
-          name.setAttribute(
-            "rotation",
-            `
-              0 0 ${info.rotation}
-            `
-          );
-
-
-          name.setAttribute(
-            "width",
-            info.width
-          );
-
-
-          name.setAttribute(
-            "height",
-            info.height
-          );
-
-
-          name.setAttribute(
-            "material",
-            `
-              shader: flat;
-              transparent: true;
-              opacity: 1;
-              alphaTest: 0.05;
-              side: double;
-              depthWrite: false;
-            `
-          );
-
-
-          /* START VERY SMALL */
-
-          name.setAttribute(
-            "scale",
-            "0.05 0.05 0.05"
-          );
-
-
-          /* POP UP LARGE */
-
-          name.setAttribute(
-            "animation__grow",
-            `
-              property: scale;
-              from: 0.05 0.05 0.05;
-              to: 1 1 1;
-              dur: 450;
-              easing: easeOutBack;
-            `
-          );
-
-
-          /* SHRINK TO RESTING SIZE */
-
-          name.setAttribute(
-            "animation__shrink",
-            `
-              property: scale;
-              from: 1 1 1;
-              to: 0.52 0.52 0.52;
-              delay: 850;
-              dur: 500;
-              easing: easeInOutQuad;
-            `
-          );
-
-
-          target.appendChild(
-            name
-          );
-
-        }
-
-
-
-        /* =====================================================
-           CLEAR OLD EFFECTS
-           ===================================================== */
-
-
-        function clearEffects() {
-
-
-          const effects =
-            target.querySelectorAll(
-              ".spray-name, .spray-effect"
-            );
-
-
-          effects.forEach(
-
-            function (item) {
-
-              if (item.parentNode) {
-
-                item.parentNode
-                  .removeChild(item);
-
-              }
-
-            }
-
-          );
-
-        }
-
-
-
-        /* =====================================================
-           TARGET 1 FOUND
-
-           ONE AT A TIME:
-
-           MICHAEL
-           RYAN
-           GAZ
-           NICK
-           SEAN
-           ===================================================== */
-
-
-        target.addEventListener(
-          "targetFound",
-
-          function () {
-
-
-            running = true;
-
-
-            clearEffects();
-
-
-            timers.forEach(
-              clearTimeout
-            );
-
-
-            timers = [];
-
-
-            /* MICHAEL */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[1],
-                    1
-                  );
-
-                },
-
-                200
-
-              )
-
-            );
-
-
-            /* RYAN */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[2],
-                    2
-                  );
-
-                },
-
-                1600
-
-              )
-
-            );
-
-
-            /* GAZ */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[0],
-                    0
-                  );
-
-                },
-
-                3000
-
-              )
-
-            );
-
-
-            /* NICK */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[3],
-                    3
-                  );
-
-                },
-
-                4400
-
-              )
-
-            );
-
-
-            /* SEAN */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[4],
-                    4
-                  );
-
-                },
-
-                5800
-
-              )
-
-            );
-
-          }
-
-        );
-
-
-
-        /* =====================================================
-           TARGET 1 LOST
-           ===================================================== */
-
-
-        target.addEventListener(
-          "targetLost",
-
-          function () {
-
-
-            running = false;
-
-
-            timers.forEach(
-              clearTimeout
-            );
-
-
-            timers = [];
-
-
-            clearEffects();
-
-          }
-
-        );
-
-      }
-
-    });
-
-
-  </script>
-
-</head>
-
-
-
-<body>
-
-
-<a-scene
-
-  mindar-image="
-    imageTargetSrc: ./targets.mind;
-    autoStart: true;
-  "
-
-  embedded
-
-  vr-mode-ui="enabled: false"
-
-  device-orientation-permission-ui="enabled: false"
-
-  renderer="
-    colorManagement: true;
-    physicallyCorrectLights: true;
-    alpha: true;
-  "
-
->
-
-
-  <!-- ====================================================== -->
-  <!-- ASSETS -->
-  <!-- ====================================================== -->
-
-
-  <a-assets>
-
-
-    <!-- BLACK HEART -->
-
-    <img
-
-      id="blackHeart"
-
-      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%232b2b2b' d='M50 87 C44 80 14 60 14 35 C14 19 34 12 50 29 C66 12 86 19 86 35 C86 60 56 80 50 87 Z'/%3E%3C/svg%3E"
-
-    >
-
-
-    <!-- BAND NAME PNGS -->
-
-    <img
-      id="seanImage"
-      src="./sean.png"
-      crossorigin="anonymous"
-    >
-
-    <img
-      id="nickImage"
-      src="./nick.png"
-      crossorigin="anonymous"
-    >
-
-    <img
-      id="ryanImage"
-      src="./ryan.png"
-      crossorigin="anonymous"
-    >
-
-    <img
-      id="gazImage"
-      src="./gaz.png"
-      crossorigin="anonymous"
-    >
-
-    <img
-      id="michaelImage"
-      src="./michael.png"
-      crossorigin="anonymous"
-    >
-
-
-  </a-assets>
-
-
-
-  <!-- ====================================================== -->
-  <!-- CAMERA -->
-  <!-- ====================================================== -->
-
-
-  <a-camera
-
-    position="0 0 0"
-
-    look-controls="enabled: false"
-
-  >
-
-  </a-camera>
-
-
-
-  <!-- ====================================================== -->
-  <!-- TARGET 0 -->
-  <!-- MUSIC NOTES + HEART -->
-  <!-- ====================================================== -->
-
-
-  <a-entity
-
-    id="hookedTarget"
-
-    mindar-image-target="targetIndex: 0"
-
-    music-emitter
-
-  >
-
-
-    <a-image
-
-      src="#blackHeart"
-
-      position="0 0 -0.04"
-
-      width="1.35"
-
-      height="1.35"
-
-      material="
-        shader: flat;
-        transparent: true;
-        opacity: 0.78;
-        side: double;
-        depthWrite: false;
-      "
-
-      scale="1 1 1"
-
-      animation__pulse="
-        property: scale;
-        from: 0.90 0.90 0.90;
-        to: 1.14 1.14 1.14;
-        dur: 650;
-        dir: alternate;
-        loop: true;
-        easing: easeInOutQuad;
-      "
-
-      animation__fadepulse="
-        property: material.opacity;
-        from: 0.58;
-        to: 0.88;
-        dur: 650;
-        dir: alternate;
-        loop: true;
-        easing: easeInOutQuad;
-      "
-
-    >
-
-    </a-image>
-
-
-  </a-entity>
-
-
-
-  <!-- ====================================================== -->
-  <!-- TARGET 1 -->
-  <!-- BAND FORMATION -->
-  <!-- ====================================================== -->
-
-
-  <a-entity
-
-    id="hookCatTarget"
-
-    mindar-image-target="targetIndex: 1"
-
-    spray-names
-
-  >
-
-  </a-entity>
-
-
-
-</a-scene>
-
-
-</body>
-
-</html>        const notes = [
-
-          `
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="100"
-            height="100"
-            viewBox="0 0 100 100"
-          >
-            <text
-              x="50"
-              y="74"
-              text-anchor="middle"
-              font-size="78"
-              font-family="Arial, sans-serif"
-              fill="#2b2b2b"
-            >♪</text>
-          </svg>
-          `,
-
-          `
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="100"
-            height="100"
-            viewBox="0 0 100 100"
-          >
-            <text
-              x="50"
-              y="74"
-              text-anchor="middle"
-              font-size="74"
-              font-family="Arial, sans-serif"
-              fill="#2b2b2b"
-            >♫</text>
-          </svg>
-          `,
-
-          `
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="100"
-            height="100"
-            viewBox="0 0 100 100"
-          >
-            <text
-              x="50"
-              y="74"
-              text-anchor="middle"
-              font-size="78"
-              font-family="Arial, sans-serif"
-              fill="#2b2b2b"
-            >♩</text>
-          </svg>
-          `
-
-        ];
-
-
-        function svgToDataURL(svg) {
-
-          return (
-            "data:image/svg+xml;charset=utf-8," +
-            encodeURIComponent(svg)
-          );
-
-        }
-
-
-        /* =========================================
-           CREATE ONE MUSIC NOTE
-           ========================================= */
-
-        function createNote() {
-
-          if (!running) return;
-
-
-          const note =
-            document.createElement("a-plane");
-
-
-          const svg =
-            notes[
-              Math.floor(
-                Math.random() * notes.length
-              )
-            ];
-
-
-          const startX =
-            ampX +
-            (Math.random() - 0.5) * 0.025;
-
-
-          const startY =
-            ampY +
-            (Math.random() - 0.5) * 0.020;
-
-
-          const driftX =
-            (Math.random() - 0.5) * 0.45;
-
-
-          const rise =
-            0.32 +
-            Math.random() * 0.42;
-
-
-          const endX =
-            startX + driftX;
-
-
-          const endY =
-            startY + rise;
-
-
-          const duration =
-            1800 +
-            Math.random() * 1300;
-
-
-          const finalScale =
-            1.0 +
-            Math.random() * 0.8;
-
-
-          const rotateAmount =
-            18 +
-            Math.random() * 30;
-
-
-          note.setAttribute(
-            "src",
-            svgToDataURL(svg)
-          );
-
-
-          note.setAttribute(
-            "material",
-            `
-              shader: flat;
-              transparent: true;
-              opacity: 1;
-              side: double;
-              alphaTest: 0.01;
-              depthWrite: false;
-            `
-          );
-
-
-          note.setAttribute(
-            "width",
-            "0.28"
-          );
-
-
-          note.setAttribute(
-            "height",
-            "0.28"
-          );
-
-
-          note.setAttribute(
-            "position",
-            `${startX} ${startY} 0.08`
-          );
-
-
-          note.setAttribute(
-            "scale",
-            "0.35 0.35 0.35"
-          );
-
-
-          note.setAttribute(
-            "animation__move",
-            `
-              property: position;
-              from: ${startX} ${startY} 0.08;
-              to: ${endX} ${endY} 0.08;
-              dur: ${duration};
-              easing: easeOutSine;
-            `
-          );
-
-
-          note.setAttribute(
-            "animation__grow",
-            `
-              property: scale;
-              from: 0.35 0.35 0.35;
-              to: ${finalScale} ${finalScale} ${finalScale};
-              dur: ${duration};
-              easing: easeOutQuad;
-            `
-          );
-
-
-          note.setAttribute(
-            "animation__dance",
-            `
-              property: rotation;
-              from: 0 0 -${rotateAmount};
-              to: 0 0 ${rotateAmount};
-              dur: ${320 + Math.random() * 280};
-              dir: alternate;
-              loop: true;
-              easing: easeInOutSine;
-            `
-          );
-
-
-          note.setAttribute(
-            "animation__fade",
-            `
-              property: material.opacity;
-              from: 1;
-              to: 0;
-              delay: ${duration * 0.65};
-              dur: ${duration * 0.35};
-              easing: easeInQuad;
-            `
-          );
-
-
-          target.appendChild(note);
-
-
-          setTimeout(
-
-            function () {
-
-              if (note.parentNode) {
-
-                note.parentNode.removeChild(note);
-
-              }
-
-            },
-
-            duration + 200
-
-          );
-
-        }
-
-
-        /* =========================================
-           TARGET 0 FOUND
-           ========================================= */
-
-        target.addEventListener(
-          "targetFound",
-
-          function () {
-
-            running = true;
-
-
-            if (!noteTimer) {
-
-              createNote();
-
-              noteTimer =
-                setInterval(
-                  createNote,
-                  350
-                );
-
-            }
-
-          }
-
-        );
-
-
-        /* =========================================
-           TARGET 0 LOST
-           ========================================= */
-
-        target.addEventListener(
-          "targetLost",
-
-          function () {
-
-            running = false;
-
-
-            if (noteTimer) {
-
-              clearInterval(noteTimer);
-
-              noteTimer = null;
-
-            }
-
-          }
-
-        );
-
-      }
-
-    });
-
-
-
-    /* ==========================================================
-       TARGET 1
-       BAND FORMATION NAMES
-       ========================================================== */
-
-
-    AFRAME.registerComponent("spray-names", {
-
-      init: function () {
-
-        const target = this.el;
-
-        let running = false;
-
-        let timers = [];
-
-
-        /* =====================================================
-           BAND FORMATION
-
-                    MICHAEL       RYAN
-
-              GAZ       NICK       SEAN
-
-           Names are approximately 200% larger
-           ===================================================== */
-
-
-        const names = [
-
-          /* GAZ — FRONT LEFT */
-
-          {
-            image: "#gazImage",
-            x: -0.58,
-            y: -0.30,
-            rotation: -4,
-            width: 1.24,
-            height: 0.50,
-            color: "#39ff14"
-          },
-
-
-          /* MICHAEL — BACK / DRUMMER */
-
-          {
-            image: "#michaelImage",
-            x: -0.20,
-            y: 0.38,
-            rotation: -2,
-            width: 1.68,
-            height: 0.50,
-            color: "#bf00ff"
-          },
-
-
-          /* RYAN — BACK RIGHT */
-
-          {
-            image: "#ryanImage",
-            x: 0.58,
-            y: 0.16,
-            rotation: 4,
-            width: 1.30,
-            height: 0.50,
-            color: "#ff1493"
-          },
-
-
-          /* NICK — FRONT CENTRE */
-
-          {
-            image: "#nickImage",
-            x: 0.00,
-            y: -0.38,
-            rotation: 0,
-            width: 1.32,
-            height: 0.50,
-            color: "#ffd700"
-          },
-
-
-          /* SEAN — FRONT RIGHT */
-
-          {
-            image: "#seanImage",
-            x: 0.58,
-            y: -0.30,
-            rotation: 4,
-            width: 1.32,
-            height: 0.50,
-            color: "#ff5a00"
-          }
-
-        ];
-
-
-
-        /* =====================================================
-           CREATE MATCHING SPRAY MIST
-           ===================================================== */
-
-
-        function createSprayMist(
-          x,
-          y,
-          color
-        ) {
-
-          for (
-            let i = 0;
-            i < 18;
-            i++
-          ) {
-
-
-            const dot =
-              document.createElement(
-                "a-circle"
-              );
-
-
-            const offsetX =
-              (Math.random() - 0.5) *
-              0.42;
-
-
-            const offsetY =
-              (Math.random() - 0.5) *
-              0.15;
-
-
-            const dotSize =
-              0.004 +
-              Math.random() *
-              0.012;
-
-
-            dot.classList.add(
-              "spray-effect"
-            );
-
-
-            dot.setAttribute(
-              "radius",
-              dotSize
-            );
-
-
-            dot.setAttribute(
-              "color",
-              color
-            );
-
-
-            dot.setAttribute(
-              "position",
-              `
-                ${x + offsetX}
-                ${y + offsetY}
-                0.10
-              `
-            );
-
-
-            dot.setAttribute(
-              "material",
-              `
-                shader: flat;
-                transparent: true;
-                opacity: 0.85;
-                side: double;
-                depthWrite: false;
-              `
-            );
-
-
-            dot.setAttribute(
-              "scale",
-              "0 0 0"
-            );
-
-
-            dot.setAttribute(
-              "animation__appear",
-              `
-                property: scale;
-                from: 0 0 0;
-                to: 1 1 1;
-                dur: ${100 + Math.random() * 220};
-                easing: easeOutQuad;
-              `
-            );
-
-
-            dot.setAttribute(
-              "animation__fade",
-              `
-                property: material.opacity;
-                from: 0.85;
-                to: 0;
-                delay: 250;
-                dur: 650;
-                easing: easeOutQuad;
-              `
-            );
-
-
-            target.appendChild(dot);
-
-
-            setTimeout(
-
-              function () {
-
-                if (dot.parentNode) {
-
-                  dot.parentNode.removeChild(dot);
-
-                }
-
-              },
-
-              1000
-
-            );
-
-          }
-
-        }
-
-
-
-        /* =====================================================
-           CREATE ONE NAME
-           ===================================================== */
-
-
-        function createName(
-          info,
-          index
-        ) {
-
-
-          if (!running) return;
-
-
-          createSprayMist(
-            info.x,
-            info.y,
-            info.color
-          );
-
-
-          const name =
-            document.createElement(
-              "a-image"
-            );
-
-
-          name.classList.add(
-            "spray-name"
-          );
-
-
-          name.setAttribute(
-            "src",
-            info.image
-          );
-
-
-          name.setAttribute(
-            "position",
-            `
-              ${info.x}
-              ${info.y}
-              ${0.15 + index * 0.01}
-            `
-          );
-
-
-          name.setAttribute(
-            "rotation",
-            `
-              0 0 ${info.rotation}
-            `
-          );
-
-
-          name.setAttribute(
-            "width",
-            info.width
-          );
-
-
-          name.setAttribute(
-            "height",
-            info.height
-          );
-
-
-          name.setAttribute(
-            "material",
-            `
-              shader: flat;
-              transparent: true;
-              opacity: 1;
-              alphaTest: 0.05;
-              side: double;
-              depthWrite: false;
-            `
-          );
-
-
-          /* START VERY SMALL */
-
-          name.setAttribute(
-            "scale",
-            "0.05 0.05 0.05"
-          );
-
-
-          /* POP INTO PLACE */
-
-          name.setAttribute(
-            "animation__spray",
-            `
-              property: scale;
-              from: 0.05 0.05 0.05;
-              to: 1 1 1;
-              dur: 500;
-              easing: easeOutBack;
-            `
-          );
-
-
-          target.appendChild(
-            name
-          );
-
-        }
-
-
-
-        /* =====================================================
-           CLEAR OLD EFFECTS
-           ===================================================== */
-
-
-        function clearEffects() {
-
-
-          const effects =
-            target.querySelectorAll(
-              ".spray-name, .spray-effect"
-            );
-
-
-          effects.forEach(
-
-            function (item) {
-
-              if (item.parentNode) {
-
-                item.parentNode
-                  .removeChild(item);
-
-              }
-
-            }
-
-          );
-
-        }
-
-
-
-        /* =====================================================
-           TARGET 1 FOUND
-
-           ONE AT A TIME:
-
-           MICHAEL
-           RYAN
-           GAZ
-           NICK
-           SEAN
-           ===================================================== */
-
-
-        target.addEventListener(
-          "targetFound",
-
-          function () {
-
-
-            running = true;
-
-
-            clearEffects();
-
-
-            timers.forEach(
-              clearTimeout
-            );
-
-
-            timers = [];
-
-
-            /* MICHAEL */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[1],
-                    1
-                  );
-
-                },
-
-                200
-
-              )
-
-            );
-
-
-            /* RYAN */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[2],
-                    2
-                  );
-
-                },
-
-                850
-
-              )
-
-            );
-
-
-            /* GAZ */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[0],
-                    0
-                  );
-
-                },
-
-                1500
-
-              )
-
-            );
-
-
-            /* NICK */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[3],
-                    3
-                  );
-
-                },
-
-                2150
-
-              )
-
-            );
-
-
-            /* SEAN */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[4],
-                    4
-                  );
-
-                },
-
-                2800
-
-              )
-
-            );
-
-          }
-
-        );
-
-
-
-        /* =====================================================
-           TARGET 1 LOST
-           ===================================================== */
-
-
-        target.addEventListener(
-          "targetLost",
-
-          function () {
-
-
-            running = false;
-
-
-            timers.forEach(
-              clearTimeout
-            );
-
-
-            timers = [];
-
-
-            clearEffects();
-
-          }
-
-        );
-
-      }
-
-    });
-
-
-  </script>
-
-</head>
-
-
-
-<body>
-
-
-<a-scene
-
-  mindar-image="
-    imageTargetSrc: ./targets.mind;
-    autoStart: true;
-  "
-
-  embedded
-
-  vr-mode-ui="enabled: false"
-
-  device-orientation-permission-ui="enabled: false"
-
-  renderer="
-    colorManagement: true;
-    physicallyCorrectLights: true;
-    alpha: true;
-  "
-
->
-
-
-  <!-- ====================================================== -->
-  <!-- ASSETS -->
-  <!-- ====================================================== -->
-
-
-  <a-assets>
-
-
-    <!-- BLACK HEART -->
-
-    <img
-
-      id="blackHeart"
-
-      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%232b2b2b' d='M50 87 C44 80 14 60 14 35 C14 19 34 12 50 29 C66 12 86 19 86 35 C86 60 56 80 50 87 Z'/%3E%3C/svg%3E"
-
-    >
-
-
-    <!-- BAND NAME PNGS -->
-
-    <img
-      id="seanImage"
-      src="./sean.png"
-      crossorigin="anonymous"
-    >
-
-    <img
-      id="nickImage"
-      src="./nick.png"
-      crossorigin="anonymous"
-    >
-
-    <img
-      id="ryanImage"
-      src="./ryan.png"
-      crossorigin="anonymous"
-    >
-
-    <img
-      id="gazImage"
-      src="./gaz.png"
-      crossorigin="anonymous"
-    >
-
-    <img
-      id="michaelImage"
-      src="./michael.png"
-      crossorigin="anonymous"
-    >
-
-
-  </a-assets>
-
-
-
-  <!-- ====================================================== -->
-  <!-- CAMERA -->
-  <!-- ====================================================== -->
-
-
-  <a-camera
-
-    position="0 0 0"
-
-    look-controls="enabled: false"
-
-  >
-
-  </a-camera>
-
-
-
-  <!-- ====================================================== -->
-  <!-- TARGET 0 -->
-  <!-- MUSIC NOTES + HEART -->
-  <!-- ====================================================== -->
-
-
-  <a-entity
-
-    id="hookedTarget"
-
-    mindar-image-target="targetIndex: 0"
-
-    music-emitter
-
-  >
-
-
-    <a-image
-
-      src="#blackHeart"
-
-      position="0 0 -0.04"
-
-      width="1.35"
-
-      height="1.35"
-
-      material="
-        shader: flat;
-        transparent: true;
-        opacity: 0.78;
-        side: double;
-        depthWrite: false;
-      "
-
-      scale="1 1 1"
-
-      animation__pulse="
-        property: scale;
-        from: 0.90 0.90 0.90;
-        to: 1.14 1.14 1.14;
-        dur: 650;
-        dir: alternate;
-        loop: true;
-        easing: easeInOutQuad;
-      "
-
-      animation__fadepulse="
-        property: material.opacity;
-        from: 0.58;
-        to: 0.88;
-        dur: 650;
-        dir: alternate;
-        loop: true;
-        easing: easeInOutQuad;
-      "
-
-    >
-
-    </a-image>
-
-
-  </a-entity>
-
-
-
-  <!-- ====================================================== -->
-  <!-- TARGET 1 -->
-  <!-- BAND FORMATION -->
-  <!-- ====================================================== -->
-
-
-  <a-entity
-
-    id="hookCatTarget"
-
-    mindar-image-target="targetIndex: 1"
-
-    spray-names
-
-  >
-
-  </a-entity>
-
-
-
-</a-scene>
-
-
-</body>
-
-</html>        const notes = [
-
-          `
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="100"
-            height="100"
-            viewBox="0 0 100 100"
-          >
-            <text
-              x="50"
-              y="74"
-              text-anchor="middle"
-              font-size="78"
-              font-family="Arial, sans-serif"
-              fill="#2b2b2b"
-            >♪</text>
-          </svg>
-          `,
-
-          `
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="100"
-            height="100"
-            viewBox="0 0 100 100"
-          >
-            <text
-              x="50"
-              y="74"
-              text-anchor="middle"
-              font-size="74"
-              font-family="Arial, sans-serif"
-              fill="#2b2b2b"
-            >♫</text>
-          </svg>
-          `,
-
-          `
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="100"
-            height="100"
-            viewBox="0 0 100 100"
-          >
-            <text
-              x="50"
-              y="74"
-              text-anchor="middle"
-              font-size="78"
-              font-family="Arial, sans-serif"
-              fill="#2b2b2b"
-            >♩</text>
-          </svg>
-          `
-
-        ];
-
-
-        function svgToDataURL(svg) {
-
-          return (
-            "data:image/svg+xml;charset=utf-8," +
-            encodeURIComponent(svg)
-          );
-
-        }
-
-
-        /* =========================================
-           CREATE ONE MUSIC NOTE
-           ========================================= */
-
-        function createNote() {
-
-          if (!running) return;
-
-
-          const note =
-            document.createElement("a-plane");
-
-
-          const svg =
-            notes[
-              Math.floor(
-                Math.random() * notes.length
-              )
-            ];
-
-
-          const startX =
-            ampX +
-            (Math.random() - 0.5) * 0.025;
-
-
-          const startY =
-            ampY +
-            (Math.random() - 0.5) * 0.020;
-
-
-          const driftX =
-            (Math.random() - 0.5) * 0.45;
-
-
-          const rise =
-            0.32 +
-            Math.random() * 0.42;
-
-
-          const endX =
-            startX + driftX;
-
-
-          const endY =
-            startY + rise;
-
-
-          const duration =
-            1800 +
-            Math.random() * 1300;
-
-
-          const finalScale =
-            1.0 +
-            Math.random() * 0.8;
-
-
-          const rotateAmount =
-            18 +
-            Math.random() * 30;
-
-
-          note.setAttribute(
-            "src",
-            svgToDataURL(svg)
-          );
-
-
-          note.setAttribute(
-            "material",
-            `
-              shader: flat;
-              transparent: true;
-              opacity: 1;
-              side: double;
-              alphaTest: 0.01;
-              depthWrite: false;
-            `
-          );
-
-
-          note.setAttribute(
-            "width",
-            "0.28"
-          );
-
-
-          note.setAttribute(
-            "height",
-            "0.28"
-          );
-
-
-          note.setAttribute(
-            "position",
-            `${startX} ${startY} 0.08`
-          );
-
-
-          note.setAttribute(
-            "scale",
-            "0.35 0.35 0.35"
-          );
-
-
-          note.setAttribute(
-            "animation__move",
-            `
-              property: position;
-              from: ${startX} ${startY} 0.08;
-              to: ${endX} ${endY} 0.08;
-              dur: ${duration};
-              easing: easeOutSine;
-            `
-          );
-
-
-          note.setAttribute(
-            "animation__grow",
-            `
-              property: scale;
-              from: 0.35 0.35 0.35;
-              to: ${finalScale} ${finalScale} ${finalScale};
-              dur: ${duration};
-              easing: easeOutQuad;
-            `
-          );
-
-
-          note.setAttribute(
-            "animation__dance",
-            `
-              property: rotation;
-              from: 0 0 -${rotateAmount};
-              to: 0 0 ${rotateAmount};
-              dur: ${320 + Math.random() * 280};
-              dir: alternate;
-              loop: true;
-              easing: easeInOutSine;
-            `
-          );
-
-
-          note.setAttribute(
-            "animation__fade",
-            `
-              property: material.opacity;
-              from: 1;
-              to: 0;
-              delay: ${duration * 0.65};
-              dur: ${duration * 0.35};
-              easing: easeInQuad;
-            `
-          );
-
-
-          target.appendChild(note);
-
-
-          setTimeout(
-
-            function () {
-
-              if (note.parentNode) {
-
-                note.parentNode.removeChild(note);
-
-              }
-
-            },
-
-            duration + 200
-
-          );
-
-        }
-
-
-        /* =========================================
-           TARGET 0 FOUND
-           ========================================= */
-
-        target.addEventListener(
-          "targetFound",
-
-          function () {
-
-            running = true;
-
-
-            if (!noteTimer) {
-
-              createNote();
-
-              noteTimer =
-                setInterval(
-                  createNote,
-                  350
-                );
-
-            }
-
-          }
-
-        );
-
-
-        /* =========================================
-           TARGET 0 LOST
-           ========================================= */
-
-        target.addEventListener(
-          "targetLost",
-
-          function () {
-
-            running = false;
-
-
-            if (noteTimer) {
-
-              clearInterval(noteTimer);
-
-              noteTimer = null;
-
-            }
-
-          }
-
-        );
-
-      }
-
-    });
-
-
-
-    /* ==========================================================
-       TARGET 1
-       BAND FORMATION NAMES
-       ========================================================== */
-
-
-    AFRAME.registerComponent("spray-names", {
-
-      init: function () {
-
-        const target = this.el;
-
-        let running = false;
-
-        let timers = [];
-
-
-        /* =====================================================
-           BAND FORMATION
-
-                       MICHAEL
-                       drummer
-
-              GAZ                 RYAN
-
-                    NICK     SEAN
-
-           x = left / right
-           y = up / down
-           ===================================================== */
-
-
-        const names = [
-
-          /* GAZ — LEFT */
-
-          {
-            image: "#gazImage",
-            x: -0.58,
-            y: 0.03,
-            rotation: -7,
-            width: 0.62,
-            height: 0.25,
-            color: "#39ff14"
-          },
-
-
-          /* MICHAEL — BACK / DRUMMER */
-
-          {
-            image: "#michaelImage",
-            x: 0.00,
-            y: 0.43,
-            rotation: 0,
-            width: 0.84,
-            height: 0.25,
-            color: "#bf00ff"
-          },
-
-
-          /* RYAN — RIGHT BESIDE MICHAEL */
-
-          {
-            image: "#ryanImage",
-            x: 0.52,
-            y: 0.08,
-            rotation: 6,
-            width: 0.65,
-            height: 0.25,
-            color: "#ff1493"
-          },
-
-
-          /* NICK — FRONT */
-
-          {
-            image: "#nickImage",
-            x: -0.22,
-            y: -0.34,
-            rotation: -4,
-            width: 0.66,
-            height: 0.25,
-            color: "#ffd700"
-          },
-
-
-          /* SEAN — FRONT RIGHT */
-
-          {
-            image: "#seanImage",
-            x: 0.34,
-            y: -0.32,
-            rotation: 4,
-            width: 0.66,
-            height: 0.25,
-            color: "#ff5a00"
-          }
-
-        ];
-
-
-
-        /* =====================================================
-           CREATE MATCHING SPRAY MIST
-           ===================================================== */
-
-
-        function createSprayMist(
-          x,
-          y,
-          color
-        ) {
-
-          for (
-            let i = 0;
-            i < 18;
-            i++
-          ) {
-
-
-            const dot =
-              document.createElement(
-                "a-circle"
-              );
-
-
-            const offsetX =
-              (Math.random() - 0.5) *
-              0.32;
-
-
-            const offsetY =
-              (Math.random() - 0.5) *
-              0.11;
-
-
-            const dotSize =
-              0.003 +
-              Math.random() *
-              0.010;
-
-
-            dot.classList.add(
-              "spray-effect"
-            );
-
-
-            dot.setAttribute(
-              "radius",
-              dotSize
-            );
-
-
-            dot.setAttribute(
-              "color",
-              color
-            );
-
-
-            dot.setAttribute(
-              "position",
-              `
-                ${x + offsetX}
-                ${y + offsetY}
-                0.10
-              `
-            );
-
-
-            dot.setAttribute(
-              "material",
-              `
-                shader: flat;
-                transparent: true;
-                opacity: 0.85;
-                side: double;
-                depthWrite: false;
-              `
-            );
-
-
-            dot.setAttribute(
-              "scale",
-              "0 0 0"
-            );
-
-
-            dot.setAttribute(
-              "animation__appear",
-              `
-                property: scale;
-                from: 0 0 0;
-                to: 1 1 1;
-                dur: ${100 + Math.random() * 220};
-                easing: easeOutQuad;
-              `
-            );
-
-
-            dot.setAttribute(
-              "animation__fade",
-              `
-                property: material.opacity;
-                from: 0.85;
-                to: 0;
-                delay: 250;
-                dur: 650;
-                easing: easeOutQuad;
-              `
-            );
-
-
-            target.appendChild(dot);
-
-
-            setTimeout(
-
-              function () {
-
-                if (dot.parentNode) {
-
-                  dot.parentNode.removeChild(dot);
-
-                }
-
-              },
-
-              1000
-
-            );
-
-          }
-
-        }
-
-
-
-        /* =====================================================
-           CREATE ONE NAME
-           ===================================================== */
-
-
-        function createName(
-          info,
-          index
-        ) {
-
-
-          if (!running) return;
-
-
-          createSprayMist(
-            info.x,
-            info.y,
-            info.color
-          );
-
-
-          const name =
-            document.createElement(
-              "a-image"
-            );
-
-
-          name.classList.add(
-            "spray-name"
-          );
-
-
-          name.setAttribute(
-            "src",
-            info.image
-          );
-
-
-          name.setAttribute(
-            "position",
-            `
-              ${info.x}
-              ${info.y}
-              ${0.15 + index * 0.01}
-            `
-          );
-
-
-          name.setAttribute(
-            "rotation",
-            `
-              0 0 ${info.rotation}
-            `
-          );
-
-
-          name.setAttribute(
-            "width",
-            info.width
-          );
-
-
-          name.setAttribute(
-            "height",
-            info.height
-          );
-
-
-          name.setAttribute(
-            "material",
-            `
-              shader: flat;
-              transparent: true;
-              opacity: 1;
-              alphaTest: 0.05;
-              side: double;
-              depthWrite: false;
-            `
-          );
-
-
-          /* START SMALL */
-
-          name.setAttribute(
-            "scale",
-            "0.05 0.05 0.05"
-          );
-
-
-          /* POP / SPRAY INTO POSITION */
-
-          name.setAttribute(
-            "animation__spray",
-            `
-              property: scale;
-              from: 0.05 0.05 0.05;
-              to: 1 1 1;
-              dur: 500;
-              easing: easeOutBack;
-            `
-          );
-
-
-          target.appendChild(
-            name
-          );
-
-        }
-
-
-
-        /* =====================================================
-           CLEAR OLD EFFECTS
-           ===================================================== */
-
-
-        function clearEffects() {
-
-
-          const effects =
-            target.querySelectorAll(
-              ".spray-name, .spray-effect"
-            );
-
-
-          effects.forEach(
-
-            function (item) {
-
-              if (item.parentNode) {
-
-                item.parentNode
-                  .removeChild(item);
-
-              }
-
-            }
-
-          );
-
-        }
-
-
-
-        /* =====================================================
-           TARGET 1 FOUND
-
-           Formation appears from back to front:
-
-           Michael
-           Gaz + Ryan
-           Nick + Sean
-           ===================================================== */
-
-
-        target.addEventListener(
-          "targetFound",
-
-          function () {
-
-
-            running = true;
-
-
-            clearEffects();
-
-
-            timers.forEach(
-              clearTimeout
-            );
-
-
-            timers = [];
-
-
-            /* MICHAEL — BACK */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[1],
-                    1
-                  );
-
-                },
-
-                200
-
-              )
-
-            );
-
-
-            /* GAZ — LEFT */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[0],
-                    0
-                  );
-
-                },
-
-                850
-
-              )
-
-            );
-
-
-            /* RYAN — RIGHT */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[2],
-                    2
-                  );
-
-                },
-
-                1100
-
-              )
-
-            );
-
-
-            /* NICK — FRONT */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[3],
-                    3
-                  );
-
-                },
-
-                1750
-
-              )
-
-            );
-
-
-            /* SEAN — FRONT RIGHT */
-
-            timers.push(
-
-              setTimeout(
-
-                function () {
-
-                  createName(
-                    names[4],
-                    4
-                  );
-
-                },
-
-                2000
-
-              )
-
-            );
-
-          }
-
-        );
-
-
-
-        /* =====================================================
-           TARGET 1 LOST
-           ===================================================== */
-
-
-        target.addEventListener(
-          "targetLost",
-
-          function () {
-
-
-            running = false;
-
-
-            timers.forEach(
-              clearTimeout
-            );
-
-
-            timers = [];
-
-
-            clearEffects();
-
-          }
-
-        );
-
-      }
-
-    });
-
-
-  </script>
-
-</head>
-
-
-
-<body>
-
-
-<a-scene
-
-  mindar-image="
-    imageTargetSrc: ./targets.mind;
-    autoStart: true;
-  "
-
-  embedded
-
-  vr-mode-ui="enabled: false"
-
-  device-orientation-permission-ui="enabled: false"
-
-  renderer="
-    colorManagement: true;
-    physicallyCorrectLights: true;
-    alpha: true;
-  "
-
->
-
-
-  <!-- ====================================================== -->
-  <!-- ASSETS -->
-  <!-- ====================================================== -->
-
-
-  <a-assets>
-
-
-    <!-- BLACK HEART -->
-
-    <img
-
-      id="blackHeart"
-
-      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%232b2b2b' d='M50 87 C44 80 14 60 14 35 C14 19 34 12 50 29 C66 12 86 19 86 35 C86 60 56 80 50 87 Z'/%3E%3C/svg%3E"
-
-    >
-
-
-    <!-- BAND NAME PNGS -->
-
-
-    <img
-      id="seanImage"
-      src="./sean.png"
-      crossorigin="anonymous"
-    >
-
-
-    <img
-      id="nickImage"
-      src="./nick.png"
-      crossorigin="anonymous"
-    >
-
-
-    <img
-      id="ryanImage"
-      src="./ryan.png"
-      crossorigin="anonymous"
-    >
-
-
-    <img
-      id="gazImage"
-      src="./gaz.png"
-      crossorigin="anonymous"
-    >
-
-
-    <img
-      id="michaelImage"
-      src="./michael.png"
-      crossorigin="anonymous"
-    >
-
-
-  </a-assets>
-
-
-
-  <!-- ====================================================== -->
-  <!-- CAMERA -->
-  <!-- ====================================================== -->
-
-
-  <a-camera
-
-    position="0 0 0"
-
-    look-controls="enabled: false"
-
-  >
-
-  </a-camera>
-
-
-
-  <!-- ====================================================== -->
-  <!-- TARGET 0 -->
-  <!-- MUSIC NOTES + HEART -->
-  <!-- ====================================================== -->
-
-
-  <a-entity
-
-    id="hookedTarget"
-
-    mindar-image-target="targetIndex: 0"
-
-    music-emitter
-
-  >
-
-
-    <a-image
-
-      src="#blackHeart"
-
-      position="0 0 -0.04"
-
-      width="1.35"
-
-      height="1.35"
-
-      material="
-        shader: flat;
-        transparent: true;
-        opacity: 0.78;
-        side: double;
-        depthWrite: false;
-      "
-
-      scale="1 1 1"
-
-      animation__pulse="
-        property: scale;
-        from: 0.90 0.90 0.90;
-        to: 1.14 1.14 1.14;
-        dur: 650;
-        dir: alternate;
-        loop: true;
-        easing: easeInOutQuad;
-      "
-
-      animation__fadepulse="
-        property: material.opacity;
-        from: 0.58;
-        to: 0.88;
-        dur: 650;
-        dir: alternate;
-        loop: true;
-        easing: easeInOutQuad;
-      "
-
-    >
-
-    </a-image>
-
-
-  </a-entity>
-
-
-
-  <!-- ====================================================== -->
-  <!-- TARGET 1 -->
-  <!-- BAND FORMATION -->
-  <!-- ====================================================== -->
-
-
-  <a-entity
-
-    id="hookCatTarget"
-
-    mindar-image-target="targetIndex: 1"
-
-    spray-names
-
-  >
-
-  </a-entity>
-
 
 
 </a-scene>
