@@ -350,32 +350,28 @@
 
 <!-- BUBBLE 1 -->
 
-<a-ring
+<!-- ======================================================
+     10 IRIDESCENT PIPE BUBBLES
+     PIPE BOWL START = 0.66 0.28
+     Each bubble has its own white shine spot.
+     ====================================================== -->
+
+
+<!-- ================= BUBBLE 1 ================= -->
+
+<a-entity
   position="0.66 0.28 0.30"
-
-  radius-inner="0.034"
-  radius-outer="0.050"
-
-  material="
-    shader: flat;
-    color: #d9fbff;
-    transparent: true;
-    opacity: 0.72;
-    side: double;
-    depthTest: false;
-    depthWrite: false;
-  "
 
   animation__move="
     property: position;
     from: 0.66 0.28 0.30;
-    to: 0.56 1.05 0.30;
+    to: 0.54 1.08 0.30;
     dur: 3000;
     loop: true;
     easing: easeOutSine;
   "
 
-  animation__scale="
+  animation__grow="
     property: scale;
     from: 0.45 0.45 0.45;
     to: 1.55 1.55 1.55;
@@ -383,275 +379,578 @@
     loop: true;
     easing: easeOutSine;
   "
-
-  animation__fade="
-    property: material.opacity;
-    from: 0.72;
-    to: 0;
-    dur: 3000;
-    loop: true;
-    easing: easeInSine;
-  "
-
-  animation__spin="
-    property: rotation;
-    from: 0 0 0;
-    to: 0 0 180;
-    dur: 3000;
-    loop: true;
-    easing: linear;
-  "
 >
-</a-ring>
+
+  <a-ring
+    radius-inner="0.034"
+    radius-outer="0.050"
+
+    material="
+      shader: flat;
+      color: #bffaff;
+      transparent: true;
+      opacity: 0.72;
+      side: double;
+      depthTest: false;
+      depthWrite: false;
+    "
+
+    animation="
+      property: material.opacity;
+      from: 0.72;
+      to: 0;
+      dur: 3000;
+      loop: true;
+    "
+  ></a-ring>
+
+  <!-- SHINE -->
+  <a-circle
+    position="-0.020 0.022 0.01"
+    radius="0.009"
+
+    material="
+      shader: flat;
+      color: #ffffff;
+      transparent: true;
+      opacity: 0.95;
+      depthTest: false;
+      depthWrite: false;
+    "
+
+    animation="
+      property: material.opacity;
+      from: 0.95;
+      to: 0;
+      dur: 3000;
+      loop: true;
+    "
+  ></a-circle>
+
+</a-entity>
 
 
 
-<!-- BUBBLE 2 -->
+<!-- ================= BUBBLE 2 ================= -->
 
-<a-ring
+<a-entity
   position="0.66 0.28 0.31"
-
-  radius-inner="0.044"
-  radius-outer="0.060"
-
-  material="
-    shader: flat;
-    color: #ffd9f7;
-    transparent: true;
-    opacity: 0.62;
-    side: double;
-    depthTest: false;
-    depthWrite: false;
-  "
 
   animation__move="
     property: position;
     from: 0.66 0.28 0.31;
-    to: 0.82 1.18 0.31;
+    to: 0.80 1.16 0.31;
     dur: 3400;
-    delay: 550;
+    delay: 300;
     loop: true;
     easing: easeOutSine;
   "
 
-  animation__scale="
+  animation__grow="
     property: scale;
     from: 0.40 0.40 0.40;
     to: 1.70 1.70 1.70;
     dur: 3400;
-    delay: 550;
+    delay: 300;
     loop: true;
     easing: easeOutSine;
   "
-
-  animation__fade="
-    property: material.opacity;
-    from: 0.62;
-    to: 0;
-    dur: 3400;
-    delay: 550;
-    loop: true;
-    easing: easeInSine;
-  "
-
-  animation__spin="
-    property: rotation;
-    from: 0 0 0;
-    to: 0 0 -220;
-    dur: 3400;
-    delay: 550;
-    loop: true;
-    easing: linear;
-  "
 >
-</a-ring>
+
+  <a-ring
+    radius-inner="0.044"
+    radius-outer="0.062"
+
+    material="
+      shader: flat;
+      color: #ffd6f4;
+      transparent: true;
+      opacity: 0.65;
+      side: double;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-ring>
+
+  <a-circle
+    position="-0.025 0.030 0.01"
+    radius="0.011"
+
+    material="
+      shader: flat;
+      color: #ffffff;
+      transparent: true;
+      opacity: 0.95;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-circle>
+
+</a-entity>
 
 
 
-<!-- BUBBLE 3 -->
+<!-- ================= BUBBLE 3 ================= -->
 
-<a-ring
+<a-entity
   position="0.66 0.28 0.32"
-
-  radius-inner="0.026"
-  radius-outer="0.041"
-
-  material="
-    shader: flat;
-    color: #fff7c7;
-    transparent: true;
-    opacity: 0.66;
-    side: double;
-    depthTest: false;
-    depthWrite: false;
-  "
 
   animation__move="
     property: position;
     from: 0.66 0.28 0.32;
-    to: 0.46 0.92 0.32;
-    dur: 2500;
-    delay: 1100;
+    to: 0.43 0.92 0.32;
+    dur: 2400;
+    delay: 650;
     loop: true;
     easing: easeOutSine;
   "
 
-  animation__scale="
+  animation__grow="
     property: scale;
-    from: 0.50 0.50 0.50;
-    to: 1.40 1.40 1.40;
-    dur: 2500;
-    delay: 1100;
+    from: 0.45 0.45 0.45;
+    to: 1.35 1.35 1.35;
+    dur: 2400;
+    delay: 650;
     loop: true;
-    easing: easeOutSine;
-  "
-
-  animation__fade="
-    property: material.opacity;
-    from: 0.66;
-    to: 0;
-    dur: 2500;
-    delay: 1100;
-    loop: true;
-    easing: easeInSine;
-  "
-
-  animation__spin="
-    property: rotation;
-    from: 0 0 0;
-    to: 0 0 160;
-    dur: 2500;
-    delay: 1100;
-    loop: true;
-    easing: linear;
   "
 >
-</a-ring>
+
+  <a-ring
+    radius-inner="0.027"
+    radius-outer="0.043"
+
+    material="
+      shader: flat;
+      color: #fff5b8;
+      transparent: true;
+      opacity: 0.68;
+      side: double;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-ring>
+
+  <a-circle
+    position="-0.016 0.020 0.01"
+    radius="0.007"
+
+    material="
+      shader: flat;
+      color: white;
+      transparent: true;
+      opacity: 0.95;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-circle>
+
+</a-entity>
 
 
 
-<!-- BUBBLE 4 -->
+<!-- ================= BUBBLE 4 ================= -->
 
-<a-ring
+<a-entity
   position="0.66 0.28 0.33"
-
-  radius-inner="0.052"
-  radius-outer="0.070"
-
-  material="
-    shader: flat;
-    color: #dcd7ff;
-    transparent: true;
-    opacity: 0.60;
-    side: double;
-    depthTest: false;
-    depthWrite: false;
-  "
 
   animation__move="
     property: position;
     from: 0.66 0.28 0.33;
-    to: 0.73 1.25 0.33;
-    dur: 3700;
-    delay: 1700;
+    to: 0.72 1.25 0.33;
+    dur: 3800;
+    delay: 950;
     loop: true;
     easing: easeOutSine;
   "
 
-  animation__scale="
+  animation__grow="
     property: scale;
-    from: 0.42 0.42 0.42;
-    to: 1.80 1.80 1.80;
-    dur: 3700;
-    delay: 1700;
+    from: 0.38 0.38 0.38;
+    to: 1.75 1.75 1.75;
+    dur: 3800;
+    delay: 950;
     loop: true;
-    easing: easeOutSine;
-  "
-
-  animation__fade="
-    property: material.opacity;
-    from: 0.60;
-    to: 0;
-    dur: 3700;
-    delay: 1700;
-    loop: true;
-    easing: easeInSine;
-  "
-
-  animation__spin="
-    property: rotation;
-    from: 0 0 0;
-    to: 0 0 -180;
-    dur: 3700;
-    delay: 1700;
-    loop: true;
-    easing: linear;
   "
 >
-</a-ring>
+
+  <a-ring
+    radius-inner="0.050"
+    radius-outer="0.070"
+
+    material="
+      shader: flat;
+      color: #d9d2ff;
+      transparent: true;
+      opacity: 0.62;
+      side: double;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-ring>
+
+  <a-circle
+    position="-0.029 0.034 0.01"
+    radius="0.012"
+
+    material="
+      shader: flat;
+      color: white;
+      transparent: true;
+      opacity: 0.92;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-circle>
+
+</a-entity>
 
 
 
-<!-- BUBBLE 5 -->
+<!-- ================= BUBBLE 5 ================= -->
 
-<a-ring
+<a-entity
   position="0.66 0.28 0.34"
-
-  radius-inner="0.029"
-  radius-outer="0.046"
-
-  material="
-    shader: flat;
-    color: #c9fff3;
-    transparent: true;
-    opacity: 0.66;
-    side: double;
-    depthTest: false;
-    depthWrite: false;
-  "
 
   animation__move="
     property: position;
     from: 0.66 0.28 0.34;
-    to: 0.90 1.00 0.34;
-    dur: 2900;
-    delay: 2250;
+    to: 0.91 1.02 0.34;
+    dur: 2850;
+    delay: 1250;
     loop: true;
     easing: easeOutSine;
   "
 
-  animation__scale="
+  animation__grow="
     property: scale;
-    from: 0.48 0.48 0.48;
-    to: 1.55 1.55 1.55;
-    dur: 2900;
-    delay: 2250;
+    from: 0.42 0.42 0.42;
+    to: 1.50 1.50 1.50;
+    dur: 2850;
+    delay: 1250;
     loop: true;
-    easing: easeOutSine;
-  "
-
-  animation__fade="
-    property: material.opacity;
-    from: 0.66;
-    to: 0;
-    dur: 2900;
-    delay: 2250;
-    loop: true;
-    easing: easeInSine;
-  "
-
-  animation__spin="
-    property: rotation;
-    from: 0 0 0;
-    to: 0 0 210;
-    dur: 2900;
-    delay: 2250;
-    loop: true;
-    easing: linear;
   "
 >
-</a-ring>
 
+  <a-ring
+    radius-inner="0.030"
+    radius-outer="0.048"
+
+    material="
+      shader: flat;
+      color: #bffff0;
+      transparent: true;
+      opacity: 0.67;
+      side: double;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-ring>
+
+  <a-circle
+    position="-0.018 0.022 0.01"
+    radius="0.008"
+
+    material="
+      shader: flat;
+      color: white;
+      transparent: true;
+      opacity: 0.95;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-circle>
+
+</a-entity>
+
+
+
+<!-- ================= BUBBLE 6 ================= -->
+
+<a-entity
+  position="0.66 0.28 0.35"
+
+  animation__move="
+    property: position;
+    from: 0.66 0.28 0.35;
+    to: 0.38 1.15 0.35;
+    dur: 3600;
+    delay: 1550;
+    loop: true;
+    easing: easeOutSine;
+  "
+
+  animation__grow="
+    property: scale;
+    from: 0.40 0.40 0.40;
+    to: 1.60 1.60 1.60;
+    dur: 3600;
+    delay: 1550;
+    loop: true;
+  "
+>
+
+  <a-ring
+    radius-inner="0.038"
+    radius-outer="0.055"
+
+    material="
+      shader: flat;
+      color: #cde8ff;
+      transparent: true;
+      opacity: 0.65;
+      side: double;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-ring>
+
+  <a-circle
+    position="-0.021 0.026 0.01"
+    radius="0.009"
+
+    material="
+      shader: flat;
+      color: white;
+      transparent: true;
+      opacity: 0.94;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-circle>
+
+</a-entity>
+
+
+
+<!-- ================= BUBBLE 7 ================= -->
+
+<a-entity
+  position="0.66 0.28 0.36"
+
+  animation__move="
+    property: position;
+    from: 0.66 0.28 0.36;
+    to: 0.68 0.88 0.36;
+    dur: 2200;
+    delay: 1850;
+    loop: true;
+    easing: easeOutSine;
+  "
+
+  animation__grow="
+    property: scale;
+    from: 0.40 0.40 0.40;
+    to: 1.30 1.30 1.30;
+    dur: 2200;
+    delay: 1850;
+    loop: true;
+  "
+>
+
+  <a-ring
+    radius-inner="0.022"
+    radius-outer="0.037"
+
+    material="
+      shader: flat;
+      color: #ffe0ef;
+      transparent: true;
+      opacity: 0.70;
+      side: double;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-ring>
+
+  <a-circle
+    position="-0.014 0.017 0.01"
+    radius="0.006"
+
+    material="
+      shader: flat;
+      color: white;
+      transparent: true;
+      opacity: 0.95;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-circle>
+
+</a-entity>
+
+
+
+<!-- ================= BUBBLE 8 ================= -->
+
+<a-entity
+  position="0.66 0.28 0.37"
+
+  animation__move="
+    property: position;
+    from: 0.66 0.28 0.37;
+    to: 1.00 1.20 0.37;
+    dur: 3900;
+    delay: 2150;
+    loop: true;
+    easing: easeOutSine;
+  "
+
+  animation__grow="
+    property: scale;
+    from: 0.38 0.38 0.38;
+    to: 1.80 1.80 1.80;
+    dur: 3900;
+    delay: 2150;
+    loop: true;
+  "
+>
+
+  <a-ring
+    radius-inner="0.046"
+    radius-outer="0.066"
+
+    material="
+      shader: flat;
+      color: #e5d7ff;
+      transparent: true;
+      opacity: 0.62;
+      side: double;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-ring>
+
+  <a-circle
+    position="-0.027 0.032 0.01"
+    radius="0.011"
+
+    material="
+      shader: flat;
+      color: white;
+      transparent: true;
+      opacity: 0.94;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-circle>
+
+</a-entity>
+
+
+
+<!-- ================= BUBBLE 9 ================= -->
+
+<a-entity
+  position="0.66 0.28 0.38"
+
+  animation__move="
+    property: position;
+    from: 0.66 0.28 0.38;
+    to: 0.51 1.32 0.38;
+    dur: 4100;
+    delay: 2450;
+    loop: true;
+    easing: easeOutSine;
+  "
+
+  animation__grow="
+    property: scale;
+    from: 0.38 0.38 0.38;
+    to: 1.65 1.65 1.65;
+    dur: 4100;
+    delay: 2450;
+    loop: true;
+  "
+>
+
+  <a-ring
+    radius-inner="0.034"
+    radius-outer="0.052"
+
+    material="
+      shader: flat;
+      color: #d4fff8;
+      transparent: true;
+      opacity: 0.65;
+      side: double;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-ring>
+
+  <a-circle
+    position="-0.020 0.025 0.01"
+    radius="0.009"
+
+    material="
+      shader: flat;
+      color: white;
+      transparent: true;
+      opacity: 0.95;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-circle>
+
+</a-entity>
+
+
+
+<!-- ================= BUBBLE 10 ================= -->
+
+<a-entity
+  position="0.66 0.28 0.39"
+
+  animation__move="
+    property: position;
+    from: 0.66 0.28 0.39;
+    to: 0.84 0.94 0.39;
+    dur: 2600;
+    delay: 2750;
+    loop: true;
+    easing: easeOutSine;
+  "
+
+  animation__grow="
+    property: scale;
+    from: 0.42 0.42 0.42;
+    to: 1.45 1.45 1.45;
+    dur: 2600;
+    delay: 2750;
+    loop: true;
+  "
+>
+
+  <a-ring
+    radius-inner="0.025"
+    radius-outer="0.041"
+
+    material="
+      shader: flat;
+      color: #fff0c7;
+      transparent: true;
+      opacity: 0.70;
+      side: double;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-ring>
+
+  <a-circle
+    position="-0.015 0.019 0.01"
+    radius="0.007"
+
+    material="
+      shader: flat;
+      color: white;
+      transparent: true;
+      opacity: 0.95;
+      depthTest: false;
+      depthWrite: false;
+    "
+  ></a-circle>
+
+</a-entity>
 
   </a-entity>
 
