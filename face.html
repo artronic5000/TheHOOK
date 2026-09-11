@@ -140,6 +140,400 @@
 
   </style>
 
+
+  <script>
+
+
+    /* ==========================================================
+       PIPE BUBBLE EMITTER
+
+       Bubble origin is positioned at the PIPE BOWL.
+
+       EDIT THESE TWO NUMBERS if needed:
+
+       pipeX = left / right
+       pipeY = up / down
+
+       ========================================================== */
+
+
+    AFRAME.registerComponent("pipe-bubbles", {
+
+
+      init: function () {
+
+
+        const target = this.el;
+
+
+        let bubbleTimer = null;
+
+        let running = false;
+
+
+
+        /* ======================================================
+           PIPE BOWL POSITION
+           ====================================================== */
+
+
+        const pipeX = 0.72;
+
+        const pipeY = 0.20;
+
+        const pipeZ = 0.18;
+
+
+
+        /* ======================================================
+           CREATE ONE BUBBLE
+           ====================================================== */
+
+
+        function createBubble() {
+
+
+          if (!running) {
+            return;
+          }
+
+
+          const bubble =
+            document.createElement("a-ring");
+
+
+          bubble.classList.add(
+            "pipe-bubble"
+          );
+
+
+
+          /* RANDOM BUBBLE SIZE */
+
+          const size =
+            0.025 +
+            Math.random() * 0.045;
+
+
+
+          /* SMALL RANDOM START VARIATION */
+
+          const startX =
+            pipeX +
+            (Math.random() - 0.5) * 0.035;
+
+
+          const startY =
+            pipeY +
+            Math.random() * 0.025;
+
+
+
+          /* RANDOM LEFT / RIGHT DRIFT */
+
+          const drift =
+            (Math.random() - 0.5) * 0.30;
+
+
+          const endX =
+            startX + drift;
+
+
+          const rise =
+            0.45 +
+            Math.random() * 0.35;
+
+
+          const endY =
+            startY + rise;
+
+
+
+          /* RANDOM SPEED */
+
+          const duration =
+            1800 +
+            Math.random() * 1500;
+
+
+
+          /* BUBBLE SHAPE */
+
+          bubble.setAttribute(
+            "radius-inner",
+            size * 0.72
+          );
+
+
+          bubble.setAttribute(
+            "radius-outer",
+            size
+          );
+
+
+
+          bubble.setAttribute(
+
+            "position",
+
+            `${startX} ${startY} ${pipeZ}`
+
+          );
+
+
+
+          /* BUBBLE MATERIAL */
+
+          bubble.setAttribute(
+
+            "material",
+
+            `
+            shader: flat;
+            color: #dffaff;
+            transparent: true;
+            opacity: 0.75;
+            side: double;
+            depthWrite: false;
+            depthTest: false;
+            `
+
+          );
+
+
+
+          /* RISE + DRIFT */
+
+          bubble.setAttribute(
+
+            "animation__move",
+
+            `
+            property: position;
+            from: ${startX} ${startY} ${pipeZ};
+            to: ${endX} ${endY} ${pipeZ};
+            dur: ${duration};
+            easing: easeOutQuad;
+            `
+
+          );
+
+
+
+          /* GROW */
+
+          bubble.setAttribute(
+
+            "animation__grow",
+
+            `
+            property: scale;
+            from: 0.65 0.65 0.65;
+            to: 1.45 1.45 1.45;
+            dur: ${duration};
+            easing: easeOutQuad;
+            `
+
+          );
+
+
+
+          /* FADE */
+
+          bubble.setAttribute(
+
+            "animation__fade",
+
+            `
+            property: material.opacity;
+            from: 0.75;
+            to: 0;
+            dur: ${duration};
+            easing: easeInQuad;
+            `
+
+          );
+
+
+
+          target.appendChild(
+            bubble
+          );
+
+
+
+          /* REMOVE AFTER ANIMATION */
+
+          setTimeout(
+
+            function () {
+
+
+              if (
+                bubble &&
+                bubble.parentNode
+              ) {
+
+                bubble.parentNode
+                  .removeChild(
+                    bubble
+                  );
+
+              }
+
+
+            },
+
+            duration + 100
+
+          );
+
+
+        }
+
+
+
+        /* ======================================================
+           START BUBBLES
+           ====================================================== */
+
+
+        function startBubbles() {
+
+
+          if (running) {
+            return;
+          }
+
+
+          running = true;
+
+
+
+          /* FIRST BUBBLE */
+
+          createBubble();
+
+
+
+          /* NEW BUBBLE EVERY ~350ms */
+
+          bubbleTimer =
+            setInterval(
+
+              function () {
+
+
+                createBubble();
+
+
+              },
+
+              350
+
+            );
+
+
+        }
+
+
+
+        /* ======================================================
+           STOP BUBBLES
+           ====================================================== */
+
+
+        function stopBubbles() {
+
+
+          running = false;
+
+
+          if (bubbleTimer) {
+
+
+            clearInterval(
+              bubbleTimer
+            );
+
+
+            bubbleTimer =
+              null;
+
+
+          }
+
+
+
+          /* REMOVE EXISTING BUBBLES */
+
+          const bubbles =
+            target.querySelectorAll(
+              ".pipe-bubble"
+            );
+
+
+          bubbles.forEach(
+
+            function (bubble) {
+
+
+              bubble.remove();
+
+
+            }
+
+          );
+
+
+        }
+
+
+
+        /* ======================================================
+           FACE FOUND / LOST
+           ====================================================== */
+
+
+        target.addEventListener(
+
+          "targetFound",
+
+          function () {
+
+
+            startBubbles();
+
+
+          }
+
+        );
+
+
+
+        target.addEventListener(
+
+          "targetLost",
+
+          function () {
+
+
+            stopBubbles();
+
+
+          }
+
+        );
+
+
+      }
+
+
+    });
+
+
+  </script>
+
 </head>
 
 
@@ -200,7 +594,7 @@
 
 
   <!-- ======================================================
-       NEW ASSETS
+       ASSETS
        ====================================================== -->
 
   <a-assets>
@@ -227,8 +621,11 @@
   <!-- CAMERA -->
 
   <a-camera
+
     active="false"
+
     position="0 0 0"
+
   >
   </a-camera>
 
@@ -236,19 +633,14 @@
 
   <!-- ======================================================
        SALTY SAILOR HAT + CAT EARS
-
-       X = left / right
-       Y = up / down
-       Z = front / back
-
-       Start here:
-       0.00  0.32  0.05
        ====================================================== -->
 
   <a-entity
+
     mindar-face-target="
       anchorIndex: 10
     "
+
   >
 
 
@@ -289,19 +681,21 @@
 
 
   <!-- ======================================================
-       CAT MOUTH + WHISKERS + PIPE
+       CAT NOSE + WHISKERS + PIPE
 
-       Start here:
-       0.00  -0.02  0.12
-
-       You will probably only need to
-       tweak X and Y slightly after testing.
+       BUBBLES ARE ATTACHED TO THIS FACE ANCHOR
        ====================================================== -->
 
   <a-entity
+
+    id="mouthTarget"
+
     mindar-face-target="
       anchorIndex: 152
     "
+
+    pipe-bubbles
+
   >
 
 
@@ -385,8 +779,10 @@
 
         function () {
 
+
           window.location.href =
             "./index.html";
+
 
         }
 
@@ -456,6 +852,7 @@
 
 
             }
+
 
             catch (error) {
 
