@@ -103,40 +103,85 @@
     }
 
 
-    #instruction {
+    /* =====================================================
+       CLICK KITTY BANNER
+       ===================================================== */
+
+    #clickKittyBanner {
 
       position: fixed;
 
-      bottom: 22px;
+      right: 14px;
+      bottom: 205px;
 
-      left: 50%;
+      width: 105px;
 
-      transform:
-        translateX(-50%);
+      z-index: 100001;
 
-      z-index: 99999;
+      padding: 6px 5px;
 
-      padding: 8px 14px;
+      box-sizing: border-box;
 
-      border-radius: 18px;
+      border-radius: 12px;
 
       background:
-        rgba(0,0,0,0.45);
+        rgba(0,0,0,0.72);
 
-      color: white;
+      color:
+        #f6b93b;
 
       font-family:
         Arial,
         Helvetica,
         sans-serif;
 
-      font-size: 11px;
+      font-size: 12px;
+
+      font-weight: 900;
 
       letter-spacing: 1px;
 
-      white-space: nowrap;
+      text-align: center;
+
+      pointer-events: none;
+
+      animation:
+        kittyBannerPulse
+        1.8s
+        ease-in-out
+        infinite;
 
     }
+
+
+    @keyframes kittyBannerPulse {
+
+      0%,
+      100% {
+
+        transform:
+          scale(1);
+
+        text-shadow:
+          0 0 3px
+          rgba(246,185,59,0.5);
+
+      }
+
+
+      50% {
+
+        transform:
+          scale(1.08);
+
+        text-shadow:
+          0 0 10px
+          rgba(246,185,59,1);
+
+      }
+
+    }
+
 
 
     /* =====================================================
@@ -159,11 +204,13 @@
 
       padding: 0;
 
-      background: transparent;
+      background:
+        transparent;
 
       cursor: pointer;
 
-      -webkit-tap-highlight-color: transparent;
+      -webkit-tap-highlight-color:
+        transparent;
 
     }
 
@@ -173,9 +220,11 @@
       width: 100%;
       height: 100%;
 
-      object-fit: contain;
+      object-fit:
+        contain;
 
-      display: block;
+      display:
+        block;
 
       filter:
         drop-shadow(
@@ -192,6 +241,7 @@
         scale(0.94);
 
     }
+
 
 
     /* =====================================================
@@ -213,16 +263,22 @@
       z-index: 200000;
 
       background:
-        rgba(0,0,0,0.84);
+        rgba(0,0,0,0.88);
 
-      align-items: center;
-      justify-content: center;
+      align-items:
+        center;
 
-      padding: 20px;
+      justify-content:
+        center;
 
-      box-sizing: border-box;
+      padding:
+        18px;
+
+      box-sizing:
+        border-box;
 
     }
+
 
 
     /* =====================================================
@@ -233,27 +289,24 @@
 
       width:
         min(
-          86%,
-          350px
+          90%,
+          390px
         );
 
       padding:
-        28px
-        20px
-        24px
-        20px;
+        30px
+        18px
+        26px
+        18px;
 
       box-sizing:
         border-box;
 
       background:
-        #080808;
-
-      border:
-        2px solid #e2b544;
+        #050505;
 
       border-radius:
-        24px;
+        20px;
 
       text-align:
         center;
@@ -267,62 +320,152 @@
         sans-serif;
 
       box-shadow:
-        0 0 32px
-        rgba(226,181,68,0.35);
+        0 8px 40px
+        rgba(0,0,0,0.65);
 
     }
+
 
 
     #tipPanel h1 {
 
       margin:
-        0 0 16px 0;
+        0 0 6px 0;
 
       color:
-        #e2b544;
+        #f6b93b;
+
+      font-family:
+        "Brush Script MT",
+        "Segoe Script",
+        cursive;
 
       font-size:
-        34px;
+        56px;
+
+      font-weight:
+        normal;
+
+      line-height:
+        0.95;
+
+      transform:
+        rotate(-2deg);
+
+      text-shadow:
+        0 2px 6px
+        rgba(246,185,59,0.18);
+
+    }
+
+
+
+    .tipHeart {
+
+      margin:
+        6px 0 8px 0;
+
+      color:
+        #f6b93b;
+
+      font-size:
+        28px;
 
       line-height:
         1;
 
+    }
+
+
+
+    .findKitty {
+
+      position:
+        relative;
+
+      display:
+        inline-block;
+
+      color:
+        #f7d36c;
+
+      font-size:
+        19px;
+
+      font-weight:
+        900;
+
       letter-spacing:
         1px;
 
+      line-height:
+        1.25;
+
     }
 
 
-    #tipPanel .findKitty {
+    .findKitty::before {
+
+      content:
+        "✦";
+
+      position:
+        absolute;
+
+      left:
+        -34px;
+
+      top:
+        14px;
 
       color:
-        #f4d879;
+        #f6b93b;
 
       font-size:
         18px;
 
-      font-weight:
-        bold;
+    }
 
-      letter-spacing:
-        1.2px;
 
-      line-height:
-        1.35;
+    .findKitty::after {
+
+      content:
+        "✦";
+
+      position:
+        absolute;
+
+      right:
+        -34px;
+
+      top:
+        14px;
+
+      color:
+        #f6b93b;
+
+      font-size:
+        18px;
 
     }
 
 
-    #tipPanel .or {
+
+    .or {
 
       margin:
-        11px 0;
+        6px 0 4px 0;
 
       color:
-        #e2b544;
+        #f6b93b;
+
+      font-family:
+        "Brush Script MT",
+        "Segoe Script",
+        cursive;
 
       font-size:
-        18px;
+        27px;
 
       font-style:
         italic;
@@ -330,57 +473,72 @@
     }
 
 
-    #tipPanel .transferTitle {
+
+    .transferTitle {
 
       margin-bottom:
-        10px;
+        9px;
 
       color:
-        white;
+        #f7d36c;
 
       font-size:
-        14px;
+        19px;
 
       font-weight:
-        bold;
+        900;
 
       letter-spacing:
-        1.3px;
+        1px;
 
     }
 
 
+
+    /* =====================================================
+       EMAIL BUTTON
+       ===================================================== */
+
     #copyEmail {
+
+      display:
+        block;
 
       width:
         100%;
 
       padding:
-        13px 8px;
+        11px 12px;
 
       border:
         none;
 
       border-radius:
-        24px;
+        28px;
 
       background:
-        #e2b544;
+        #f6d675;
 
       color:
         #111111;
 
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
       font-size:
-        14px;
+        17px;
 
       font-weight:
-        bold;
+        900;
 
       cursor:
         pointer;
 
-      word-break:
-        break-word;
+      box-shadow:
+        0 2px 8px
+        rgba(0,0,0,0.25);
 
       -webkit-tap-highlight-color:
         transparent;
@@ -396,16 +554,17 @@
     }
 
 
+
     #copyMessage {
 
       min-height:
         18px;
 
       margin-top:
-        10px;
+        7px;
 
       color:
-        #e2b544;
+        #f6b93b;
 
       font-size:
         11px;
@@ -414,56 +573,107 @@
         bold;
 
       letter-spacing:
-        1.2px;
+        1px;
 
     }
+
 
 
     #paw {
 
-      margin-top:
-        6px;
+      margin:
+        4px 0 4px 0;
 
       color:
-        #e2b544;
+        #f6d675;
 
       font-size:
-        22px;
+        30px;
 
     }
 
 
+
+    .tipMessage {
+
+      margin:
+        3px 0 2px 0;
+
+      color:
+        #f6d675;
+
+      font-family:
+        "Brush Script MT",
+        "Segoe Script",
+        cursive;
+
+      font-size:
+        26px;
+
+      font-style:
+        italic;
+
+      transform:
+        rotate(-3deg);
+
+    }
+
+
+
+    .bottomHeart {
+
+      margin:
+        4px 0 18px 0;
+
+      color:
+        #f6b93b;
+
+      font-size:
+        28px;
+
+    }
+
+
+
     #closeTip {
 
-      margin-top:
-        14px;
+      width:
+        58%;
 
       padding:
-        10px 30px;
+        10px 16px;
 
       border:
-        1px solid #e2b544;
+        2px solid #f6d675;
 
       border-radius:
-        24px;
+        28px;
 
       background:
         transparent;
 
       color:
-        white;
+        #f6d675;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
       font-size:
-        13px;
+        15px;
 
       font-weight:
-        bold;
+        900;
 
       letter-spacing:
-        1.2px;
+        2px;
 
       cursor:
         pointer;
+
+      -webkit-tap-highlight-color:
+        transparent;
 
     }
 
@@ -503,6 +713,16 @@
 
 
 <!-- ======================================================
+     CLICK KITTY BANNER
+     ====================================================== -->
+
+<div id="clickKittyBanner">
+  CLICK KITTY
+</div>
+
+
+
+<!-- ======================================================
      ANIMATED KITTY TIP BUTTON
      ====================================================== -->
 
@@ -521,6 +741,7 @@
 </button>
 
 
+
 <!-- ======================================================
      TIP POPUP
      ====================================================== -->
@@ -529,14 +750,18 @@
 
   <div id="tipPanel">
 
+
     <h1>
-      THANK YOU!
+      Thank You!
     </h1>
 
-    <div class="findKitty">
 
+    <div class="tipHeart">
       ♥
-      <br>
+    </div>
+
+
+    <div class="findKitty">
 
       FIND THE KITTY
       <br>
@@ -545,13 +770,16 @@
 
     </div>
 
+
     <div class="or">
       or
     </div>
 
+
     <div class="transferTitle">
       E-TRANSFER:
     </div>
+
 
     <button
       id="copyEmail"
@@ -560,13 +788,26 @@
       thehooksechelt@gmail.com
     </button>
 
+
     <div id="copyMessage">
       TAP EMAIL TO COPY
     </div>
 
+
     <div id="paw">
       🐾
     </div>
+
+
+    <div class="tipMessage">
+      Tips keep the music alive!
+    </div>
+
+
+    <div class="bottomHeart">
+      ♥
+    </div>
+
 
     <button
       id="closeTip"
@@ -575,9 +816,12 @@
       CLOSE
     </button>
 
+
   </div>
 
 </div>
+
+
 
 <a-scene
 
@@ -660,9 +904,15 @@
       src="#hatImage"
 
       position="
-        0.00
-        0.20
+        -0.03
+        0.15
         0.05
+      "
+
+      rotation="
+        0
+        0
+        -8
       "
 
       width="
@@ -738,631 +988,614 @@
 
 
     <!-- ===================================================
-         BUBBLE 1
-         STARTS AT PIPE BOWL
-
-         Change the FIRST two numbers below
-         to move the bubble source:
-
-         X = left / right
-         Y = up / down
-
-         Current source:
-         X 0.66
-         Y 0.28
+         10 IRIDESCENT PIPE BUBBLES
+         PIPE BOWL START = 0.66 0.28
          =================================================== -->
 
-<!-- ===================================================
-     PRETTIER SOAP BUBBLES
-     Same starting point:
-     0.66 0.28
-     =================================================== -->
-
-
-<!-- BUBBLE 1 -->
-
-<!-- ======================================================
-     10 IRIDESCENT PIPE BUBBLES
-     PIPE BOWL START = 0.66 0.28
-     Each bubble has its own white shine spot.
-     ====================================================== -->
-
-
-<!-- ================= BUBBLE 1 ================= -->
-
-<a-entity
-  position="0.66 0.28 0.30"
-
-  animation__move="
-    property: position;
-    from: 0.66 0.28 0.30;
-    to: 0.54 1.08 0.30;
-    dur: 3000;
-    loop: true;
-    easing: easeOutSine;
-  "
-
-  animation__grow="
-    property: scale;
-    from: 0.45 0.45 0.45;
-    to: 1.55 1.55 1.55;
-    dur: 3000;
-    loop: true;
-    easing: easeOutSine;
-  "
->
-
-  <a-ring
-    radius-inner="0.034"
-    radius-outer="0.050"
-
-    material="
-      shader: flat;
-      color: #bffaff;
-      transparent: true;
-      opacity: 0.72;
-      side: double;
-      depthTest: false;
-      depthWrite: false;
-    "
-
-    animation="
-      property: material.opacity;
-      from: 0.72;
-      to: 0;
-      dur: 3000;
-      loop: true;
-    "
-  ></a-ring>
-
-  <!-- SHINE -->
-
-  <a-circle
-    position="-0.020 0.022 0.01"
-    radius="0.009"
-
-    material="
-      shader: flat;
-      color: #ffffff;
-      transparent: true;
-      opacity: 0.95;
-      depthTest: false;
-      depthWrite: false;
-    "
-
-    animation="
-      property: material.opacity;
-      from: 0.95;
-      to: 0;
-      dur: 3000;
-      loop: true;
-    "
-  ></a-circle>
-
-</a-entity>
-
-
-
-<!-- ================= BUBBLE 2 ================= -->
-
-<a-entity
-  position="0.66 0.28 0.31"
-
-  animation__move="
-    property: position;
-    from: 0.66 0.28 0.31;
-    to: 0.80 1.16 0.31;
-    dur: 3400;
-    delay: 300;
-    loop: true;
-    easing: easeOutSine;
-  "
-
-  animation__grow="
-    property: scale;
-    from: 0.40 0.40 0.40;
-    to: 1.70 1.70 1.70;
-    dur: 3400;
-    delay: 300;
-    loop: true;
-    easing: easeOutSine;
-  "
->
-
-  <a-ring
-    radius-inner="0.044"
-    radius-outer="0.062"
-
-    material="
-      shader: flat;
-      color: #ffd6f4;
-      transparent: true;
-      opacity: 0.65;
-      side: double;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-ring>
-
-  <a-circle
-    position="-0.025 0.030 0.01"
-    radius="0.011"
-
-    material="
-      shader: flat;
-      color: #ffffff;
-      transparent: true;
-      opacity: 0.95;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-circle>
-
-</a-entity>
-
-
-
-<!-- ================= BUBBLE 3 ================= -->
-
-<a-entity
-  position="0.66 0.28 0.32"
-
-  animation__move="
-    property: position;
-    from: 0.66 0.28 0.32;
-    to: 0.43 0.92 0.32;
-    dur: 2400;
-    delay: 650;
-    loop: true;
-    easing: easeOutSine;
-  "
-
-  animation__grow="
-    property: scale;
-    from: 0.45 0.45 0.45;
-    to: 1.35 1.35 1.35;
-    dur: 2400;
-    delay: 650;
-    loop: true;
-  "
->
-
-  <a-ring
-    radius-inner="0.027"
-    radius-outer="0.043"
-
-    material="
-      shader: flat;
-      color: #fff5b8;
-      transparent: true;
-      opacity: 0.68;
-      side: double;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-ring>
-
-  <a-circle
-    position="-0.016 0.020 0.01"
-    radius="0.007"
-
-    material="
-      shader: flat;
-      color: white;
-      transparent: true;
-      opacity: 0.95;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-circle>
-
-</a-entity>
-
-
-
-<!-- ================= BUBBLE 4 ================= -->
-
-<a-entity
-  position="0.66 0.28 0.33"
-
-  animation__move="
-    property: position;
-    from: 0.66 0.28 0.33;
-    to: 0.72 1.25 0.33;
-    dur: 3800;
-    delay: 950;
-    loop: true;
-    easing: easeOutSine;
-  "
-
-  animation__grow="
-    property: scale;
-    from: 0.38 0.38 0.38;
-    to: 1.75 1.75 1.75;
-    dur: 3800;
-    delay: 950;
-    loop: true;
-  "
->
-
-  <a-ring
-    radius-inner="0.050"
-    radius-outer="0.070"
-
-    material="
-      shader: flat;
-      color: #d9d2ff;
-      transparent: true;
-      opacity: 0.62;
-      side: double;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-ring>
-
-  <a-circle
-    position="-0.029 0.034 0.01"
-    radius="0.012"
-
-    material="
-      shader: flat;
-      color: white;
-      transparent: true;
-      opacity: 0.92;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-circle>
-
-</a-entity>
-
-
-
-<!-- ================= BUBBLE 5 ================= -->
-
-<a-entity
-  position="0.66 0.28 0.34"
-
-  animation__move="
-    property: position;
-    from: 0.66 0.28 0.34;
-    to: 0.91 1.02 0.34;
-    dur: 2850;
-    delay: 1250;
-    loop: true;
-    easing: easeOutSine;
-  "
-
-  animation__grow="
-    property: scale;
-    from: 0.42 0.42 0.42;
-    to: 1.50 1.50 1.50;
-    dur: 2850;
-    delay: 1250;
-    loop: true;
-  "
->
-
-  <a-ring
-    radius-inner="0.030"
-    radius-outer="0.048"
-
-    material="
-      shader: flat;
-      color: #bffff0;
-      transparent: true;
-      opacity: 0.67;
-      side: double;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-ring>
-
-  <a-circle
-    position="-0.018 0.022 0.01"
-    radius="0.008"
-
-    material="
-      shader: flat;
-      color: white;
-      transparent: true;
-      opacity: 0.95;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-circle>
-
-</a-entity>
-
-
-
-<!-- ================= BUBBLE 6 ================= -->
-
-<a-entity
-  position="0.66 0.28 0.35"
-
-  animation__move="
-    property: position;
-    from: 0.66 0.28 0.35;
-    to: 0.38 1.15 0.35;
-    dur: 3600;
-    delay: 1550;
-    loop: true;
-    easing: easeOutSine;
-  "
-
-  animation__grow="
-    property: scale;
-    from: 0.40 0.40 0.40;
-    to: 1.60 1.60 1.60;
-    dur: 3600;
-    delay: 1550;
-    loop: true;
-  "
->
-
-  <a-ring
-    radius-inner="0.038"
-    radius-outer="0.055"
-
-    material="
-      shader: flat;
-      color: #cde8ff;
-      transparent: true;
-      opacity: 0.65;
-      side: double;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-ring>
-
-  <a-circle
-    position="-0.021 0.026 0.01"
-    radius="0.009"
-
-    material="
-      shader: flat;
-      color: white;
-      transparent: true;
-      opacity: 0.94;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-circle>
-
-</a-entity>
-
-
-
-<!-- ================= BUBBLE 7 ================= -->
-
-<a-entity
-  position="0.66 0.28 0.36"
-
-  animation__move="
-    property: position;
-    from: 0.66 0.28 0.36;
-    to: 0.68 0.88 0.36;
-    dur: 2200;
-    delay: 1850;
-    loop: true;
-    easing: easeOutSine;
-  "
-
-  animation__grow="
-    property: scale;
-    from: 0.40 0.40 0.40;
-    to: 1.30 1.30 1.30;
-    dur: 2200;
-    delay: 1850;
-    loop: true;
-  "
->
-
-  <a-ring
-    radius-inner="0.022"
-    radius-outer="0.037"
-
-    material="
-      shader: flat;
-      color: #ffe0ef;
-      transparent: true;
-      opacity: 0.70;
-      side: double;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-ring>
-
-  <a-circle
-    position="-0.014 0.017 0.01"
-    radius="0.006"
-
-    material="
-      shader: flat;
-      color: white;
-      transparent: true;
-      opacity: 0.95;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-circle>
-
-</a-entity>
-
-
-
-<!-- ================= BUBBLE 8 ================= -->
-
-<a-entity
-  position="0.66 0.28 0.37"
-
-  animation__move="
-    property: position;
-    from: 0.66 0.28 0.37;
-    to: 1.00 1.20 0.37;
-    dur: 3900;
-    delay: 2150;
-    loop: true;
-    easing: easeOutSine;
-  "
-
-  animation__grow="
-    property: scale;
-    from: 0.38 0.38 0.38;
-    to: 1.80 1.80 1.80;
-    dur: 3900;
-    delay: 2150;
-    loop: true;
-  "
->
-
-  <a-ring
-    radius-inner="0.046"
-    radius-outer="0.066"
-
-    material="
-      shader: flat;
-      color: #e5d7ff;
-      transparent: true;
-      opacity: 0.62;
-      side: double;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-ring>
-
-  <a-circle
-    position="-0.027 0.032 0.01"
-    radius="0.011"
-
-    material="
-      shader: flat;
-      color: white;
-      transparent: true;
-      opacity: 0.94;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-circle>
-
-</a-entity>
-
-
-
-<!-- ================= BUBBLE 9 ================= -->
-
-<a-entity
-  position="0.66 0.28 0.38"
-
-  animation__move="
-    property: position;
-    from: 0.66 0.28 0.38;
-    to: 0.51 1.32 0.38;
-    dur: 4100;
-    delay: 2450;
-    loop: true;
-    easing: easeOutSine;
-  "
-
-  animation__grow="
-    property: scale;
-    from: 0.38 0.38 0.38;
-    to: 1.65 1.65 1.65;
-    dur: 4100;
-    delay: 2450;
-    loop: true;
-  "
->
-
-  <a-ring
-    radius-inner="0.034"
-    radius-outer="0.052"
-
-    material="
-      shader: flat;
-      color: #d4fff8;
-      transparent: true;
-      opacity: 0.65;
-      side: double;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-ring>
-
-  <a-circle
-    position="-0.020 0.025 0.01"
-    radius="0.009"
-
-    material="
-      shader: flat;
-      color: white;
-      transparent: true;
-      opacity: 0.95;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-circle>
-
-</a-entity>
-
-
-
-<!-- ================= BUBBLE 10 ================= -->
-
-<a-entity
-  position="0.66 0.28 0.39"
-
-  animation__move="
-    property: position;
-    from: 0.66 0.28 0.39;
-    to: 0.84 0.94 0.39;
-    dur: 2600;
-    delay: 2750;
-    loop: true;
-    easing: easeOutSine;
-  "
-
-  animation__grow="
-    property: scale;
-    from: 0.42 0.42 0.42;
-    to: 1.45 1.45 1.45;
-    dur: 2600;
-    delay: 2750;
-    loop: true;
-  "
->
-
-  <a-ring
-    radius-inner="0.025"
-    radius-outer="0.041"
-
-    material="
-      shader: flat;
-      color: #fff0c7;
-      transparent: true;
-      opacity: 0.70;
-      side: double;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-ring>
-
-  <a-circle
-    position="-0.015 0.019 0.01"
-    radius="0.007"
-
-    material="
-      shader: flat;
-      color: white;
-      transparent: true;
-      opacity: 0.95;
-      depthTest: false;
-      depthWrite: false;
-    "
-  ></a-circle>
-
-</a-entity>
+
+    <!-- ================= BUBBLE 1 ================= -->
+
+    <a-entity
+      position="0.66 0.28 0.30"
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.30;
+        to: 0.54 1.08 0.30;
+        dur: 3000;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__grow="
+        property: scale;
+        from: 0.45 0.45 0.45;
+        to: 1.55 1.55 1.55;
+        dur: 3000;
+        loop: true;
+        easing: easeOutSine;
+      "
+    >
+
+      <a-ring
+        radius-inner="0.034"
+        radius-outer="0.050"
+
+        material="
+          shader: flat;
+          color: #bffaff;
+          transparent: true;
+          opacity: 0.72;
+          side: double;
+          depthTest: false;
+          depthWrite: false;
+        "
+
+        animation="
+          property: material.opacity;
+          from: 0.72;
+          to: 0;
+          dur: 3000;
+          loop: true;
+        "
+      ></a-ring>
+
+
+      <a-circle
+        position="-0.020 0.022 0.01"
+        radius="0.009"
+
+        material="
+          shader: flat;
+          color: #ffffff;
+          transparent: true;
+          opacity: 0.95;
+          depthTest: false;
+          depthWrite: false;
+        "
+
+        animation="
+          property: material.opacity;
+          from: 0.95;
+          to: 0;
+          dur: 3000;
+          loop: true;
+        "
+      ></a-circle>
+
+    </a-entity>
+
+
+
+    <!-- ================= BUBBLE 2 ================= -->
+
+    <a-entity
+      position="0.66 0.28 0.31"
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.31;
+        to: 0.80 1.16 0.31;
+        dur: 3400;
+        delay: 300;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__grow="
+        property: scale;
+        from: 0.40 0.40 0.40;
+        to: 1.70 1.70 1.70;
+        dur: 3400;
+        delay: 300;
+        loop: true;
+        easing: easeOutSine;
+      "
+    >
+
+      <a-ring
+        radius-inner="0.044"
+        radius-outer="0.062"
+
+        material="
+          shader: flat;
+          color: #ffd6f4;
+          transparent: true;
+          opacity: 0.65;
+          side: double;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-ring>
+
+
+      <a-circle
+        position="-0.025 0.030 0.01"
+        radius="0.011"
+
+        material="
+          shader: flat;
+          color: #ffffff;
+          transparent: true;
+          opacity: 0.95;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-circle>
+
+    </a-entity>
+
+
+
+    <!-- ================= BUBBLE 3 ================= -->
+
+    <a-entity
+      position="0.66 0.28 0.32"
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.32;
+        to: 0.43 0.92 0.32;
+        dur: 2400;
+        delay: 650;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__grow="
+        property: scale;
+        from: 0.45 0.45 0.45;
+        to: 1.35 1.35 1.35;
+        dur: 2400;
+        delay: 650;
+        loop: true;
+      "
+    >
+
+      <a-ring
+        radius-inner="0.027"
+        radius-outer="0.043"
+
+        material="
+          shader: flat;
+          color: #fff5b8;
+          transparent: true;
+          opacity: 0.68;
+          side: double;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-ring>
+
+
+      <a-circle
+        position="-0.016 0.020 0.01"
+        radius="0.007"
+
+        material="
+          shader: flat;
+          color: white;
+          transparent: true;
+          opacity: 0.95;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-circle>
+
+    </a-entity>
+
+
+
+    <!-- ================= BUBBLE 4 ================= -->
+
+    <a-entity
+      position="0.66 0.28 0.33"
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.33;
+        to: 0.72 1.25 0.33;
+        dur: 3800;
+        delay: 950;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__grow="
+        property: scale;
+        from: 0.38 0.38 0.38;
+        to: 1.75 1.75 1.75;
+        dur: 3800;
+        delay: 950;
+        loop: true;
+      "
+    >
+
+      <a-ring
+        radius-inner="0.050"
+        radius-outer="0.070"
+
+        material="
+          shader: flat;
+          color: #d9d2ff;
+          transparent: true;
+          opacity: 0.62;
+          side: double;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-ring>
+
+
+      <a-circle
+        position="-0.029 0.034 0.01"
+        radius="0.012"
+
+        material="
+          shader: flat;
+          color: white;
+          transparent: true;
+          opacity: 0.92;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-circle>
+
+    </a-entity>
+
+
+
+    <!-- ================= BUBBLE 5 ================= -->
+
+    <a-entity
+      position="0.66 0.28 0.34"
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.34;
+        to: 0.91 1.02 0.34;
+        dur: 2850;
+        delay: 1250;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__grow="
+        property: scale;
+        from: 0.42 0.42 0.42;
+        to: 1.50 1.50 1.50;
+        dur: 2850;
+        delay: 1250;
+        loop: true;
+      "
+    >
+
+      <a-ring
+        radius-inner="0.030"
+        radius-outer="0.048"
+
+        material="
+          shader: flat;
+          color: #bffff0;
+          transparent: true;
+          opacity: 0.67;
+          side: double;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-ring>
+
+
+      <a-circle
+        position="-0.018 0.022 0.01"
+        radius="0.008"
+
+        material="
+          shader: flat;
+          color: white;
+          transparent: true;
+          opacity: 0.95;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-circle>
+
+    </a-entity>
+
+
+
+    <!-- ================= BUBBLE 6 ================= -->
+
+    <a-entity
+      position="0.66 0.28 0.35"
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.35;
+        to: 0.38 1.15 0.35;
+        dur: 3600;
+        delay: 1550;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__grow="
+        property: scale;
+        from: 0.40 0.40 0.40;
+        to: 1.60 1.60 1.60;
+        dur: 3600;
+        delay: 1550;
+        loop: true;
+      "
+    >
+
+      <a-ring
+        radius-inner="0.038"
+        radius-outer="0.055"
+
+        material="
+          shader: flat;
+          color: #cde8ff;
+          transparent: true;
+          opacity: 0.65;
+          side: double;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-ring>
+
+
+      <a-circle
+        position="-0.021 0.026 0.01"
+        radius="0.009"
+
+        material="
+          shader: flat;
+          color: white;
+          transparent: true;
+          opacity: 0.94;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-circle>
+
+    </a-entity>
+
+
+
+    <!-- ================= BUBBLE 7 ================= -->
+
+    <a-entity
+      position="0.66 0.28 0.36"
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.36;
+        to: 0.68 0.88 0.36;
+        dur: 2200;
+        delay: 1850;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__grow="
+        property: scale;
+        from: 0.40 0.40 0.40;
+        to: 1.30 1.30 1.30;
+        dur: 2200;
+        delay: 1850;
+        loop: true;
+      "
+    >
+
+      <a-ring
+        radius-inner="0.022"
+        radius-outer="0.037"
+
+        material="
+          shader: flat;
+          color: #ffe0ef;
+          transparent: true;
+          opacity: 0.70;
+          side: double;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-ring>
+
+
+      <a-circle
+        position="-0.014 0.017 0.01"
+        radius="0.006"
+
+        material="
+          shader: flat;
+          color: white;
+          transparent: true;
+          opacity: 0.95;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-circle>
+
+    </a-entity>
+
+
+
+    <!-- ================= BUBBLE 8 ================= -->
+
+    <a-entity
+      position="0.66 0.28 0.37"
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.37;
+        to: 1.00 1.20 0.37;
+        dur: 3900;
+        delay: 2150;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__grow="
+        property: scale;
+        from: 0.38 0.38 0.38;
+        to: 1.80 1.80 1.80;
+        dur: 3900;
+        delay: 2150;
+        loop: true;
+      "
+    >
+
+      <a-ring
+        radius-inner="0.046"
+        radius-outer="0.066"
+
+        material="
+          shader: flat;
+          color: #e5d7ff;
+          transparent: true;
+          opacity: 0.62;
+          side: double;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-ring>
+
+
+      <a-circle
+        position="-0.027 0.032 0.01"
+        radius="0.011"
+
+        material="
+          shader: flat;
+          color: white;
+          transparent: true;
+          opacity: 0.94;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-circle>
+
+    </a-entity>
+
+
+
+    <!-- ================= BUBBLE 9 ================= -->
+
+    <a-entity
+      position="0.66 0.28 0.38"
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.38;
+        to: 0.51 1.32 0.38;
+        dur: 4100;
+        delay: 2450;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__grow="
+        property: scale;
+        from: 0.38 0.38 0.38;
+        to: 1.65 1.65 1.65;
+        dur: 4100;
+        delay: 2450;
+        loop: true;
+      "
+    >
+
+      <a-ring
+        radius-inner="0.034"
+        radius-outer="0.052"
+
+        material="
+          shader: flat;
+          color: #d4fff8;
+          transparent: true;
+          opacity: 0.65;
+          side: double;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-ring>
+
+
+      <a-circle
+        position="-0.020 0.025 0.01"
+        radius="0.009"
+
+        material="
+          shader: flat;
+          color: white;
+          transparent: true;
+          opacity: 0.95;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-circle>
+
+    </a-entity>
+
+
+
+    <!-- ================= BUBBLE 10 ================= -->
+
+    <a-entity
+      position="0.66 0.28 0.39"
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.39;
+        to: 0.84 0.94 0.39;
+        dur: 2600;
+        delay: 2750;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__grow="
+        property: scale;
+        from: 0.42 0.42 0.42;
+        to: 1.45 1.45 1.45;
+        dur: 2600;
+        delay: 2750;
+        loop: true;
+      "
+    >
+
+      <a-ring
+        radius-inner="0.025"
+        radius-outer="0.041"
+
+        material="
+          shader: flat;
+          color: #fff0c7;
+          transparent: true;
+          opacity: 0.70;
+          side: double;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-ring>
+
+
+      <a-circle
+        position="-0.015 0.019 0.01"
+        radius="0.007"
+
+        material="
+          shader: flat;
+          color: white;
+          transparent: true;
+          opacity: 0.95;
+          depthTest: false;
+          depthWrite: false;
+        "
+      ></a-circle>
+
+    </a-entity>
 
 
   </a-entity>
@@ -1552,9 +1785,7 @@
 
 
 
-      /* =====================================================
-         PRELOAD TIP IMAGES
-         ===================================================== */
+      /* PRELOAD TIP IMAGES */
 
       tipFrames.forEach(
 
@@ -1595,13 +1826,6 @@
 
       /* =====================================================
          TIP ANIMATION
-
-         closed
-         open
-         money dropping
-         money inside
-         closed
-         pause
          ===================================================== */
 
       async function playTipAnimation() {
@@ -1668,8 +1892,6 @@
 
           await playTipAnimation();
 
-
-          /* PAUSE ON CLOSED KITTY */
 
           await wait(
             2500
@@ -1740,10 +1962,6 @@
           catch (error) {
 
 
-            /*
-              FALLBACK FOR OLDER MOBILE BROWSERS
-            */
-
             const textArea =
               document.createElement(
                 "textarea"
@@ -1775,6 +1993,7 @@
 
             try {
 
+
               document.execCommand(
                 "copy"
               );
@@ -1783,13 +2002,16 @@
               copyMessage.textContent =
                 "EMAIL COPIED ✓";
 
+
             }
 
 
             catch (copyError) {
 
+
               copyMessage.textContent =
                 "COPY: " + email;
+
 
             }
 
@@ -1834,7 +2056,7 @@
 
 
       /* =====================================================
-         TAP DARK AREA TO CLOSE POPUP
+         TAP DARK AREA TO CLOSE
          ===================================================== */
 
       tipOverlay.addEventListener(
