@@ -140,400 +140,6 @@
 
   </style>
 
-
-  <script>
-
-
-    /* ==========================================================
-       PIPE BUBBLE EMITTER
-
-       Bubble origin is positioned at the PIPE BOWL.
-
-       EDIT THESE TWO NUMBERS if needed:
-
-       pipeX = left / right
-       pipeY = up / down
-
-       ========================================================== */
-
-
-    AFRAME.registerComponent("pipe-bubbles", {
-
-
-      init: function () {
-
-
-        const target = this.el;
-
-
-        let bubbleTimer = null;
-
-        let running = false;
-
-
-
-        /* ======================================================
-           PIPE BOWL POSITION
-           ====================================================== */
-
-
-        const pipeX = 0.72;
-
-        const pipeY = 0.20;
-
-        const pipeZ = 0.18;
-
-
-
-        /* ======================================================
-           CREATE ONE BUBBLE
-           ====================================================== */
-
-
-        function createBubble() {
-
-
-          if (!running) {
-            return;
-          }
-
-
-          const bubble =
-            document.createElement("a-ring");
-
-
-          bubble.classList.add(
-            "pipe-bubble"
-          );
-
-
-
-          /* RANDOM BUBBLE SIZE */
-
-          const size =
-            0.025 +
-            Math.random() * 0.045;
-
-
-
-          /* SMALL RANDOM START VARIATION */
-
-          const startX =
-            pipeX +
-            (Math.random() - 0.5) * 0.035;
-
-
-          const startY =
-            pipeY +
-            Math.random() * 0.025;
-
-
-
-          /* RANDOM LEFT / RIGHT DRIFT */
-
-          const drift =
-            (Math.random() - 0.5) * 0.30;
-
-
-          const endX =
-            startX + drift;
-
-
-          const rise =
-            0.45 +
-            Math.random() * 0.35;
-
-
-          const endY =
-            startY + rise;
-
-
-
-          /* RANDOM SPEED */
-
-          const duration =
-            1800 +
-            Math.random() * 1500;
-
-
-
-          /* BUBBLE SHAPE */
-
-          bubble.setAttribute(
-            "radius-inner",
-            size * 0.72
-          );
-
-
-          bubble.setAttribute(
-            "radius-outer",
-            size
-          );
-
-
-
-          bubble.setAttribute(
-
-            "position",
-
-            `${startX} ${startY} ${pipeZ}`
-
-          );
-
-
-
-          /* BUBBLE MATERIAL */
-
-          bubble.setAttribute(
-
-            "material",
-
-            `
-            shader: flat;
-            color: #dffaff;
-            transparent: true;
-            opacity: 0.75;
-            side: double;
-            depthWrite: false;
-            depthTest: false;
-            `
-
-          );
-
-
-
-          /* RISE + DRIFT */
-
-          bubble.setAttribute(
-
-            "animation__move",
-
-            `
-            property: position;
-            from: ${startX} ${startY} ${pipeZ};
-            to: ${endX} ${endY} ${pipeZ};
-            dur: ${duration};
-            easing: easeOutQuad;
-            `
-
-          );
-
-
-
-          /* GROW */
-
-          bubble.setAttribute(
-
-            "animation__grow",
-
-            `
-            property: scale;
-            from: 0.65 0.65 0.65;
-            to: 1.45 1.45 1.45;
-            dur: ${duration};
-            easing: easeOutQuad;
-            `
-
-          );
-
-
-
-          /* FADE */
-
-          bubble.setAttribute(
-
-            "animation__fade",
-
-            `
-            property: material.opacity;
-            from: 0.75;
-            to: 0;
-            dur: ${duration};
-            easing: easeInQuad;
-            `
-
-          );
-
-
-
-          target.appendChild(
-            bubble
-          );
-
-
-
-          /* REMOVE AFTER ANIMATION */
-
-          setTimeout(
-
-            function () {
-
-
-              if (
-                bubble &&
-                bubble.parentNode
-              ) {
-
-                bubble.parentNode
-                  .removeChild(
-                    bubble
-                  );
-
-              }
-
-
-            },
-
-            duration + 100
-
-          );
-
-
-        }
-
-
-
-        /* ======================================================
-           START BUBBLES
-           ====================================================== */
-
-
-        function startBubbles() {
-
-
-          if (running) {
-            return;
-          }
-
-
-          running = true;
-
-
-
-          /* FIRST BUBBLE */
-
-          createBubble();
-
-
-
-          /* NEW BUBBLE EVERY ~350ms */
-
-          bubbleTimer =
-            setInterval(
-
-              function () {
-
-
-                createBubble();
-
-
-              },
-
-              350
-
-            );
-
-
-        }
-
-
-
-        /* ======================================================
-           STOP BUBBLES
-           ====================================================== */
-
-
-        function stopBubbles() {
-
-
-          running = false;
-
-
-          if (bubbleTimer) {
-
-
-            clearInterval(
-              bubbleTimer
-            );
-
-
-            bubbleTimer =
-              null;
-
-
-          }
-
-
-
-          /* REMOVE EXISTING BUBBLES */
-
-          const bubbles =
-            target.querySelectorAll(
-              ".pipe-bubble"
-            );
-
-
-          bubbles.forEach(
-
-            function (bubble) {
-
-
-              bubble.remove();
-
-
-            }
-
-          );
-
-
-        }
-
-
-
-        /* ======================================================
-           FACE FOUND / LOST
-           ====================================================== */
-
-
-        target.addEventListener(
-
-          "targetFound",
-
-          function () {
-
-
-            startBubbles();
-
-
-          }
-
-        );
-
-
-
-        target.addEventListener(
-
-          "targetLost",
-
-          function () {
-
-
-            stopBubbles();
-
-
-          }
-
-        );
-
-
-      }
-
-
-    });
-
-
-  </script>
-
 </head>
 
 
@@ -621,26 +227,21 @@
   <!-- CAMERA -->
 
   <a-camera
-
     active="false"
-
     position="0 0 0"
-
   >
   </a-camera>
 
 
 
   <!-- ======================================================
-       SALTY SAILOR HAT + CAT EARS
+       HAT
        ====================================================== -->
 
   <a-entity
-
     mindar-face-target="
       anchorIndex: 10
     "
-
   >
 
 
@@ -682,19 +283,13 @@
 
   <!-- ======================================================
        CAT NOSE + WHISKERS + PIPE
-
-       BUBBLES ARE ATTACHED TO THIS FACE ANCHOR
        ====================================================== -->
 
   <a-entity
 
-    id="mouthTarget"
-
     mindar-face-target="
       anchorIndex: 152
     "
-
-    pipe-bubbles
 
   >
 
@@ -729,6 +324,311 @@
 
     >
     </a-image>
+
+
+
+    <!-- ===================================================
+         BUBBLE 1
+         STARTS AT PIPE BOWL
+
+         Change the FIRST two numbers below
+         to move the bubble source:
+
+         X = left / right
+         Y = up / down
+
+         Current source:
+         X 0.66
+         Y 0.28
+         =================================================== -->
+
+    <a-ring
+
+      position="
+        0.66
+        0.28
+        0.30
+      "
+
+      radius-inner="0.035"
+
+      radius-outer="0.055"
+
+      material="
+        shader: flat;
+        color: #ffffff;
+        transparent: true;
+        opacity: 0.90;
+        side: double;
+        depthTest: false;
+        depthWrite: false;
+      "
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.30;
+        to: 0.56 1.05 0.30;
+        dur: 2600;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__scale="
+        property: scale;
+        from: 0.6 0.6 0.6;
+        to: 1.7 1.7 1.7;
+        dur: 2600;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__fade="
+        property: material.opacity;
+        from: 0.90;
+        to: 0.10;
+        dur: 2600;
+        loop: true;
+        easing: linear;
+      "
+
+    >
+    </a-ring>
+
+
+
+    <!-- BUBBLE 2 -->
+
+    <a-ring
+
+      position="
+        0.66
+        0.28
+        0.31
+      "
+
+      radius-inner="0.045"
+
+      radius-outer="0.065"
+
+      material="
+        shader: flat;
+        color: #dffaff;
+        transparent: true;
+        opacity: 0;
+        side: double;
+        depthTest: false;
+        depthWrite: false;
+      "
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.31;
+        to: 0.82 1.18 0.31;
+        dur: 3100;
+        delay: 650;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__scale="
+        property: scale;
+        from: 0.55 0.55 0.55;
+        to: 1.8 1.8 1.8;
+        dur: 3100;
+        delay: 650;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__fade="
+        property: material.opacity;
+        from: 0.85;
+        to: 0.05;
+        dur: 3100;
+        delay: 650;
+        loop: true;
+        easing: linear;
+      "
+
+    >
+    </a-ring>
+
+
+
+    <!-- BUBBLE 3 -->
+
+    <a-ring
+
+      position="
+        0.66
+        0.28
+        0.32
+      "
+
+      radius-inner="0.027"
+
+      radius-outer="0.045"
+
+      material="
+        shader: flat;
+        color: #ffffff;
+        transparent: true;
+        opacity: 0;
+        side: double;
+        depthTest: false;
+        depthWrite: false;
+      "
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.32;
+        to: 0.46 0.92 0.32;
+        dur: 2200;
+        delay: 1250;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__scale="
+        property: scale;
+        from: 0.6 0.6 0.6;
+        to: 1.5 1.5 1.5;
+        dur: 2200;
+        delay: 1250;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__fade="
+        property: material.opacity;
+        from: 0.85;
+        to: 0.05;
+        dur: 2200;
+        delay: 1250;
+        loop: true;
+        easing: linear;
+      "
+
+    >
+    </a-ring>
+
+
+
+    <!-- BUBBLE 4 -->
+
+    <a-ring
+
+      position="
+        0.66
+        0.28
+        0.33
+      "
+
+      radius-inner="0.055"
+
+      radius-outer="0.075"
+
+      material="
+        shader: flat;
+        color: #e8fbff;
+        transparent: true;
+        opacity: 0;
+        side: double;
+        depthTest: false;
+        depthWrite: false;
+      "
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.33;
+        to: 0.73 1.25 0.33;
+        dur: 3400;
+        delay: 1800;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__scale="
+        property: scale;
+        from: 0.5 0.5 0.5;
+        to: 1.65 1.65 1.65;
+        dur: 3400;
+        delay: 1800;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__fade="
+        property: material.opacity;
+        from: 0.80;
+        to: 0.05;
+        dur: 3400;
+        delay: 1800;
+        loop: true;
+        easing: linear;
+      "
+
+    >
+    </a-ring>
+
+
+
+    <!-- BUBBLE 5 -->
+
+    <a-ring
+
+      position="
+        0.66
+        0.28
+        0.34
+      "
+
+      radius-inner="0.030"
+
+      radius-outer="0.050"
+
+      material="
+        shader: flat;
+        color: #ffffff;
+        transparent: true;
+        opacity: 0;
+        side: double;
+        depthTest: false;
+        depthWrite: false;
+      "
+
+      animation__move="
+        property: position;
+        from: 0.66 0.28 0.34;
+        to: 0.90 1.00 0.34;
+        dur: 2800;
+        delay: 2350;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__scale="
+        property: scale;
+        from: 0.5 0.5 0.5;
+        to: 1.75 1.75 1.75;
+        dur: 2800;
+        delay: 2350;
+        loop: true;
+        easing: easeOutSine;
+      "
+
+      animation__fade="
+        property: material.opacity;
+        from: 0.85;
+        to: 0.05;
+        dur: 2800;
+        delay: 2350;
+        loop: true;
+        easing: linear;
+      "
+
+    >
+    </a-ring>
 
 
   </a-entity>
@@ -771,26 +671,20 @@
 
 
 
-      /* BACK */
-
       backButton.addEventListener(
 
         "click",
 
         function () {
 
-
           window.location.href =
             "./index.html";
-
 
         }
 
       );
 
 
-
-      /* GET MINDAR FACE SYSTEM */
 
       scene.addEventListener(
 
@@ -798,21 +692,16 @@
 
         function () {
 
-
           arSystem =
-
             scene.systems[
               "mindar-face-system"
             ];
-
 
         }
 
       );
 
 
-
-      /* SWITCH FRONT / REAR CAMERA */
 
       switchButton.addEventListener(
 
@@ -823,13 +712,10 @@
 
           if (!arSystem) {
 
-
             arSystem =
-
               scene.systems[
                 "mindar-face-system"
               ];
-
 
           }
 
@@ -846,22 +732,18 @@
 
             try {
 
-
               await arSystem
                 .switchCamera();
-
 
             }
 
 
             catch (error) {
 
-
               console.log(
                 "Camera switch error:",
                 error
               );
-
 
             }
 
