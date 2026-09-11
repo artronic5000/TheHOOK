@@ -107,132 +107,96 @@
        CLICK KITTY BANNER
        ===================================================== */
 
-    #clickKittyBanner {
+   #clickKittyBanner {
 
-      position: fixed;
+  position: fixed;
 
-      right: 14px;
-      bottom: 205px;
+  left: 14px;
+  bottom: 18px;
 
-      width: 105px;
+  width: 105px;
 
-      z-index: 100001;
+  z-index: 100001;
 
-      padding: 6px 5px;
+  padding: 6px 5px;
 
-      box-sizing: border-box;
+  box-sizing: border-box;
 
-      border-radius: 12px;
+  border-radius: 12px;
 
-      background:
-        rgba(0,0,0,0.72);
+  background:
+    rgba(0,0,0,0.72);
 
-      color:
-        #f6b93b;
+  color:
+    #f6b93b;
 
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
 
-      font-size: 12px;
+  font-size: 12px;
 
-      font-weight: 900;
+  font-weight: 900;
 
-      letter-spacing: 1px;
+  letter-spacing: 1px;
 
-      text-align: center;
+  text-align: center;
 
-      pointer-events: none;
+  pointer-events: none;
 
-      animation:
-        kittyBannerPulse
-        1.8s
-        ease-in-out
-        infinite;
+  animation:
+    kittyBannerPulse
+    1.8s
+    ease-in-out
+    infinite;
 
-    }
-
-
-    @keyframes kittyBannerPulse {
-
-      0%,
-      100% {
-
-        transform:
-          scale(1);
-
-        text-shadow:
-          0 0 3px
-          rgba(246,185,59,0.5);
-
-      }
-
-
-      50% {
-
-        transform:
-          scale(1.08);
-
-        text-shadow:
-          0 0 10px
-          rgba(246,185,59,1);
-
-      }
-
-    }
-
-
+}
 
     /* =====================================================
        ANIMATED KITTY TIP BUTTON
        ===================================================== */
 
-    #tipButton {
+#tipButton {
 
-      position: fixed;
+  position: fixed;
 
-      right: 14px;
-      bottom: 58px;
+  left: 14px;
+  bottom: 58px;
 
-      width: 105px;
-      height: 145px;
+  width: 105px;
+  height: 145px;
 
-      z-index: 100000;
+  z-index: 100000;
 
-      border: none;
+  border: none;
+  padding: 0;
 
-      padding: 0;
+  background: transparent;
 
-      background:
-        transparent;
+  cursor: pointer;
 
-      cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 
-      -webkit-tap-highlight-color:
-        transparent;
-
-    }
+}
 
 
-    #tipButton img {
+#tipButton img {
 
-      width: 100%;
-      height: 100%;
+  width: 100%;
+  height: 100%;
 
-      object-fit:
-        contain;
+  object-fit: contain;
 
-      display:
-        block;
+  display: block;
 
-      filter:
-        drop-shadow(
-          0 4px 7px
-          rgba(0,0,0,0.45)
-        );
+  filter:
+    drop-shadow(
+      0 4px 7px
+      rgba(0,0,0,0.45)
+    );
 
-    }
+}
 
 
     #tipButton:active {
@@ -905,7 +869,7 @@
 
       position="
         -0.03
-        0.15
+        0.25
         0.05
       "
 
