@@ -221,6 +221,90 @@
 
     }
 
+
+    /* ======================================================
+       SCREEN-FIXED BAND NAMES
+       Large like "Let's Meet The Band", then shrink into stack
+       ====================================================== */
+
+    #bandNameStack {
+      position: fixed;
+      inset: 0;
+      z-index: 99997;
+      pointer-events: none;
+    }
+
+    .band-screen-name {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+
+      width: 88%;
+      max-width: 460px;
+      height: auto;
+
+      opacity: 0;
+
+      transform:
+        translate(-50%, -50%)
+        scale(0.92);
+
+      transform-origin: center center;
+
+      transition:
+        left 0.65s ease,
+        top 0.65s ease,
+        width 0.65s ease,
+        max-width 0.65s ease,
+        opacity 0.25s ease,
+        transform 0.65s cubic-bezier(.22,.9,.28,1);
+
+      filter:
+        drop-shadow(
+          0 7px 12px
+          rgba(0,0,0,0.32)
+        );
+    }
+
+    /* BIG centred reveal */
+    .band-screen-name.flash {
+      left: 50%;
+      top: 50%;
+
+      width: 88%;
+      max-width: 460px;
+
+      opacity: 1;
+
+      transform:
+        translate(-50%, -50%)
+        scale(1);
+    }
+
+    /* Small, steady final position */
+    .band-screen-name.stacked {
+      left: 50%;
+      top: var(--stack-top);
+
+      width: 36%;
+      max-width: 190px;
+
+      opacity: 1;
+
+      transform:
+        translate(-50%, -50%)
+        scale(1);
+    }
+
+    /* Fade the completed stack before the final Hook button */
+    .band-screen-name.fade-away {
+      opacity: 0;
+      transform:
+        translate(-50%, -50%)
+        scale(0.92);
+    }
+
+
   </style>
 
 
@@ -1092,6 +1176,127 @@
 
 
           /* =====================================================
+             SCREEN NAME OVERLAY
+             ===================================================== */
+
+          function resetScreenNames() {
+
+            const screenNames =
+              document.querySelectorAll(
+                ".band-screen-name"
+              );
+
+
+            screenNames.forEach(
+              function (img) {
+
+                img.classList.remove(
+                  "flash",
+                  "stacked",
+                  "fade-away"
+                );
+
+                img.style.opacity =
+                  "0";
+
+              }
+            );
+
+          }
+
+
+
+          function revealScreenName(id) {
+
+            if (!running)
+              return;
+
+
+            const img =
+              document.getElementById(id);
+
+
+            if (!img)
+              return;
+
+
+            img.classList.remove(
+              "stacked",
+              "fade-away"
+            );
+
+
+            img.style.opacity =
+              "";
+
+
+            /* Large, centred reveal */
+
+            requestAnimationFrame(
+              function () {
+
+                img.classList.add(
+                  "flash"
+                );
+
+              }
+            );
+
+
+            /* Shrink smoothly into its stack position */
+
+            timers.push(
+              setTimeout(
+                function () {
+
+                  if (!running)
+                    return;
+
+
+                  img.classList.remove(
+                    "flash"
+                  );
+
+
+                  img.classList.add(
+                    "stacked"
+                  );
+
+                },
+
+                700
+
+              )
+            );
+
+          }
+
+
+
+          function fadeScreenNames() {
+
+            const screenNames =
+              document.querySelectorAll(
+                ".band-screen-name.stacked"
+              );
+
+
+            screenNames.forEach(
+              function (img) {
+
+                img.classList.add(
+                  "fade-away"
+                );
+
+              }
+            );
+
+          }
+
+
+
+
+          /* =====================================================
              SHOW THE HOOK BUTTON
              ===================================================== */
 
@@ -1185,6 +1390,8 @@
 
             hideMeetBandIntro();
 
+            resetScreenNames();
+
           }
 
 
@@ -1232,61 +1439,16 @@
               );
 
 
-              /* MICHAEL */
+              /* =================================================
+                 BAND NAMES
+                 Order:
+                 NICK -> SEAN -> GAZ -> RYAN -> MICHAEL
 
-              timers.push(
-                setTimeout(
-                  function () {
-
-                    createName(
-                      names[1],
-                      1
-                    );
-
-                  },
-
-                  2600
-
-                )
-              );
-
-
-              /* RYAN */
-
-              timers.push(
-                setTimeout(
-                  function () {
-
-                    createName(
-                      names[2],
-                      2
-                    );
-
-                  },
-
-                  4000
-
-                )
-              );
-
-
-              /* GAZ */
-
-              timers.push(
-                setTimeout(
-                  function () {
-
-                    createName(
-                      names[0],
-                      0
-                    );
-
-                  },
-
-                  5400
-
-                )
-              );
+                 Each name:
+                 1. appears large in the centre
+                 2. shrinks into the vertical stack
+                 3. stays completely steady
+                 ================================================= */
 
 
               /* NICK */
@@ -1295,14 +1457,13 @@
                 setTimeout(
                   function () {
 
-                    createName(
-                      names[3],
-                      3
+                    revealScreenName(
+                      "screenNick"
                     );
 
                   },
 
-                  6800
+                  2200
 
                 )
               );
@@ -1314,14 +1475,84 @@
                 setTimeout(
                   function () {
 
-                    createName(
-                      names[4],
-                      4
+                    revealScreenName(
+                      "screenSean"
                     );
 
                   },
 
-                  8200
+                  3500
+
+                )
+              );
+
+
+              /* GAZ */
+
+              timers.push(
+                setTimeout(
+                  function () {
+
+                    revealScreenName(
+                      "screenGaz"
+                    );
+
+                  },
+
+                  4800
+
+                )
+              );
+
+
+              /* RYAN */
+
+              timers.push(
+                setTimeout(
+                  function () {
+
+                    revealScreenName(
+                      "screenRyan"
+                    );
+
+                  },
+
+                  6100
+
+                )
+              );
+
+
+              /* MICHAEL */
+
+              timers.push(
+                setTimeout(
+                  function () {
+
+                    revealScreenName(
+                      "screenMichael"
+                    );
+
+                  },
+
+                  7400
+
+                )
+              );
+
+
+              /* Hold the full five-name stack briefly,
+                 then fade it away */
+
+              timers.push(
+                setTimeout(
+                  function () {
+
+                    fadeScreenNames();
+
+                  },
+
+                  8800
 
                 )
               );
@@ -1337,7 +1568,7 @@
 
                   },
 
-                  9800
+                  9500
 
                 )
               );
@@ -1427,6 +1658,62 @@
   <img
     src="./meettheband.png"
     alt="Let's Meet The Band"
+  >
+
+</div>
+
+
+<!-- ======================================================
+     SCREEN-FIXED BAND NAME STACK
+
+     Final stack order:
+     NICK
+     SEAN
+     GAZ
+     RYAN
+     MICHAEL
+     ====================================================== -->
+
+<div id="bandNameStack">
+
+  <img
+    id="screenNick"
+    class="band-screen-name"
+    src="./nick.png"
+    alt="Nick"
+    style="--stack-top: 22%;"
+  >
+
+  <img
+    id="screenSean"
+    class="band-screen-name"
+    src="./sean.png"
+    alt="Sean"
+    style="--stack-top: 35%;"
+  >
+
+  <img
+    id="screenGaz"
+    class="band-screen-name"
+    src="./gaz.png"
+    alt="Gaz"
+    style="--stack-top: 48%;"
+  >
+
+  <img
+    id="screenRyan"
+    class="band-screen-name"
+    src="./ryan.png"
+    alt="Ryan"
+    style="--stack-top: 61%;"
+  >
+
+  <img
+    id="screenMichael"
+    class="band-screen-name"
+    src="./michael.png"
+    alt="Michael"
+    style="--stack-top: 74%;"
   >
 
 </div>
