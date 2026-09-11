@@ -33,17 +33,6 @@
     }
 
 
-    /*
-      IMPORTANT:
-
-      No custom VIDEO positioning here.
-
-      MindAR will position and size the
-      camera video so that it lines up
-      correctly with the face tracking.
-    */
-
-
     #backButton {
 
       position: fixed;
@@ -210,26 +199,23 @@
 >
 
 
+  <!-- ======================================================
+       NEW ASSETS
+       ====================================================== -->
+
   <a-assets>
 
 
     <img
-      id="earsImage"
-      src="./catears.png"
+      id="hatImage"
+      src="./hat.png"
       crossorigin="anonymous"
     >
 
 
     <img
-      id="beardImage"
-      src="./beard.png"
-      crossorigin="anonymous"
-    >
-
-
-    <img
-      id="pipeImage"
-      src="./pipe.png"
+      id="mouthImage"
+      src="./mouth.png"
       crossorigin="anonymous"
     >
 
@@ -249,10 +235,14 @@
 
 
   <!-- ======================================================
-       CAT EARS
+       SALTY SAILOR HAT + CAT EARS
 
-       Position remains:
-       0.00  0.30  0.02
+       X = left / right
+       Y = up / down
+       Z = front / back
+
+       Start here:
+       0.00  0.32  0.05
        ====================================================== -->
 
   <a-entity
@@ -264,20 +254,20 @@
 
     <a-image
 
-      src="#earsImage"
+      src="#hatImage"
 
       position="
-    0.00
-        0.30
-        0.02
+        0.00
+        0.32
+        0.05
       "
 
       width="
-        1.65
+        1.75
       "
 
       height="
-        0.85
+        0.95
       "
 
       material="
@@ -299,13 +289,13 @@
 
 
   <!-- ======================================================
-       BEARD
+       CAT MOUTH + WHISKERS + PIPE
 
-       Position remains:
-       0.00  0.06  0.05
+       Start here:
+       0.00  -0.02  0.12
 
-       depthTest:false prevents transparent
-       layers from cutting pieces out.
+       You will probably only need to
+       tweak X and Y slightly after testing.
        ====================================================== -->
 
   <a-entity
@@ -317,82 +307,20 @@
 
     <a-image
 
-      src="#beardImage"
+      src="#mouthImage"
 
       position="
         0.00
-        0.06
-        0.05
-      "
-
-      width="
-        1.40
-      "
-
-      height="
-        1.10
-      "
-
-      material="
-        shader: flat;
-        transparent: true;
-        opacity: 1;
-        alphaTest: 0.01;
-        side: double;
-        depthWrite: false;
-        depthTest: false;
-      "
-
-    >
-    </a-image>
-
-
-  </a-entity>
-
-
-
-  <!-- ======================================================
-       PIPE
-
-       Same X/Y position:
-       0.36  -0.14
-
-       Z slightly increased:
-       0.12
-
-       This puts the pipe safely above
-       the beard layer.
-       ====================================================== -->
-
-  <a-entity
-    mindar-face-target="
-      anchorIndex: 61
-    "
-  >
-
-
-    <a-image
-
-      src="#pipeImage"
-
-      position="
-        0.66
-        -0.20
+        -0.02
         0.12
       "
 
       width="
-        0.80
+        1.70
       "
 
       height="
-        0.40
-      "
-
-      rotation="
-        0
-        0
-        -8
+        0.95
       "
 
       material="
@@ -466,7 +394,7 @@
 
 
 
-      /* GET MINDAR SYSTEM */
+      /* GET MINDAR FACE SYSTEM */
 
       scene.addEventListener(
 
