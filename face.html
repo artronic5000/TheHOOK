@@ -33,19 +33,16 @@
     }
 
 
-    /* CAMERA VIDEO */
+    /*
+      IMPORTANT:
 
-    video {
+      No custom VIDEO positioning here.
 
-      width: 100% !important;
-      height: 100% !important;
+      MindAR will position and size the
+      camera video so that it lines up
+      correctly with the face tracking.
+    */
 
-      object-fit: cover !important;
-
-    }
-
-
-    /* BACK BUTTON */
 
     #backButton {
 
@@ -82,8 +79,6 @@
     }
 
 
-    /* CAMERA SWITCH BUTTON */
-
     #switchCamera {
 
       position: fixed;
@@ -118,8 +113,6 @@
 
     }
 
-
-    /* BOTTOM INSTRUCTION */
 
     #instruction {
 
@@ -165,8 +158,6 @@
 <body>
 
 
-<!-- BACK BUTTON -->
-
 <button
   id="backButton"
   type="button"
@@ -174,9 +165,6 @@
   ← BACK
 </button>
 
-
-
-<!-- CAMERA SWITCH -->
 
 <button
   id="switchCamera"
@@ -186,16 +174,11 @@
 </button>
 
 
-
 <div id="instruction">
   SWITCH FRONT / BACK CAMERA
 </div>
 
 
-
-<!-- =========================================================
-     FACE AR SCENE
-     ========================================================= -->
 
 <a-scene
 
@@ -226,8 +209,6 @@
 
 >
 
-
-  <!-- ASSETS -->
 
   <a-assets>
 
@@ -270,12 +251,8 @@
   <!-- ======================================================
        CAT EARS
 
-       X stays -0.30
-
-       OLD Y = 0.50
-       NEW Y = 0.30
-
-       EARS MOVED DOWN 0.20
+       Position remains:
+       -0.30  0.30  0.02
        ====================================================== -->
 
   <a-entity
@@ -310,6 +287,7 @@
         alphaTest: 0.01;
         side: double;
         depthWrite: false;
+        depthTest: false;
       "
 
     >
@@ -323,12 +301,11 @@
   <!-- ======================================================
        BEARD
 
-       X stays -0.30
+       Position remains:
+       -0.30  0.06  0.05
 
-       OLD Y = -0.14
-       NEW Y = 0.06
-
-       BEARD MOVED UP 0.20
+       depthTest:false prevents transparent
+       layers from cutting pieces out.
        ====================================================== -->
 
   <a-entity
@@ -363,6 +340,7 @@
         alphaTest: 0.01;
         side: double;
         depthWrite: false;
+        depthTest: false;
       "
 
     >
@@ -376,11 +354,14 @@
   <!-- ======================================================
        PIPE
 
-       NO CHANGE
+       Same X/Y position:
+       0.36  -0.14
 
-       X = 0.36
-       Y = -0.14
-       Z = 0.08
+       Z slightly increased:
+       0.12
+
+       This puts the pipe safely above
+       the beard layer.
        ====================================================== -->
 
   <a-entity
@@ -397,7 +378,7 @@
       position="
         0.36
         -0.14
-        0.08
+        0.12
       "
 
       width="
@@ -421,6 +402,7 @@
         alphaTest: 0.01;
         side: double;
         depthWrite: false;
+        depthTest: false;
       "
 
     >
@@ -506,7 +488,7 @@
 
 
 
-      /* SWITCH CAMERA */
+      /* SWITCH FRONT / REAR CAMERA */
 
       switchButton.addEventListener(
 
