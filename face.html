@@ -138,6 +138,344 @@
 
     }
 
+
+    /* =====================================================
+       ANIMATED KITTY TIP BUTTON
+       ===================================================== */
+
+    #tipButton {
+
+      position: fixed;
+
+      right: 14px;
+      bottom: 58px;
+
+      width: 105px;
+      height: 145px;
+
+      z-index: 100000;
+
+      border: none;
+
+      padding: 0;
+
+      background: transparent;
+
+      cursor: pointer;
+
+      -webkit-tap-highlight-color: transparent;
+
+    }
+
+
+    #tipButton img {
+
+      width: 100%;
+      height: 100%;
+
+      object-fit: contain;
+
+      display: block;
+
+      filter:
+        drop-shadow(
+          0 4px 7px
+          rgba(0,0,0,0.45)
+        );
+
+    }
+
+
+    #tipButton:active {
+
+      transform:
+        scale(0.94);
+
+    }
+
+
+    /* =====================================================
+       TIP OVERLAY
+       ===================================================== */
+
+    #tipOverlay {
+
+      display: none;
+
+      position: fixed;
+
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      z-index: 200000;
+
+      background:
+        rgba(0,0,0,0.84);
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+
+      box-sizing: border-box;
+
+    }
+
+
+    /* =====================================================
+       TIP PANEL
+       ===================================================== */
+
+    #tipPanel {
+
+      width:
+        min(
+          86%,
+          350px
+        );
+
+      padding:
+        28px
+        20px
+        24px
+        20px;
+
+      box-sizing:
+        border-box;
+
+      background:
+        #080808;
+
+      border:
+        2px solid #e2b544;
+
+      border-radius:
+        24px;
+
+      text-align:
+        center;
+
+      color:
+        white;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      box-shadow:
+        0 0 32px
+        rgba(226,181,68,0.35);
+
+    }
+
+
+    #tipPanel h1 {
+
+      margin:
+        0 0 16px 0;
+
+      color:
+        #e2b544;
+
+      font-size:
+        34px;
+
+      line-height:
+        1;
+
+      letter-spacing:
+        1px;
+
+    }
+
+
+    #tipPanel .findKitty {
+
+      color:
+        #f4d879;
+
+      font-size:
+        18px;
+
+      font-weight:
+        bold;
+
+      letter-spacing:
+        1.2px;
+
+      line-height:
+        1.35;
+
+    }
+
+
+    #tipPanel .or {
+
+      margin:
+        11px 0;
+
+      color:
+        #e2b544;
+
+      font-size:
+        18px;
+
+      font-style:
+        italic;
+
+    }
+
+
+    #tipPanel .transferTitle {
+
+      margin-bottom:
+        10px;
+
+      color:
+        white;
+
+      font-size:
+        14px;
+
+      font-weight:
+        bold;
+
+      letter-spacing:
+        1.3px;
+
+    }
+
+
+    #copyEmail {
+
+      width:
+        100%;
+
+      padding:
+        13px 8px;
+
+      border:
+        none;
+
+      border-radius:
+        24px;
+
+      background:
+        #e2b544;
+
+      color:
+        #111111;
+
+      font-size:
+        14px;
+
+      font-weight:
+        bold;
+
+      cursor:
+        pointer;
+
+      word-break:
+        break-word;
+
+      -webkit-tap-highlight-color:
+        transparent;
+
+    }
+
+
+    #copyEmail:active {
+
+      transform:
+        scale(0.97);
+
+    }
+
+
+    #copyMessage {
+
+      min-height:
+        18px;
+
+      margin-top:
+        10px;
+
+      color:
+        #e2b544;
+
+      font-size:
+        11px;
+
+      font-weight:
+        bold;
+
+      letter-spacing:
+        1.2px;
+
+    }
+
+
+    #paw {
+
+      margin-top:
+        6px;
+
+      color:
+        #e2b544;
+
+      font-size:
+        22px;
+
+    }
+
+
+    #closeTip {
+
+      margin-top:
+        14px;
+
+      padding:
+        10px 30px;
+
+      border:
+        1px solid #e2b544;
+
+      border-radius:
+        24px;
+
+      background:
+        transparent;
+
+      color:
+        white;
+
+      font-size:
+        13px;
+
+      font-weight:
+        bold;
+
+      letter-spacing:
+        1.2px;
+
+      cursor:
+        pointer;
+
+    }
+
+
+    #closeTip:active {
+
+      transform:
+        scale(0.96);
+
+    }
+
+
   </style>
 
 </head>
@@ -161,6 +499,85 @@
 >
   ↻ CAMERA
 </button>
+
+
+
+<!-- ======================================================
+     ANIMATED KITTY TIP BUTTON
+     ====================================================== -->
+
+<button
+  id="tipButton"
+  type="button"
+  aria-label="Tip The Hook"
+>
+
+  <img
+    id="tipAnimation"
+    src="./tip1.png"
+    alt="Tip The Hook"
+  >
+
+</button>
+
+
+<!-- ======================================================
+     TIP POPUP
+     ====================================================== -->
+
+<div id="tipOverlay">
+
+  <div id="tipPanel">
+
+    <h1>
+      THANK YOU!
+    </h1>
+
+    <div class="findKitty">
+
+      ♥
+      <br>
+
+      FIND THE KITTY
+      <br>
+
+      ON STAGE
+
+    </div>
+
+    <div class="or">
+      or
+    </div>
+
+    <div class="transferTitle">
+      E-TRANSFER:
+    </div>
+
+    <button
+      id="copyEmail"
+      type="button"
+    >
+      thehooksechelt@gmail.com
+    </button>
+
+    <div id="copyMessage">
+      TAP EMAIL TO COPY
+    </div>
+
+    <div id="paw">
+      🐾
+    </div>
+
+    <button
+      id="closeTip"
+      type="button"
+    >
+      CLOSE
+    </button>
+
+  </div>
+
+</div>
 
 
 <div id="instruction">
@@ -341,6 +758,7 @@
          X 0.66
          Y 0.28
          =================================================== -->
+
 <!-- ===================================================
      PRETTIER SOAP BUBBLES
      Same starting point:
@@ -405,6 +823,7 @@
   ></a-ring>
 
   <!-- SHINE -->
+
   <a-circle
     position="-0.020 0.022 0.01"
     radius="0.009"
@@ -952,6 +1371,7 @@
 
 </a-entity>
 
+
   </a-entity>
 
 
@@ -1067,6 +1487,384 @@
               );
 
             }
+
+
+          }
+
+
+        }
+
+      );
+
+
+
+      /* =====================================================
+         KITTY TIP ELEMENTS
+         ===================================================== */
+
+      const tipButton =
+        document.getElementById(
+          "tipButton"
+        );
+
+
+      const tipAnimation =
+        document.getElementById(
+          "tipAnimation"
+        );
+
+
+      const tipOverlay =
+        document.getElementById(
+          "tipOverlay"
+        );
+
+
+      const copyEmail =
+        document.getElementById(
+          "copyEmail"
+        );
+
+
+      const copyMessage =
+        document.getElementById(
+          "copyMessage"
+        );
+
+
+      const closeTip =
+        document.getElementById(
+          "closeTip"
+        );
+
+
+
+      /* =====================================================
+         TIP IMAGE FRAMES
+         ===================================================== */
+
+      const tipFrames = [
+
+        "./tip1.png",
+
+        "./tip2.png",
+
+        "./tip3.png",
+
+        "./tip4.png",
+
+        "./tip5.png"
+
+      ];
+
+
+
+      /* =====================================================
+         PRELOAD TIP IMAGES
+         ===================================================== */
+
+      tipFrames.forEach(
+
+        function (src) {
+
+          const img =
+            new Image();
+
+          img.src =
+            src;
+
+        }
+
+      );
+
+
+
+      function wait(
+        milliseconds
+      ) {
+
+        return new Promise(
+
+          function (resolve) {
+
+            setTimeout(
+              resolve,
+              milliseconds
+            );
+
+          }
+
+        );
+
+      }
+
+
+
+      /* =====================================================
+         TIP ANIMATION
+
+         closed
+         open
+         money dropping
+         money inside
+         closed
+         pause
+         ===================================================== */
+
+      async function playTipAnimation() {
+
+
+        tipAnimation.src =
+          tipFrames[0];
+
+
+        await wait(
+          350
+        );
+
+
+        tipAnimation.src =
+          tipFrames[1];
+
+
+        await wait(
+          350
+        );
+
+
+        tipAnimation.src =
+          tipFrames[2];
+
+
+        await wait(
+          420
+        );
+
+
+        tipAnimation.src =
+          tipFrames[3];
+
+
+        await wait(
+          420
+        );
+
+
+        tipAnimation.src =
+          tipFrames[4];
+
+
+        await wait(
+          500
+        );
+
+
+        tipAnimation.src =
+          tipFrames[0];
+
+
+      }
+
+
+
+      async function startTipLoop() {
+
+
+        while (true) {
+
+
+          await playTipAnimation();
+
+
+          /* PAUSE ON CLOSED KITTY */
+
+          await wait(
+            2500
+          );
+
+
+        }
+
+
+      }
+
+
+
+      startTipLoop();
+
+
+
+      /* =====================================================
+         OPEN TIP WINDOW
+         ===================================================== */
+
+      tipButton.addEventListener(
+
+        "click",
+
+        function () {
+
+          tipOverlay.style.display =
+            "flex";
+
+        }
+
+      );
+
+
+
+      /* =====================================================
+         COPY E-TRANSFER EMAIL
+         ===================================================== */
+
+      copyEmail.addEventListener(
+
+        "click",
+
+        async function () {
+
+
+          const email =
+            "thehooksechelt@gmail.com";
+
+
+          try {
+
+
+            await navigator.clipboard
+              .writeText(
+                email
+              );
+
+
+            copyMessage.textContent =
+              "EMAIL COPIED ✓";
+
+
+          }
+
+
+          catch (error) {
+
+
+            /*
+              FALLBACK FOR OLDER MOBILE BROWSERS
+            */
+
+            const textArea =
+              document.createElement(
+                "textarea"
+              );
+
+
+            textArea.value =
+              email;
+
+
+            textArea.style.position =
+              "fixed";
+
+
+            textArea.style.opacity =
+              "0";
+
+
+            document.body.appendChild(
+              textArea
+            );
+
+
+            textArea.focus();
+
+
+            textArea.select();
+
+
+            try {
+
+              document.execCommand(
+                "copy"
+              );
+
+
+              copyMessage.textContent =
+                "EMAIL COPIED ✓";
+
+            }
+
+
+            catch (copyError) {
+
+              copyMessage.textContent =
+                "COPY: " + email;
+
+            }
+
+
+            document.body.removeChild(
+              textArea
+            );
+
+
+          }
+
+
+        }
+
+      );
+
+
+
+      /* =====================================================
+         CLOSE TIP WINDOW
+         ===================================================== */
+
+      closeTip.addEventListener(
+
+        "click",
+
+        function () {
+
+
+          tipOverlay.style.display =
+            "none";
+
+
+          copyMessage.textContent =
+            "TAP EMAIL TO COPY";
+
+
+        }
+
+      );
+
+
+
+      /* =====================================================
+         TAP DARK AREA TO CLOSE POPUP
+         ===================================================== */
+
+      tipOverlay.addEventListener(
+
+        "click",
+
+        function (event) {
+
+
+          if (
+
+            event.target ===
+            tipOverlay
+
+          ) {
+
+
+            tipOverlay.style.display =
+              "none";
+
+
+            copyMessage.textContent =
+              "TAP EMAIL TO COPY";
 
 
           }
