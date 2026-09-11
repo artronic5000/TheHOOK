@@ -866,21 +866,23 @@
             );
 
 
+            /* ===============================================
+               START HUGE + FLAT IN THE CENTRE
+
+               The name begins at the centre of the target,
+               straight-on and very large so it reads like a
+               full-screen flash before retracting.
+               =============================================== */
+
             name.setAttribute(
               "position",
-              `
-                ${info.x}
-                ${info.y}
-                ${0.15 + index * 0.01}
-              `
+              "0 0 0.01"
             );
 
 
             name.setAttribute(
               "rotation",
-              `
-                0 0 ${info.rotation}
-              `
+              "0 0 0"
             );
 
 
@@ -909,39 +911,103 @@
             );
 
 
+            /* Huge initial flash. Increase 2.8 if you want
+               the name to fill even more of the screen. */
+
             name.setAttribute(
               "scale",
-              "0.05 0.05 0.05"
-            );
-
-
-            name.setAttribute(
-              "animation__grow",
-              `
-                property: scale;
-                from: 0.05 0.05 0.05;
-                to: 1 1 1;
-                dur: 450;
-                easing: easeOutBack;
-              `
-            );
-
-
-            name.setAttribute(
-              "animation__shrink",
-              `
-                property: scale;
-                from: 1 1 1;
-                to: 0.52 0.52 0.52;
-                delay: 850;
-                dur: 500;
-                easing: easeInOutQuad;
-              `
+              "2.8 2.8 2.8"
             );
 
 
             target.appendChild(
               name
+            );
+
+
+            /* Hold the big name briefly, then retract it to
+               its permanent band-member location. */
+
+            name.setAttribute(
+              "animation__retractPosition",
+              `
+                property: position;
+                from: 0 0 0.01;
+                to: ${info.x} ${info.y} 0;
+                delay: 500;
+                dur: 700;
+                easing: easeInOutCubic;
+              `
+            );
+
+
+            name.setAttribute(
+              "animation__retractScale",
+              `
+                property: scale;
+                from: 2.8 2.8 2.8;
+                to: 0.52 0.52 0.52;
+                delay: 500;
+                dur: 700;
+                easing: easeInOutCubic;
+              `
+            );
+
+
+            name.setAttribute(
+              "animation__retractRotation",
+              `
+                property: rotation;
+                from: 0 0 0;
+                to: 0 0 ${info.rotation};
+                delay: 500;
+                dur: 700;
+                easing: easeInOutCubic;
+              `
+            );
+
+
+            /* After the retract finishes, force the exact
+               final values so the name stays completely
+               steady with Z = 0. */
+
+            timers.push(
+              setTimeout(
+                function () {
+
+                  if (!running || !name.parentNode)
+                    return;
+
+                  name.removeAttribute(
+                    "animation__retractPosition"
+                  );
+
+                  name.removeAttribute(
+                    "animation__retractScale"
+                  );
+
+                  name.removeAttribute(
+                    "animation__retractRotation"
+                  );
+
+                  name.setAttribute(
+                    "position",
+                    `${info.x} ${info.y} 0`
+                  );
+
+                  name.setAttribute(
+                    "scale",
+                    "0.52 0.52 0.52"
+                  );
+
+                  name.setAttribute(
+                    "rotation",
+                    `0 0 ${info.rotation}`
+                  );
+
+                },
+                1250
+              )
             );
 
           }
