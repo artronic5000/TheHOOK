@@ -28,7 +28,67 @@
 
 
     /* ======================================================
-       THE HOOK BUTTON
+       LET'S MEET THE BAND INTRO
+       ====================================================== */
+
+    #meetBandIntro {
+
+      position: fixed;
+      left: 50%;
+      top: 50%;
+
+      transform:
+        translate(-50%, -42%)
+        scale(0.82);
+
+      z-index: 99998;
+
+      display: none;
+
+      width: 88%;
+      max-width: 460px;
+
+      opacity: 0;
+
+      pointer-events: none;
+
+      transition:
+        opacity 0.65s ease,
+        transform 0.65s ease;
+
+    }
+
+
+    #meetBandIntro.show {
+
+      display: block;
+
+      opacity: 1;
+
+      transform:
+        translate(-50%, -50%)
+        scale(1);
+
+    }
+
+
+    #meetBandIntro img {
+
+      display: block;
+      width: 100%;
+      height: auto;
+
+      filter:
+        drop-shadow(
+          0 8px 14px
+          rgba(0,0,0,0.35)
+        );
+
+    }
+
+
+    /* ======================================================
+       FINAL THE HOOK FACE FILTER BUTTON
        ====================================================== */
 
     #hookButton {
@@ -39,39 +99,20 @@
       top: 50%;
 
       transform:
-        translate(-50%, -50%)
+        translate(-50%, -42%)
         scale(0.82);
 
       z-index: 99999;
 
       display: none;
 
-      width: 82%;
-      max-width: 420px;
+      width: 84%;
+      max-width: 430px;
 
-      padding: 30px 20px;
+      padding: 0;
 
-      background:
-        rgba(0, 0, 0, 0.96);
-
-      border:
-        2px solid #f4f8ff;
-
-      border-radius: 8px;
-
-      color:
-        #f4f8ff;
-
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-      font-size: 38px;
-
-      font-weight: bold;
-
-      letter-spacing: 8px;
+      background: transparent;
+      border: none;
 
       text-align: center;
 
@@ -79,13 +120,11 @@
 
       opacity: 0;
 
-      box-shadow:
-        0 0 12px rgba(255,255,255,0.45),
-        0 0 30px rgba(210,230,255,0.20);
+      -webkit-tap-highlight-color: transparent;
 
       transition:
-        opacity 0.5s ease,
-        transform 0.5s ease;
+        opacity 0.65s ease,
+        transform 0.65s ease;
 
     }
 
@@ -103,20 +142,82 @@
     }
 
 
-    #hookButton small {
+    #hookButton:active {
+
+      transform:
+        translate(-50%, -50%)
+        scale(0.96);
+
+    }
+
+
+    #hookButton img {
 
       display: block;
 
-      margin-top: 12px;
+      width: 100%;
+      height: auto;
 
-      font-size: 11px;
+      margin: 0 auto;
 
-      font-weight: normal;
+      pointer-events: none;
 
-      letter-spacing: 3px;
+      filter:
+        drop-shadow(
+          0 8px 14px
+          rgba(0,0,0,0.35)
+        );
 
-      color:
-        #d8e3ef;
+    }
+
+
+    #hookButton small {
+
+      display: inline-block;
+
+      margin-top: 10px;
+
+      padding: 9px 18px;
+
+      border-radius: 22px;
+
+      background:
+        rgba(0,0,0,0.86);
+
+      color: #f6d675;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      font-size: 12px;
+
+      font-weight: 900;
+
+      letter-spacing: 2px;
+
+      animation:
+        faceFilterPulse
+        1.8s
+        ease-in-out
+        infinite;
+
+    }
+
+
+    @keyframes faceFilterPulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.82;
+      }
+
+      50% {
+        transform: scale(1.05);
+        opacity: 1;
+      }
 
     }
 
@@ -848,6 +949,83 @@
 
 
           /* =====================================================
+             SHOW / HIDE LET'S MEET THE BAND INTRO
+             ===================================================== */
+
+          function showMeetBandIntro() {
+
+            if (!running)
+              return;
+
+
+            const intro =
+              document.getElementById(
+                "meetBandIntro"
+              );
+
+
+            if (!intro)
+              return;
+
+
+            intro.style.display =
+              "block";
+
+
+            requestAnimationFrame(
+              function () {
+
+                intro.classList.add(
+                  "show"
+                );
+
+              }
+            );
+
+          }
+
+
+
+          function hideMeetBandIntro() {
+
+            const intro =
+              document.getElementById(
+                "meetBandIntro"
+              );
+
+
+            if (!intro)
+              return;
+
+
+            intro.classList.remove(
+              "show"
+            );
+
+
+            setTimeout(
+              function () {
+
+                if (
+                  !intro.classList.contains(
+                    "show"
+                  )
+                ) {
+
+                  intro.style.display =
+                    "none";
+
+                }
+
+              },
+              700
+            );
+
+          }
+
+
+
+          /* =====================================================
              SHOW THE HOOK BUTTON
              ===================================================== */
 
@@ -939,6 +1117,8 @@
 
             hideHookButton();
 
+            hideMeetBandIntro();
+
           }
 
 
@@ -967,6 +1147,25 @@
                 [];
 
 
+              /* LET'S MEET THE BAND INTRO */
+
+              showMeetBandIntro();
+
+
+              timers.push(
+                setTimeout(
+                  function () {
+
+                    hideMeetBandIntro();
+
+                  },
+
+                  1900
+
+                )
+              );
+
+
               /* MICHAEL */
 
               timers.push(
@@ -980,7 +1179,7 @@
 
                   },
 
-                  200
+                  2600
 
                 )
               );
@@ -999,7 +1198,7 @@
 
                   },
 
-                  1600
+                  4000
 
                 )
               );
@@ -1018,7 +1217,7 @@
 
                   },
 
-                  3000
+                  5400
 
                 )
               );
@@ -1037,7 +1236,7 @@
 
                   },
 
-                  4400
+                  6800
 
                 )
               );
@@ -1056,13 +1255,13 @@
 
                   },
 
-                  5800
+                  8200
 
                 )
               );
 
 
-              /* THE HOOK BUTTON */
+              /* FINAL THE HOOK FACE FILTER BUTTON */
 
               timers.push(
                 setTimeout(
@@ -1072,7 +1271,7 @@
 
                   },
 
-                  7500
+                  9800
 
                 )
               );
@@ -1154,14 +1353,34 @@
 
 
 <!-- ======================================================
-     NORMAL HTML BUTTON
+     TARGET 1 INTRO: LET'S MEET THE BAND
+     ====================================================== -->
+
+<div id="meetBandIntro">
+
+  <img
+    src="./meettheband.png"
+    alt="Let's Meet The Band"
+  >
+
+</div>
+
+
+
+<!-- ======================================================
+     FINAL THE HOOK FACE FILTER BUTTON
      ====================================================== -->
 
 <button
   id="hookButton"
   type="button"
+  aria-label="Open The Hook face filter"
 >
-  THE HOOK
+
+  <img
+    src="./hooklogo.png"
+    alt="The Hook"
+  >
 
   <small>
     TAP FOR FACE FILTER
