@@ -363,7 +363,7 @@
                 text-anchor="middle"
                 font-size="78"
                 font-family="Arial, sans-serif"
-                fill="#2b2b2b"
+                fill="#d9b77e"
               >♪</text>
             </svg>
             `,
@@ -381,7 +381,7 @@
                 text-anchor="middle"
                 font-size="74"
                 font-family="Arial, sans-serif"
-                fill="#2b2b2b"
+                fill="#d9b77e"
               >♫</text>
             </svg>
             `,
@@ -399,7 +399,7 @@
                 text-anchor="middle"
                 font-size="78"
                 font-family="Arial, sans-serif"
-                fill="#2b2b2b"
+                fill="#d9b77e"
               >♩</text>
             </svg>
             `
@@ -1773,8 +1773,9 @@
 
 
     <img
-      id="blackHeart"
-      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%232b2b2b' d='M50 87 C44 80 14 60 14 35 C14 19 34 12 50 29 C66 12 86 19 86 35 C86 60 56 80 50 87 Z'/%3E%3C/svg%3E"
+      id="hookHeart"
+      src="./hookheart.png"
+      crossorigin="anonymous"
     >
 
 
@@ -1842,42 +1843,42 @@
 
     <a-image
 
-      src="#blackHeart"
+      src="#hookHeart"
 
-      position="0 0 -0.04"
+      position="0 0 0.02"
 
-      width="1.35"
+      width="1.05"
 
-      height="1.35"
+      height="1.05"
 
       material="
         shader: flat;
         transparent: true;
-        opacity: 0.78;
+        opacity: 0.05;
         side: double;
         depthWrite: false;
       "
 
-      scale="1 1 1"
+      scale="0.82 0.82 0.82"
 
       animation__pulse="
         property: scale;
-        from: 0.90 0.90 0.90;
-        to: 1.14 1.14 1.14;
-        dur: 650;
+        from: 0.82 0.82 0.82;
+        to: 1.05 1.05 1.05;
+        dur: 900;
         dir: alternate;
         loop: true;
-        easing: easeInOutQuad;
+        easing: easeInOutSine;
       "
 
       animation__fadepulse="
         property: material.opacity;
-        from: 0.58;
-        to: 0.88;
-        dur: 650;
+        from: 0.05;
+        to: 1;
+        dur: 900;
         dir: alternate;
         loop: true;
-        easing: easeInOutQuad;
+        easing: easeInOutSine;
       "
 
     >
