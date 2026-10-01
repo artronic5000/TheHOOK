@@ -2566,7 +2566,48 @@ function createNote() {
       }
 
     );
+/* =========================================================
+   CAT TAIL — FLICK FLICK, PAUSE, REPEAT
+   ========================================================= */
 
+AFRAME.registerComponent("cat-tail-flick", {
+
+  init: function () {
+
+    const tail = this.el;
+
+    function flickTail() {
+
+      tail.removeAttribute("animation__wag");
+
+      setTimeout(function () {
+
+        tail.setAttribute(
+          "animation__wag",
+          `
+          property: rotation;
+          from: 0 0 -3;
+          to: 0 0 5;
+          dur: 350;
+          dir: alternate;
+          loop: 4;
+          easing: easeInOutSine;
+          `
+        );
+
+      }, 50);
+
+    }
+
+    /* first little flick */
+    setTimeout(flickTail, 1500);
+
+    /* repeat after a pause */
+    setInterval(flickTail, 5000);
+
+  }
+
+});
   </script>
 
 </head>
@@ -2826,17 +2867,9 @@ function createNote() {
   position="0.22 -0.10 0.04"
 
   rotation="0 0 0"
-
-  animation__wag="
-    property: rotation;
-    from: 0 0 -5;
-    to: 0 0 7;
-    dur: 450;
-    dir: alternate;
-    loop: true;
-    easing: easeInOutSine;
-  "
->
+  cat-tail-flick
+  >
+  
 
   <a-image
 
