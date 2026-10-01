@@ -1081,7 +1081,90 @@ const bubbleSVG = `
 
       if (!running)
         return;
+/* =========================================
+   IMPACT FLASH BEHIND HEART
+   ========================================= */
 
+const flash =
+  document.createElement("a-circle");
+
+flash.classList.add(
+  "target0-effect"
+);
+
+flash.setAttribute(
+  "position",
+  `${heartX} ${heartY} 0.01`
+);
+
+flash.setAttribute(
+  "radius",
+  "0.20"
+);
+
+flash.setAttribute(
+  "segments",
+  "32"
+);
+
+flash.setAttribute(
+  "material",
+  `
+  shader: flat;
+  color: #FF5A00;
+  transparent: true;
+  opacity: 0.90;
+  side: double;
+  depthWrite: false;
+  `
+);
+
+flash.setAttribute(
+  "scale",
+  "0.05 0.05 0.05"
+);
+
+flash.setAttribute(
+  "animation__flashgrow",
+  `
+  property: scale;
+  from: 0.05 0.05 0.05;
+  to: 2.8 2.8 2.8;
+  dur: 300;
+  easing: easeOutQuad;
+  `
+);
+
+flash.setAttribute(
+  "animation__flashfade",
+  `
+  property: material.opacity;
+  from: 0.90;
+  to: 0;
+  dur: 320;
+  easing: easeOutQuad;
+  `
+);
+
+target.appendChild(
+  flash
+);
+
+later(
+  function () {
+
+    if (flash.parentNode) {
+
+      flash.parentNode.removeChild(
+        flash
+      );
+
+    }
+
+  },
+
+  400
+);
 
       const heart =
         target.querySelector(
