@@ -1364,52 +1364,128 @@ later(
 
       );
 
+/* =================================================
+   BIG HEART SLOWLY SHRINKS + FADES AWAY
+   REVEALING THE REAL STICKER
+   ================================================= */
 
-      /* =================================================
-         HEART SETTLES INTO SMALL PULSE
-         ================================================= */
+later(
 
-      later(
+  function () {
 
-        function () {
-
-          if (!running)
-            return;
-
-
-          heart.removeAttribute(
-            "animation__burst"
-          );
+    if (!running)
+      return;
 
 
-          heart.setAttribute(
-            "scale",
-            "0.49 0.49 0.49"
-          );
+    /* stop the giant burst */
+
+    heart.removeAttribute(
+      "animation__burst"
+    );
 
 
-          heart.setAttribute(
-            "animation__pulse",
-            `
-            property: scale;
-            from: 0.46 0.46 0.46;
-            to: 0.52 0.52 0.52;
-            dur: 900;
-            dir: alternate;
-            loop: true;
-            easing: easeInOutSine;
-            `
-          );
+    /*
+      Start from the giant size.
+      Then slowly shrink toward the sticker.
+    */
 
-        },
-
-        520
-
-      );
-
-    }
+    heart.setAttribute(
+      "scale",
+      "3.2 3.2 3.2"
+    );
 
 
+    heart.setAttribute(
+      "animation__shrinkaway",
+      `
+      property: scale;
+
+      from:
+      3.2 3.2 3.2;
+
+      to:
+      0.45 0.45 0.45;
+
+      dur:
+      1400;
+
+      easing:
+      easeInOutSine;
+      `
+    );
+
+
+    /* FADE OUT AT THE SAME TIME */
+
+    heart.setAttribute(
+      "animation__heartfade",
+      `
+      property: material.opacity;
+
+      from:
+      1;
+
+      to:
+      0;
+
+      dur:
+      1400;
+
+      easing:
+      easeInOutSine;
+      `
+    );
+
+
+    /* completely hide it when finished */
+
+    later(
+
+      function () {
+
+        if (!running)
+          return;
+
+
+        heart.removeAttribute(
+          "animation__shrinkaway"
+        );
+
+
+        heart.removeAttribute(
+          "animation__heartfade"
+        );
+
+
+        heart.setAttribute(
+          "scale",
+          "0.45 0.45 0.45"
+        );
+
+
+        heart.setAttribute(
+          "material",
+          `
+          shader: flat;
+          transparent: true;
+          opacity: 0;
+          side: double;
+          depthWrite: false;
+          `
+        );
+
+      },
+
+      1450
+
+    );
+
+  },
+
+  520
+
+);
+     
     /* =====================================================
        CLEAR TARGET 0
        ===================================================== */
@@ -1482,10 +1558,6 @@ later(
           "animation__burst"
         );
 
-
-        heart.removeAttribute(
-          "animation__pulse"
-        );
 
 
         heart.setAttribute(
