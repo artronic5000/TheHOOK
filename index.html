@@ -2844,6 +2844,11 @@ AFRAME.registerComponent("cat-tail-flick", {
   src="./tail.png"
   crossorigin="anonymous"
 >
+      <img
+  id="catWink"
+  src="./wink.png"
+  crossorigin="anonymous"
+>
     </a-assets>
 
 
@@ -2903,6 +2908,27 @@ AFRAME.registerComponent("cat-tail-flick", {
   "
 >
 </a-image> 
+      <!-- CAT WINK OVERLAY -->
+
+<a-image
+  id="catWinkAR"
+
+  src="#catWink"
+
+  position="0.04 0.34 0.035"
+
+  width="0.30"
+  height="0.22"
+
+  material="
+    shader: flat;
+    transparent: true;
+    opacity: 1;
+    side: double;
+    depthWrite: false;
+  "
+>
+</a-image>
  <!-- =========================================
      CAT TAIL — PIVOTS FROM BODY
      ========================================= -->
