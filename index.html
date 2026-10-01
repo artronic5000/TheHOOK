@@ -2772,7 +2772,11 @@ function createNote() {
 
       >
 
-
+<img
+  id="catTail"
+  src="./tail.png"
+  crossorigin="anonymous"
+>
     </a-assets>
 
 
@@ -2811,6 +2815,39 @@ function createNote() {
       music-emitter
 
     >
+      <!-- ANIMATED CAT TAIL -->
+
+<a-image
+  id="catTailAR"
+
+  src="#catTail"
+
+  position="0.34 0.02 0.04"
+
+  width="0.28"
+  height="0.52"
+
+  rotation="0 0 0"
+
+  material="
+    shader: flat;
+    transparent: true;
+    opacity: 1;
+    side: double;
+    depthWrite: false;
+  "
+
+  animation__wag="
+    property: rotation;
+    from: 0 0 -5;
+    to: 0 0 7;
+    dur: 450;
+    dir: alternate;
+    loop: true;
+    easing: easeInOutSine;
+  "
+>
+</a-image>
 
 <!-- WARM GLOW BEHIND STICKER -->
 
