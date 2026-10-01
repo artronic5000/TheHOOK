@@ -311,9 +311,9 @@
   <script>
 
 
-//* ==========================================================
+/* ==========================================================
    TARGET 0
-   BUBBLE TAKEOVER + HEART BURST + MUSIC NOTES
+   BUBBLES → SCREEN TAKEOVER → HEART BURST → MUSIC NOTES
    ========================================================== */
 
 AFRAME.registerComponent("music-emitter", {
@@ -323,48 +323,54 @@ AFRAME.registerComponent("music-emitter", {
     const target = this.el;
 
     let running = false;
-    let noteTimer = null;
+
     let bubbleTimer = null;
+    let noteTimer = null;
+
     let timers = [];
 
-    /* =========================================
-       MUSIC NOTES — ORIGINAL LOCATION
-       ========================================= */
+
+    /* =====================================================
+       LOCATIONS
+       ===================================================== */
+
+    /* MUSIC NOTES — ORIGINAL LOCATION */
 
     const ampX = -0.15;
     const ampY = -0.30;
 
 
-    /* =========================================
-       BUBBLES — CIGARETTE TIP
-       ========================================= */
+    /* BUBBLES — END OF CIGARETTE */
 
     const bubbleX = -0.15;
     const bubbleY = 0.30;
 
 
-    /* =========================================
-       HEART LOCATION
-       ========================================= */
+    /* HEART */
 
     const heartX = 0.10;
     const heartY = 0.25;
 
 
+    /* THE HOOK ORANGE */
+
     const orange = "#FF5A00";
 
 
-    /* =========================================
+
+    /* =====================================================
        MUSIC NOTE ART
-       ========================================= */
+       ===================================================== */
 
     const notes = [
 
       `
-      <svg xmlns="http://www.w3.org/2000/svg"
-           width="100"
-           height="100"
-           viewBox="0 0 100 100">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="100"
+        height="100"
+        viewBox="0 0 100 100"
+      >
 
         <text
           x="50"
@@ -378,11 +384,14 @@ AFRAME.registerComponent("music-emitter", {
       </svg>
       `,
 
+
       `
-      <svg xmlns="http://www.w3.org/2000/svg"
-           width="100"
-           height="100"
-           viewBox="0 0 100 100">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="100"
+        height="100"
+        viewBox="0 0 100 100"
+      >
 
         <text
           x="50"
@@ -396,11 +405,14 @@ AFRAME.registerComponent("music-emitter", {
       </svg>
       `,
 
+
       `
-      <svg xmlns="http://www.w3.org/2000/svg"
-           width="100"
-           height="100"
-           viewBox="0 0 100 100">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="100"
+        height="100"
+        viewBox="0 0 100 100"
+      >
 
         <text
           x="50"
@@ -417,6 +429,11 @@ AFRAME.registerComponent("music-emitter", {
     ];
 
 
+
+    /* =====================================================
+       SVG → IMAGE
+       ===================================================== */
+
     function svgToDataURL(svg) {
 
       return (
@@ -427,21 +444,34 @@ AFRAME.registerComponent("music-emitter", {
     }
 
 
+
+    /* =====================================================
+       TIMER HELPER
+       ===================================================== */
+
     function later(fn, delay) {
 
-      const id =
-        setTimeout(fn, delay);
+      const timer =
+        setTimeout(
+          fn,
+          delay
+        );
 
-      timers.push(id);
 
-      return id;
+      timers.push(
+        timer
+      );
+
+
+      return timer;
 
     }
 
 
-    /* =========================================
-       CREATE NORMAL MUSIC NOTE
-       ========================================= */
+
+    /* =====================================================
+       CREATE MUSIC NOTE
+       ===================================================== */
 
     function createNote() {
 
@@ -470,6 +500,11 @@ AFRAME.registerComponent("music-emitter", {
         ];
 
 
+
+      /* -----------------------------------------
+         ORIGINAL MUSIC NOTE START POSITION
+         ----------------------------------------- */
+
       const startX =
 
         ampX +
@@ -485,6 +520,11 @@ AFRAME.registerComponent("music-emitter", {
         (Math.random() - 0.5) *
         0.020;
 
+
+
+      /* -----------------------------------------
+         FLOATING MOVEMENT
+         ----------------------------------------- */
 
       const driftX =
 
@@ -508,6 +548,7 @@ AFRAME.registerComponent("music-emitter", {
         startY + rise;
 
 
+
       const duration =
 
         1800 +
@@ -515,6 +556,9 @@ AFRAME.registerComponent("music-emitter", {
         Math.random() *
         1300;
 
+
+
+      /* SMALL NOTES */
 
       const finalScale =
 
@@ -524,12 +568,14 @@ AFRAME.registerComponent("music-emitter", {
         0.30;
 
 
+
       const rotateAmount =
 
         18 +
 
         Math.random() *
         30;
+
 
 
       note.setAttribute(
@@ -575,67 +621,123 @@ AFRAME.registerComponent("music-emitter", {
       );
 
 
+
+      /* MOVE */
+
       note.setAttribute(
         "animation__move",
         `
         property: position;
-        from: ${startX} ${startY} 0.12;
-        to: ${endX} ${endY} 0.12;
+
+        from:
+        ${startX}
+        ${startY}
+        0.12;
+
+        to:
+        ${endX}
+        ${endY}
+        0.12;
+
         dur: ${duration};
+
         easing: easeOutSine;
         `
       );
 
 
+
+      /* GROW */
+
       note.setAttribute(
         "animation__grow",
         `
         property: scale;
-        from: 0.30 0.30 0.30;
-        to: ${finalScale} ${finalScale} ${finalScale};
+
+        from:
+        0.30 0.30 0.30;
+
+        to:
+        ${finalScale}
+        ${finalScale}
+        ${finalScale};
+
         dur: ${duration};
+
         easing: easeOutQuad;
         `
       );
 
 
+
+      /* WOBBLE */
+
       note.setAttribute(
         "animation__dance",
         `
         property: rotation;
-        from: 0 0 -${rotateAmount};
-        to: 0 0 ${rotateAmount};
-        dur: ${320 + Math.random() * 280};
+
+        from:
+        0 0 -${rotateAmount};
+
+        to:
+        0 0 ${rotateAmount};
+
+        dur:
+        ${320 + Math.random() * 280};
+
         dir: alternate;
+
         loop: true;
+
         easing: easeInOutSine;
         `
       );
 
 
+
+      /* FADE */
+
       note.setAttribute(
         "animation__fade",
         `
-        property: material.opacity;
+        property:
+        material.opacity;
+
         from: 1;
+
         to: 0;
-        delay: ${duration * 0.65};
-        dur: ${duration * 0.35};
+
+        delay:
+        ${duration * 0.65};
+
+        dur:
+        ${duration * 0.35};
+
         easing: easeInQuad;
         `
       );
 
 
-      target.appendChild(note);
+
+      target.appendChild(
+        note
+      );
+
 
 
       later(
+
         function () {
 
-          if (note.parentNode) {
+          if (
+            note.parentNode
+          ) {
 
             note.parentNode
-              .removeChild(note);
+              .removeChild(
+                note
+              );
 
           }
 
@@ -649,9 +751,9 @@ AFRAME.registerComponent("music-emitter", {
 
 
 
-    /* =========================================
-       CREATE GLASS BUBBLE
-       ========================================= */
+    /* =====================================================
+       CREATE BUBBLE
+       ===================================================== */
 
     function createBubble(stage) {
 
@@ -666,82 +768,108 @@ AFRAME.registerComponent("music-emitter", {
 
 
       bubble.classList.add(
-        "target0-effect",
+        "target0-effect"
+      );
+
+
+      bubble.classList.add(
         "hook-bubble"
       );
 
 
-      /* Bubble SVG:
-         transparent middle
-         pale rim
-         white shine */
+
+      /* -----------------------------------------
+         TRANSPARENT GLASS BUBBLE
+
+         White rim
+         White highlight
+         Tiny orange reflection
+         ----------------------------------------- */
 
       const bubbleSVG = `
 
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="100"
-          height="100"
-          viewBox="0 0 100 100"
-        >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="100"
+        height="100"
+        viewBox="0 0 100 100"
+      >
 
-          <circle
-            cx="50"
-            cy="50"
-            r="43"
-            fill="rgba(255,255,255,0.08)"
-            stroke="rgba(255,255,255,0.85)"
-            stroke-width="4"
-          />
+        <circle
+          cx="50"
+          cy="50"
+          r="43"
 
-          <circle
-            cx="35"
-            cy="31"
-            r="8"
-            fill="rgba(255,255,255,0.90)"
-          />
+          fill="rgba(255,255,255,0.06)"
 
-          <circle
-            cx="68"
-            cy="69"
-            r="4"
-            fill="rgba(255,90,0,0.45)"
-          />
+          stroke="rgba(255,255,255,0.88)"
 
-        </svg>
+          stroke-width="3"
+        />
+
+
+        <ellipse
+          cx="34"
+          cy="29"
+
+          rx="9"
+          ry="6"
+
+          fill="rgba(255,255,255,0.90)"
+        />
+
+
+        <circle
+          cx="68"
+          cy="70"
+          r="4"
+
+          fill="rgba(255,90,0,0.55)"
+        />
+
+      </svg>
 
       `;
 
 
+
       let endX;
       let endY;
+
       let size;
       let duration;
 
 
-      /* =========================================
-         EARLY BUBBLES
-         Stay near cigarette
-         ========================================= */
 
-      if (stage === 1) {
+      /* =================================================
+         STAGE 1
+
+         Small bubbles coming directly from cigarette
+         ================================================= */
+
+      if (
+        stage === 1
+      ) {
+
 
         endX =
 
           bubbleX +
 
           (Math.random() - 0.5) *
-          0.35;
+          0.30;
+
 
 
         endY =
 
           bubbleY +
 
-          0.20 +
+          0.18 +
 
           Math.random() *
-          0.35;
+          0.30;
+
 
 
         size =
@@ -752,9 +880,10 @@ AFRAME.registerComponent("music-emitter", {
           0.12;
 
 
+
         duration =
 
-          1400 +
+          1200 +
 
           Math.random() *
           700;
@@ -762,12 +891,62 @@ AFRAME.registerComponent("music-emitter", {
       }
 
 
-      /* =========================================
-         TAKEOVER BUBBLES
-         Spread over the view
-         ========================================= */
+
+      /* =================================================
+         STAGE 2
+
+         Bubbles start spreading everywhere
+         ================================================= */
+
+      else if (
+        stage === 2
+      ) {
+
+
+        endX =
+
+          (Math.random() - 0.5) *
+          1.35;
+
+
+
+        endY =
+
+          (Math.random() - 0.5) *
+          1.40;
+
+
+
+        size =
+
+          0.16 +
+
+          Math.random() *
+          0.22;
+
+
+
+        duration =
+
+          1000 +
+
+          Math.random() *
+          650;
+
+      }
+
+
+
+      /* =================================================
+         STAGE 3
+
+         BIG BUBBLE TAKEOVER
+
+         These cover much more of the view.
+         ================================================= */
 
       else {
+
 
         endX =
 
@@ -775,28 +954,32 @@ AFRAME.registerComponent("music-emitter", {
           1.65;
 
 
+
         endY =
 
           (Math.random() - 0.5) *
-          1.70;
+          1.75;
+
 
 
         size =
 
-          0.20 +
+          0.25 +
 
           Math.random() *
-          0.34;
+          0.38;
+
 
 
         duration =
 
-          900 +
+          700 +
 
           Math.random() *
-          700;
+          500;
 
       }
+
 
 
       bubble.setAttribute(
@@ -807,16 +990,18 @@ AFRAME.registerComponent("music-emitter", {
       );
 
 
+
       bubble.setAttribute(
         "material",
         `
         shader: flat;
         transparent: true;
-        opacity: 0.90;
+        opacity: 0.92;
         side: double;
         depthWrite: false;
         `
       );
+
 
 
       bubble.setAttribute(
@@ -831,40 +1016,76 @@ AFRAME.registerComponent("music-emitter", {
       );
 
 
+
+      /* EVERY BUBBLE STARTS
+         AT CIGARETTE TIP */
+
       bubble.setAttribute(
         "position",
-        `${bubbleX} ${bubbleY} 0.15`
+        `
+        ${bubbleX}
+        ${bubbleY}
+        0.15
+        `
       );
+
 
 
       bubble.setAttribute(
         "scale",
-        "0.15 0.15 0.15"
+        "0.10 0.10 0.10"
       );
 
+
+
+      /* MOVE */
 
       bubble.setAttribute(
         "animation__move",
         `
         property: position;
-        from: ${bubbleX} ${bubbleY} 0.15;
-        to: ${endX} ${endY} 0.15;
-        dur: ${duration};
-        easing: easeOutSine;
+
+        from:
+        ${bubbleX}
+        ${bubbleY}
+        0.15;
+
+        to:
+        ${endX}
+        ${endY}
+        0.15;
+
+        dur:
+        ${duration};
+
+        easing:
+        easeOutSine;
         `
       );
 
+
+
+      /* GROW */
 
       bubble.setAttribute(
         "animation__grow",
         `
         property: scale;
-        from: 0.15 0.15 0.15;
-        to: 1 1 1;
-        dur: ${duration * 0.70};
-        easing: easeOutQuad;
+
+        from:
+        0.10 0.10 0.10;
+
+        to:
+        1 1 1;
+
+        dur:
+        ${duration * 0.75};
+
+        easing:
+        easeOutQuad;
         `
       );
+
 
 
       target.appendChild(
@@ -872,24 +1093,33 @@ AFRAME.registerComponent("music-emitter", {
       );
 
 
-      /* Keep takeover bubbles alive
-         until heart punches through */
 
-      if (stage === 1) {
+      /* Early bubbles eventually disappear.
+         Takeover bubbles remain until
+         the heart blasts them away. */
+
+      if (
+        stage === 1
+      ) {
 
         later(
+
           function () {
 
-            if (bubble.parentNode) {
+            if (
+              bubble.parentNode
+            ) {
 
               bubble.parentNode
-                .removeChild(bubble);
+                .removeChild(
+                  bubble
+                );
 
             }
 
           },
 
-          duration + 300
+          duration + 500
 
         );
 
@@ -899,9 +1129,9 @@ AFRAME.registerComponent("music-emitter", {
 
 
 
-    /* =========================================
-       HEART BURST THROUGH BUBBLES
-       ========================================= */
+    /* =====================================================
+       HEART BURSTS THROUGH BUBBLES
+       ===================================================== */
 
     function heartBurst() {
 
@@ -919,7 +1149,10 @@ AFRAME.registerComponent("music-emitter", {
         return;
 
 
-      /* HEART BECOMES VISIBLE */
+
+      /* =================================================
+         MAKE HEART VISIBLE
+         ================================================= */
 
       heart.setAttribute(
         "material",
@@ -933,31 +1166,44 @@ AFRAME.registerComponent("music-emitter", {
       );
 
 
+
       /* START TINY */
 
       heart.setAttribute(
         "scale",
-        "0.05 0.05 0.05"
+        "0.03 0.03 0.03"
       );
 
 
-      /* BIG PUNCH THROUGH */
+
+      /* =================================================
+         HEART PUNCHES FORWARD
+         ================================================= */
 
       heart.setAttribute(
         "animation__burst",
         `
         property: scale;
-        from: 0.05 0.05 0.05;
-        to: 0.75 0.75 0.75;
-        dur: 350;
-        easing: easeOutBack;
+
+        from:
+        0.03 0.03 0.03;
+
+        to:
+        0.78 0.78 0.78;
+
+        dur:
+        360;
+
+        easing:
+        easeOutBack;
         `
       );
 
 
-      /* =========================================
-         THROW ALL BUBBLES OUTWARD
-         ========================================= */
+
+      /* =================================================
+         BLOW BUBBLES AWAY
+         ================================================= */
 
       const bubbles =
         target.querySelectorAll(
@@ -966,17 +1212,28 @@ AFRAME.registerComponent("music-emitter", {
 
 
       bubbles.forEach(
+
         function (bubble) {
+
+
+          /* Stop existing movement */
 
           bubble.removeAttribute(
             "animation__move"
           );
 
 
+          bubble.removeAttribute(
+            "animation__grow"
+          );
+
+
+
           const pos =
             bubble.getAttribute(
               "position"
             );
+
 
 
           let dx =
@@ -987,40 +1244,57 @@ AFRAME.registerComponent("music-emitter", {
             pos.y - heartY;
 
 
+
           let length =
+
             Math.sqrt(
+
               dx * dx +
+
               dy * dy
+
             );
 
 
-          if (length < 0.01) {
+
+          if (
+            length < 0.02
+          ) {
 
             dx =
               Math.random() - 0.5;
 
+
             dy =
               Math.random() - 0.5;
 
+
             length =
+
               Math.sqrt(
+
                 dx * dx +
+
                 dy * dy
+
               );
 
           }
+
 
 
           dx /= length;
           dy /= length;
 
 
-          const distance =
+
+          const blastDistance =
 
             0.75 +
 
             Math.random() *
-            0.70;
+            0.80;
+
 
 
           const blastX =
@@ -1028,7 +1302,8 @@ AFRAME.registerComponent("music-emitter", {
             pos.x +
 
             dx *
-            distance;
+            blastDistance;
+
 
 
           const blastY =
@@ -1036,37 +1311,70 @@ AFRAME.registerComponent("music-emitter", {
             pos.y +
 
             dy *
-            distance;
+            blastDistance;
 
+
+
+          /* SHOOT OUTWARD */
 
           bubble.setAttribute(
             "animation__blast",
             `
             property: position;
-            from: ${pos.x} ${pos.y} 0.15;
-            to: ${blastX} ${blastY} 0.15;
-            dur: ${450 + Math.random() * 300};
-            easing: easeOutQuad;
+
+            from:
+            ${pos.x}
+            ${pos.y}
+            0.15;
+
+            to:
+            ${blastX}
+            ${blastY}
+            0.15;
+
+            dur:
+            ${450 + Math.random() * 300};
+
+            easing:
+            easeOutQuad;
             `
           );
 
+
+
+          /* FADE WHILE FLYING */
 
           bubble.setAttribute(
             "animation__blastfade",
             `
-            property: material.opacity;
-            from: 0.90;
-            to: 0;
-            dur: 600;
-            easing: easeOutQuad;
+            property:
+            material.opacity;
+
+            from:
+            0.92;
+
+            to:
+            0;
+
+            dur:
+            650;
+
+            easing:
+            easeOutQuad;
             `
           );
 
 
+
+          /* REMOVE BUBBLE */
+
           later(
+
             function () {
 
-              if (bubble.parentNode) {
+              if (
+                bubble.parentNode
+              ) {
 
                 bubble.parentNode
                   .removeChild(
@@ -1082,14 +1390,17 @@ AFRAME.registerComponent("music-emitter", {
           );
 
         }
+
       );
 
 
-      /* =========================================
-         HEART SETTLES SMALL
-         ========================================= */
+
+      /* =================================================
+         HEART SETTLES DOWN
+         ================================================= */
 
       later(
+
         function () {
 
           if (!running)
@@ -1107,22 +1418,37 @@ AFRAME.registerComponent("music-emitter", {
           );
 
 
+
+          /* NORMAL HEARTBEAT */
+
           heart.setAttribute(
             "animation__pulse",
             `
             property: scale;
-            from: 0.46 0.46 0.46;
-            to: 0.52 0.52 0.52;
-            dur: 900;
-            dir: alternate;
-            loop: true;
-            easing: easeInOutSine;
+
+            from:
+            0.46 0.46 0.46;
+
+            to:
+            0.52 0.52 0.52;
+
+            dur:
+            900;
+
+            dir:
+            alternate;
+
+            loop:
+            true;
+
+            easing:
+            easeInOutSine;
             `
           );
 
         },
 
-        420
+        430
 
       );
 
@@ -1130,11 +1456,14 @@ AFRAME.registerComponent("music-emitter", {
 
 
 
-    /* =========================================
+    /* =====================================================
        CLEAR TARGET 0
-       ========================================= */
+       ===================================================== */
 
     function clearTarget0() {
+
+
+      /* STOP TIMERS */
 
       timers.forEach(
         clearTimeout
@@ -1144,45 +1473,71 @@ AFRAME.registerComponent("music-emitter", {
       timers = [];
 
 
-      if (bubbleTimer) {
+
+      /* STOP BUBBLES */
+
+      if (
+        bubbleTimer
+      ) {
 
         clearInterval(
           bubbleTimer
         );
 
-        bubbleTimer = null;
+
+        bubbleTimer =
+          null;
 
       }
 
 
-      if (noteTimer) {
+
+      /* STOP NOTES */
+
+      if (
+        noteTimer
+      ) {
 
         clearInterval(
           noteTimer
         );
 
-        noteTimer = null;
+
+        noteTimer =
+          null;
 
       }
 
+
+
+      /* REMOVE TEMPORARY AR OBJECTS */
 
       target
         .querySelectorAll(
           ".target0-effect"
         )
         .forEach(
+
           function (item) {
 
-            if (item.parentNode) {
+            if (
+              item.parentNode
+            ) {
 
               item.parentNode
-                .removeChild(item);
+                .removeChild(
+                  item
+                );
 
             }
 
           }
+
         );
 
+
+
+      /* RESET HEART */
 
       const heart =
         target.querySelector(
@@ -1190,7 +1545,9 @@ AFRAME.registerComponent("music-emitter", {
         );
 
 
-      if (heart) {
+      if (
+        heart
+      ) {
 
         heart.removeAttribute(
           "animation__burst"
@@ -1225,31 +1582,40 @@ AFRAME.registerComponent("music-emitter", {
 
 
 
-    /* =========================================
+    /* =====================================================
        TARGET FOUND
-       ========================================= */
+       ===================================================== */
 
     target.addEventListener(
+
       "targetFound",
 
       function () {
 
-        running = true;
+
+        running =
+          true;
 
 
         clearTarget0();
 
 
-        /* -----------------------------------------
-           0–1 SECOND
-           Gentle bubbles from cigarette
-           ----------------------------------------- */
 
-        let bubbleStage = 1;
+        /* =================================================
+           PHASE 1
+
+           Cigarette starts blowing bubbles
+           ================================================= */
+
+        let bubbleStage =
+          1;
+
 
 
         bubbleTimer =
+
           setInterval(
+
             function () {
 
               createBubble(
@@ -1258,37 +1624,52 @@ AFRAME.registerComponent("music-emitter", {
 
             },
 
-            170
+            180
+
           );
 
 
-        /* -----------------------------------------
-           AFTER 1 SECOND
-           TAKEOVER BEGINS
-           ----------------------------------------- */
+
+        /* =================================================
+           PHASE 2 — 1 SECOND
+
+           More bubbles begin spreading
+           ================================================= */
 
         later(
+
           function () {
 
-            bubbleStage = 2;
+
+            bubbleStage =
+              2;
 
 
-            clearInterval(
+            if (
               bubbleTimer
-            );
+            ) {
+
+              clearInterval(
+                bubbleTimer
+              );
+
+            }
+
 
 
             bubbleTimer =
+
               setInterval(
+
                 function () {
+
 
                   createBubble(2);
 
-                  /* Make some moments denser */
 
                   if (
                     Math.random() >
-                    0.35
+                    0.45
                   ) {
 
                     createBubble(2);
@@ -1297,7 +1678,8 @@ AFRAME.registerComponent("music-emitter", {
 
                 },
 
-                95
+                120
+
               );
 
           },
@@ -1307,19 +1689,89 @@ AFRAME.registerComponent("music-emitter", {
         );
 
 
-        /* -----------------------------------------
-           3.25 SECONDS
-           STOP MAKING BUBBLES
-           ----------------------------------------- */
+
+        /* =================================================
+           PHASE 3 — 2 SECONDS
+
+           SCREEN TAKEOVER
+           ================================================= */
 
         later(
+
           function () {
 
-            if (bubbleTimer) {
+
+            bubbleStage =
+              3;
+
+
+            if (
+              bubbleTimer
+            ) {
 
               clearInterval(
                 bubbleTimer
               );
+
+            }
+
+
+
+            bubbleTimer =
+
+              setInterval(
+
+                function () {
+
+
+                  /* LOTS OF BUBBLES */
+
+                  createBubble(3);
+
+                  createBubble(3);
+
+
+                  if (
+                    Math.random() >
+                    0.35
+                  ) {
+
+                    createBubble(3);
+
+                  }
+
+                },
+
+                90
+
+              );
+
+          },
+
+          2000
+
+        );
+
+
+
+        /* =================================================
+           3.25 SEC
+
+           STOP MAKING NEW BUBBLES
+           ================================================= */
+
+        later(
+
+          function () {
+
+            if (
+              bubbleTimer
+            ) {
+
+              clearInterval(
+                bubbleTimer
+              );
+
 
               bubbleTimer =
                 null;
@@ -1333,30 +1785,39 @@ AFRAME.registerComponent("music-emitter", {
         );
 
 
-        /* -----------------------------------------
-           3.4 SECONDS
-           HEART PUNCHES THROUGH
-           ----------------------------------------- */
+
+        /* =================================================
+           3.45 SEC
+
+           HEART BURSTS THROUGH
+           ================================================= */
 
         later(
+
           function () {
 
             heartBurst();
 
           },
 
-          3400
+          3450
 
         );
 
 
-        /* -----------------------------------------
-           3.75 SECONDS
+
+        /* =================================================
+           3.85 SEC
+
            MUSIC NOTES BEGIN
-           ----------------------------------------- */
+
+           FROM THEIR ORIGINAL LOCATION
+           ================================================= */
 
         later(
+
           function () {
+
 
             if (!running)
               return;
@@ -1366,42 +1827,51 @@ AFRAME.registerComponent("music-emitter", {
 
 
             noteTimer =
+
               setInterval(
+
                 createNote,
+
                 350
+
               );
 
           },
 
-          3750
+          3850
 
         );
 
       }
+
     );
 
 
 
-    /* =========================================
+    /* =====================================================
        TARGET LOST
-       ========================================= */
+       ===================================================== */
 
     target.addEventListener(
+
       "targetLost",
 
       function () {
 
-        running = false;
+
+        running =
+          false;
+
 
         clearTarget0();
 
       }
+
     );
 
   }
 
 });
-
 
     /* ==========================================================
        TARGET 1
@@ -2553,47 +3023,67 @@ AFRAME.registerComponent("music-emitter", {
 
 
 
-  <!-- ======================================================
-       TARGET 0
-       ====================================================== -->
+ <!-- ======================================================
+     TARGET 0
+     BUBBLES + HEART + MUSIC
+     ====================================================== -->
 
-  <a-entity
-    id="hookedTarget"
-    mindar-image-target="targetIndex: 0"
-    music-emitter
+<a-entity
+
+  id="hookedTarget"
+
+  mindar-image-target="
+    targetIndex: 0
+  "
+
+  music-emitter
+
+>
+
+
+  <!-- =========================================
+       HOOK HEART
+
+       Starts invisible.
+       JavaScript makes it burst through bubbles.
+       ========================================= -->
+
+  <a-image
+
+    id="hookHeartAR"
+
+    src="#hookHeart"
+
+    position="
+      .1
+      .25
+      0.02
+    "
+
+    width=".45"
+
+    height=".45"
+
+    scale="
+      0.45
+      0.45
+      0.45
+    "
+
+    material="
+      shader: flat;
+      transparent: true;
+      opacity: 0;
+      side: double;
+      depthWrite: false;
+    "
+
   >
 
-
-    <a-image
-      id="hookHeartAR"
-      
-      src="#hookHeart"
-
-      position=".1 .25 0.02"
-
-      width=".45"
-
-      height=".45"
-
-      material="
-        shader: flat;
-        transparent: true;
-        opacity: 0;
-        side: double;
-        depthWrite: false;
-      "
-
-      scale="0.45 0.45 0.45"
-
-      
-
-    >
-    </a-image>
+  </a-image>
 
 
-  </a-entity>
-
-
+</a-entity>
 
   <!-- ======================================================
        TARGET 1
