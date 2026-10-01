@@ -1608,6 +1608,27 @@ function createNote() {
                   `
 
                 );
+                /* REVEAL THE BRIGHT DIGITAL STICKER */
+
+const digitalSticker =
+  target.querySelector(
+    "#bubblesStickerAR"
+  );
+
+if (digitalSticker) {
+
+  digitalSticker.setAttribute(
+    "animation__appear",
+    `
+    property: material.opacity;
+    from: 0;
+    to: 1;
+    dur: 900;
+    easing: easeInOutSine;
+    `
+  );
+
+}
 
               },
 
@@ -2812,6 +2833,11 @@ AFRAME.registerComponent("cat-tail-flick", {
         crossorigin="anonymous"
 
       >
+      <img
+  id="bubblesSticker"
+  src="./bubbles.png"
+  crossorigin="anonymous"
+>
 
 <img
   id="catTail"
@@ -2856,6 +2882,27 @@ AFRAME.registerComponent("cat-tail-flick", {
       music-emitter
 
     >
+     <!-- FULL BRIGHT DIGITAL STICKER -->
+
+<a-image
+  id="bubblesStickerAR"
+
+  src="#bubblesSticker"
+
+  position="0 0 0.015"
+
+  width="1"
+  height="1"
+
+  material="
+    shader: flat;
+    transparent: true;
+    opacity: 0;
+    side: double;
+    depthWrite: false;
+  "
+>
+</a-image> 
  <!-- =========================================
      CAT TAIL — PIVOTS FROM BODY
      ========================================= -->
