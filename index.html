@@ -2812,7 +2812,42 @@ function createNote() {
 
     >
 
+<!-- WARM GLOW BEHIND STICKER -->
 
+<a-circle
+  position="0 0 -0.01"
+  radius="0.58"
+
+  material="
+    shader: flat;
+    color: #FFF1C7;
+    transparent: true;
+    opacity: 0.18;
+    side: double;
+    depthWrite: false;
+  "
+
+  animation__glow="
+    property: material.opacity;
+    from: 0.10;
+    to: 0.32;
+    dur: 1100;
+    dir: alternate;
+    loop: true;
+    easing: easeInOutSine;
+  "
+
+  animation__breath="
+    property: scale;
+    from: 0.96 0.96 0.96;
+    to: 1.08 1.08 1.08;
+    dur: 1100;
+    dir: alternate;
+    loop: true;
+    easing: easeInOutSine;
+  "
+>
+</a-circle>
       <!-- BIG HEART -->
 
       <a-image
