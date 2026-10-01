@@ -424,307 +424,489 @@
           /* =================================================
              CREATE MUSIC NOTE
              ================================================= */
+function createNote() {
 
-          function createNote() {
+  if (!running)
+    return;
 
 
-            if (!running)
-              return;
+  /* ==============================================
+     CREATE ONE NOTE-IN-A-BUBBLE
+     ============================================== */
 
+  const noteBubble =
+    document.createElement(
+      "a-plane"
+    );
 
 
-            const note =
+  noteBubble.classList.add(
+    "target0-effect"
+  );
 
-              document.createElement(
-                "a-plane"
-              );
 
+  /* RANDOM MUSIC NOTE */
 
+  const symbols = [
+    "♪",
+    "♫",
+    "♩"
+  ];
 
-            note.classList.add(
-              "target0-effect"
-            );
 
+  const symbol =
 
+    symbols[
+      Math.floor(
+        Math.random() *
+        symbols.length
+      )
+    ];
 
-            const startX =
 
-              ampX +
+  /* ==============================================
+     IRIDESCENT BUBBLE COLOUR
+     ============================================== */
 
-              (Math.random() - 0.5) *
-              0.025;
+  const bubbleColours = [
 
+    "rgba(243,185,255,0.38)",
 
+    "rgba(185,221,255,0.38)",
 
-            const startY =
+    "rgba(191,255,240,0.38)",
 
-              ampY +
+    "rgba(255,208,234,0.38)",
 
-              (Math.random() - 0.5) *
-              0.020;
+    "rgba(213,197,255,0.38)",
 
+    "rgba(255,240,189,0.38)"
 
+  ];
 
-            const endX =
 
-              startX +
+  const bubbleColour =
 
-              (Math.random() - 0.5) *
-              0.45;
+    bubbleColours[
+      Math.floor(
+        Math.random() *
+        bubbleColours.length
+      )
+    ];
 
 
+  /* ==============================================
+     DRAW BUBBLE + ORANGE NOTE TOGETHER
 
-            const endY =
+     This is ONE SVG, which keeps the note
+     safely inside its bubble.
+     ============================================== */
 
-              startY +
+  const noteBubbleSVG = `
 
-              0.32 +
+    <svg
 
-              Math.random() *
-              0.42;
+      xmlns="http://www.w3.org/2000/svg"
 
+      width="140"
 
+      height="140"
 
-            const duration =
+      viewBox="0 0 140 140"
 
-              1800 +
+    >
 
-              Math.random() *
-              1300;
 
+      <!-- BUBBLE -->
 
+      <circle
 
-            const finalScale =
+        cx="70"
 
-              0.50 +
+        cy="70"
 
-              Math.random() *
-              0.30;
+        r="59"
 
+        fill="${bubbleColour}"
 
+        stroke="rgba(255,255,255,0.95)"
 
-            const rotate =
+        stroke-width="3"
 
-              18 +
+      />
 
-              Math.random() *
-              30;
 
+      <!-- IRIDESCENT INNER GLOW -->
 
+      <circle
 
-            note.setAttribute(
+        cx="70"
 
-              "src",
+        cy="70"
 
-              svgURL(
+        r="52"
 
-                noteArt[
+        fill="none"
 
-                  Math.floor(
+        stroke="rgba(255,255,255,0.28)"
 
-                    Math.random() *
-                    noteArt.length
+        stroke-width="5"
 
-                  )
+      />
 
-                ]
 
-              )
+      <!-- LARGE SHINE -->
 
-            );
+      <ellipse
 
+        cx="48"
 
+        cy="43"
 
-            note.setAttribute(
+        rx="15"
 
-              "material",
+        ry="8"
 
-              `
-              shader: flat;
-              transparent: true;
-              opacity: 1;
-              side: double;
-              alphaTest: 0.01;
-              depthWrite: false;
-              `
+        fill="rgba(255,255,255,0.90)"
 
-            );
+      />
 
 
+      <!-- SMALL SHINE -->
 
-            note.setAttribute(
-              "width",
-              "0.28"
-            );
+      <circle
 
+        cx="42"
 
-            note.setAttribute(
-              "height",
-              "0.28"
-            );
+        cy="35"
 
+        r="5"
 
+        fill="#FFFFFF"
 
-            note.setAttribute(
+      />
 
-              "position",
 
-              `${startX} ${startY} 0.12`
+      <!-- SECOND REFLECTION -->
 
-            );
+      <ellipse
 
+        cx="94"
 
+        cy="94"
 
-            note.setAttribute(
+        rx="8"
 
-              "scale",
+        ry="5"
 
-              "0.30 0.30 0.30"
+        fill="rgba(255,255,255,0.40)"
 
-            );
+      />
 
 
+      <!-- ORANGE MUSIC NOTE -->
 
-            note.setAttribute(
+      <text
 
-              "animation__move",
+        x="70"
 
-              `
-              property: position;
+        y="96"
 
-              from:
-              ${startX}
-              ${startY}
-              0.12;
+        text-anchor="middle"
 
-              to:
-              ${endX}
-              ${endY}
-              0.12;
+        font-family="Arial, sans-serif"
 
-              dur:
-              ${duration};
+        font-size="76"
 
-              easing:
-              easeOutSine;
-              `
+        font-weight="700"
 
-            );
+        fill="#FF5A00"
 
+      >${symbol}</text>
 
 
-            note.setAttribute(
+    </svg>
 
-              "animation__grow",
+  `;
 
-              `
-              property: scale;
 
-              from:
-              0.30 0.30 0.30;
+  noteBubble.setAttribute(
 
-              to:
-              ${finalScale}
-              ${finalScale}
-              ${finalScale};
+    "src",
 
-              dur:
-              ${duration};
+    svgURL(
+      noteBubbleSVG
+    )
 
-              easing:
-              easeOutQuad;
-              `
+  );
 
-            );
 
+  noteBubble.setAttribute(
 
+    "material",
 
-            note.setAttribute(
+    `
+    shader: flat;
+    transparent: true;
+    opacity: 1;
+    side: double;
+    alphaTest: 0.01;
+    depthWrite: false;
+    `
 
-              "animation__dance",
+  );
 
-              `
-              property: rotation;
 
-              from:
-              0 0 -${rotate};
+  /* ==============================================
+     START AT AMP
 
-              to:
-              0 0 ${rotate};
+     SAME LOCATION AS OUR WORKING NOTES
+     ============================================== */
 
-              dur:
-              ${320 + Math.random() * 280};
+  const startX =
 
-              dir:
-              alternate;
+    ampX +
 
-              loop:
-              true;
+    (Math.random() - 0.5) *
+    0.035;
 
-              easing:
-              easeInOutSine;
-              `
 
-            );
+  const startY =
 
+    ampY +
 
+    (Math.random() - 0.5) *
+    0.025;
 
-            note.setAttribute(
 
-              "animation__fade",
+  /* ==============================================
+     FLOAT UP AND OUT
+     ============================================== */
 
-              `
-              property:
-              material.opacity;
+  const endX =
 
-              from:
-              1;
+    startX +
 
-              to:
-              0;
+    (Math.random() - 0.5) *
+    0.48;
 
-              delay:
-              ${duration * 0.65};
 
-              dur:
-              ${duration * 0.35};
+  const endY =
 
-              easing:
-              easeInQuad;
-              `
+    startY +
 
-            );
+    0.42 +
 
+    Math.random() *
+    0.42;
 
 
-            target.appendChild(
-              note
-            );
+  /* SLIGHTLY DIFFERENT SIZES */
 
+  const size =
 
+    0.16 +
 
-            later(
+    Math.random() *
+    0.10;
 
-              function () {
 
-                if (
-                  note.parentNode
-                ) {
+  const duration =
 
-                  note.remove();
+    2200 +
 
-                }
+    Math.random() *
+    1200;
 
-              },
 
-              duration + 250
+  noteBubble.setAttribute(
+    "width",
+    size
+  );
 
-            );
 
-          }
+  noteBubble.setAttribute(
+    "height",
+    size
+  );
 
 
+  noteBubble.setAttribute(
 
+    "position",
+
+    `${startX} ${startY} 0.14`
+
+  );
+
+
+  /* START SMALL */
+
+  noteBubble.setAttribute(
+
+    "scale",
+
+    "0.25 0.25 0.25"
+
+  );
+
+
+  /* ==============================================
+     FLOAT UP
+     ============================================== */
+
+  noteBubble.setAttribute(
+
+    "animation__move",
+
+    `
+    property: position;
+
+    from:
+    ${startX}
+    ${startY}
+    0.14;
+
+    to:
+    ${endX}
+    ${endY}
+    0.14;
+
+    dur:
+    ${duration};
+
+    easing:
+    easeOutSine;
+    `
+
+  );
+
+
+  /* ==============================================
+     BUBBLE GROWS AS IT RISES
+     ============================================== */
+
+  noteBubble.setAttribute(
+
+    "animation__grow",
+
+    `
+    property: scale;
+
+    from:
+    0.25 0.25 0.25;
+
+    to:
+    1 1 1;
+
+    dur:
+    ${duration * 0.55};
+
+    easing:
+    easeOutQuad;
+    `
+
+  );
+
+
+  /* ==============================================
+     GENTLE WOBBLE
+     ============================================== */
+
+  const wobble =
+
+    8 +
+
+    Math.random() *
+    10;
+
+
+  noteBubble.setAttribute(
+
+    "animation__wobble",
+
+    `
+    property: rotation;
+
+    from:
+    0 0 -${wobble};
+
+    to:
+    0 0 ${wobble};
+
+    dur:
+    ${550 + Math.random() * 300};
+
+    dir:
+    alternate;
+
+    loop:
+    true;
+
+    easing:
+    easeInOutSine;
+    `
+
+  );
+
+
+  /* ==============================================
+     FADE NEAR TOP
+     ============================================== */
+
+  noteBubble.setAttribute(
+
+    "animation__fade",
+
+    `
+    property:
+    material.opacity;
+
+    from:
+    1;
+
+    to:
+    0;
+
+    delay:
+    ${duration * 0.72};
+
+    dur:
+    ${duration * 0.28};
+
+    easing:
+    easeInQuad;
+    `
+
+  );
+
+
+  target.appendChild(
+    noteBubble
+  );
+
+
+  /* REMOVE WHEN FINISHED */
+
+  later(
+
+    function () {
+
+      if (
+        noteBubble.parentNode
+      ) {
+
+        noteBubble.remove();
+
+      }
+
+    },
+
+    duration + 250
+
+  );
+
+}
           /* =================================================
              BUBBLE ART
              ================================================= */
