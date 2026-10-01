@@ -331,6 +331,11 @@ AFRAME.registerComponent("music-emitter", {
     const heartX = 0.10;
     const heartY = 0.25;
 
+    /* MUSIC NOTE START LOCATION */
+const ampX = -0.15;
+const ampY = -0.30;
+    
+
     /* HOOK ORANGE */
     const orange = "#FF5A00";
 
@@ -478,18 +483,18 @@ AFRAME.registerComponent("music-emitter", {
 
       const startX =
 
-        heartX +
+  ampX +
 
-        (Math.random() - 0.5) *
-        0.035;
+  (Math.random() - 0.5) *
+  0.025;
 
 
-      const startY =
+const startY =
 
-        heartY +
+  ampY +
 
-        (Math.random() - 0.5) *
-        0.035;
+  (Math.random() - 0.5) *
+  0.020;
 
 
       let endX;
