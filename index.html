@@ -310,7 +310,6 @@
 
   <script>
 
-
 /* ==========================================================
    TARGET 0
    BUBBLES → SCREEN TAKEOVER → HEART BURST → MUSIC NOTES
@@ -323,10 +322,8 @@ AFRAME.registerComponent("music-emitter", {
     const target = this.el;
 
     let running = false;
-
     let bubbleTimer = null;
     let noteTimer = null;
-
     let timers = [];
 
 
@@ -335,27 +332,19 @@ AFRAME.registerComponent("music-emitter", {
        ===================================================== */
 
     /* MUSIC NOTES — ORIGINAL LOCATION */
-
     const ampX = -0.15;
     const ampY = -0.30;
 
-
-    /* BUBBLES — END OF CIGARETTE */
-
+    /* BUBBLES — CIGARETTE TIP */
     const bubbleX = -0.15;
     const bubbleY = 0.30;
 
-
     /* HEART */
-
     const heartX = 0.10;
     const heartY = 0.25;
 
-
     /* THE HOOK ORANGE */
-
     const orange = "#FF5A00";
-
 
 
     /* =====================================================
@@ -365,12 +354,10 @@ AFRAME.registerComponent("music-emitter", {
     const notes = [
 
       `
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="100"
-        height="100"
-        viewBox="0 0 100 100"
-      >
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="100"
+           height="100"
+           viewBox="0 0 100 100">
 
         <text
           x="50"
@@ -384,14 +371,11 @@ AFRAME.registerComponent("music-emitter", {
       </svg>
       `,
 
-
       `
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="100"
-        height="100"
-        viewBox="0 0 100 100"
-      >
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="100"
+           height="100"
+           viewBox="0 0 100 100">
 
         <text
           x="50"
@@ -405,14 +389,11 @@ AFRAME.registerComponent("music-emitter", {
       </svg>
       `,
 
-
       `
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="100"
-        height="100"
-        viewBox="0 0 100 100"
-      >
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="100"
+           height="100"
+           viewBox="0 0 100 100">
 
         <text
           x="50"
@@ -429,11 +410,6 @@ AFRAME.registerComponent("music-emitter", {
     ];
 
 
-
-    /* =====================================================
-       SVG → IMAGE
-       ===================================================== */
-
     function svgToDataURL(svg) {
 
       return (
@@ -444,29 +420,16 @@ AFRAME.registerComponent("music-emitter", {
     }
 
 
-
-    /* =====================================================
-       TIMER HELPER
-       ===================================================== */
-
     function later(fn, delay) {
 
       const timer =
-        setTimeout(
-          fn,
-          delay
-        );
+        setTimeout(fn, delay);
 
-
-      timers.push(
-        timer
-      );
-
+      timers.push(timer);
 
       return timer;
 
     }
-
 
 
     /* =====================================================
@@ -480,9 +443,7 @@ AFRAME.registerComponent("music-emitter", {
 
 
       const note =
-        document.createElement(
-          "a-plane"
-        );
+        document.createElement("a-plane");
 
 
       note.classList.add(
@@ -500,10 +461,7 @@ AFRAME.registerComponent("music-emitter", {
         ];
 
 
-
-      /* -----------------------------------------
-         ORIGINAL MUSIC NOTE START POSITION
-         ----------------------------------------- */
+      /* ORIGINAL NOTE LOCATION */
 
       const startX =
 
@@ -520,11 +478,6 @@ AFRAME.registerComponent("music-emitter", {
         (Math.random() - 0.5) *
         0.020;
 
-
-
-      /* -----------------------------------------
-         FLOATING MOVEMENT
-         ----------------------------------------- */
 
       const driftX =
 
@@ -548,7 +501,6 @@ AFRAME.registerComponent("music-emitter", {
         startY + rise;
 
 
-
       const duration =
 
         1800 +
@@ -556,9 +508,6 @@ AFRAME.registerComponent("music-emitter", {
         Math.random() *
         1300;
 
-
-
-      /* SMALL NOTES */
 
       const finalScale =
 
@@ -568,14 +517,12 @@ AFRAME.registerComponent("music-emitter", {
         0.30;
 
 
-
       const rotateAmount =
 
         18 +
 
         Math.random() *
         30;
-
 
 
       note.setAttribute(
@@ -621,123 +568,68 @@ AFRAME.registerComponent("music-emitter", {
       );
 
 
-
-      /* MOVE */
-
       note.setAttribute(
         "animation__move",
         `
         property: position;
-
-        from:
-        ${startX}
-        ${startY}
-        0.12;
-
-        to:
-        ${endX}
-        ${endY}
-        0.12;
-
+        from: ${startX} ${startY} 0.12;
+        to: ${endX} ${endY} 0.12;
         dur: ${duration};
-
         easing: easeOutSine;
         `
       );
 
 
-
-      /* GROW */
-
       note.setAttribute(
         "animation__grow",
         `
         property: scale;
-
-        from:
-        0.30 0.30 0.30;
-
-        to:
-        ${finalScale}
-        ${finalScale}
-        ${finalScale};
-
+        from: 0.30 0.30 0.30;
+        to: ${finalScale} ${finalScale} ${finalScale};
         dur: ${duration};
-
         easing: easeOutQuad;
         `
       );
 
 
-
-      /* WOBBLE */
-
       note.setAttribute(
         "animation__dance",
         `
         property: rotation;
-
-        from:
-        0 0 -${rotateAmount};
-
-        to:
-        0 0 ${rotateAmount};
-
-        dur:
-        ${320 + Math.random() * 280};
-
+        from: 0 0 -${rotateAmount};
+        to: 0 0 ${rotateAmount};
+        dur: ${320 + Math.random() * 280};
         dir: alternate;
-
         loop: true;
-
         easing: easeInOutSine;
         `
       );
 
 
-
-      /* FADE */
-
       note.setAttribute(
         "animation__fade",
         `
-        property:
-        material.opacity;
-
+        property: material.opacity;
         from: 1;
-
         to: 0;
-
-        delay:
-        ${duration * 0.65};
-
-        dur:
-        ${duration * 0.35};
-
+        delay: ${duration * 0.65};
+        dur: ${duration * 0.35};
         easing: easeInQuad;
         `
       );
 
 
-
-      target.appendChild(
-        note
-      );
-
+      target.appendChild(note);
 
 
       later(
 
         function () {
 
-          if (
-            note.parentNode
-          ) {
+          if (note.parentNode) {
 
             note.parentNode
-              .removeChild(
-                note
-              );
+              .removeChild(note);
 
           }
 
@@ -750,9 +642,8 @@ AFRAME.registerComponent("music-emitter", {
     }
 
 
-
     /* =====================================================
-       CREATE BUBBLE
+       CREATE GLASS BUBBLE
        ===================================================== */
 
     function createBubble(stage) {
@@ -768,174 +659,63 @@ AFRAME.registerComponent("music-emitter", {
 
 
       bubble.classList.add(
-        "target0-effect"
-      );
-
-
-      bubble.classList.add(
+        "target0-effect",
         "hook-bubble"
       );
 
 
-
-      /* -----------------------------------------
-         TRANSPARENT GLASS BUBBLE
-
-         White rim
-         White highlight
-         Tiny orange reflection
-         ----------------------------------------- */
+      /* SAFE WHITE / GLASS BUBBLE */
 
       const bubbleSVG = `
 
-     const bubbleSVG = `
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="100"
+          height="100"
+          viewBox="0 0 100 100"
+        >
 
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="100"
-  height="100"
-  viewBox="0 0 100 100"
->
+          <circle
+            cx="50"
+            cy="50"
+            r="43"
+            fill="rgba(255,255,255,0.06)"
+            stroke="rgba(255,255,255,0.88)"
+            stroke-width="3"
+          />
 
-  <defs>
+          <ellipse
+            cx="34"
+            cy="29"
+            rx="9"
+            ry="6"
+            fill="rgba(255,255,255,0.90)"
+          />
 
-    <!-- IRIDESCENT PEARL GRADIENT -->
+          <circle
+            cx="68"
+            cy="70"
+            r="4"
+            fill="rgba(255,90,0,0.55)"
+          />
 
-    <radialGradient
-      id="pearl"
-      cx="32%"
-      cy="25%"
-      r="75%"
-    >
+        </svg>
 
-      <stop
-        offset="0%"
-        stop-color="#ffffff"
-      />
-
-      <stop
-        offset="22%"
-        stop-color="#f7d8ff"
-      />
-
-      <stop
-        offset="40%"
-        stop-color="#c7e7ff"
-      />
-
-      <stop
-        offset="58%"
-        stop-color="#d8fff4"
-      />
-
-      <stop
-        offset="76%"
-        stop-color="#ffe4c7"
-      />
-
-      <stop
-        offset="100%"
-        stop-color="#e8cfff"
-      />
-
-    </radialGradient>
-
-
-    <!-- SHINY HIGHLIGHT -->
-
-    <radialGradient
-      id="shine"
-      cx="30%"
-      cy="25%"
-      r="65%"
-    >
-
-      <stop
-        offset="0%"
-        stop-color="#ffffff"
-        stop-opacity="1"
-      />
-
-      <stop
-        offset="100%"
-        stop-color="#ffffff"
-        stop-opacity="0"
-      />
-
-    </radialGradient>
-
-  </defs>
-
-
-  <!-- SOLID IRIDESCENT BUBBLE -->
-
-  <circle
-    cx="50"
-    cy="50"
-    r="44"
-    fill="url(#pearl)"
-    stroke="#ffffff"
-    stroke-width="3"
-  />
-
-
-  <!-- LARGE PEARLY SHINE -->
-
-  <ellipse
-    cx="34"
-    cy="30"
-    rx="15"
-    ry="10"
-    fill="url(#shine)"
-  />
-
-
-  <!-- SMALL WHITE GLINT -->
-
-  <circle
-    cx="29"
-    cy="25"
-    r="5"
-    fill="#ffffff"
-    opacity="0.95"
-  />
-
-
-  <!-- LITTLE IRIDESCENT REFLECTION -->
-
-  <ellipse
-    cx="68"
-    cy="69"
-    rx="8"
-    ry="5"
-    fill="#ffbde8"
-    opacity="0.55"
-  />
-
-</svg>
-
-`;
-
+      `;
 
 
       let endX;
       let endY;
-
       let size;
       let duration;
 
 
-
-      /* =================================================
+      /* ===============================================
          STAGE 1
+         SMALL BUBBLES FROM CIGARETTE
+         =============================================== */
 
-         Small bubbles coming directly from cigarette
-         ================================================= */
-
-      if (
-        stage === 1
-      ) {
-
+      if (stage === 1) {
 
         endX =
 
@@ -943,7 +723,6 @@ AFRAME.registerComponent("music-emitter", {
 
           (Math.random() - 0.5) *
           0.30;
-
 
 
         endY =
@@ -956,14 +735,12 @@ AFRAME.registerComponent("music-emitter", {
           0.30;
 
 
-
         size =
 
           0.10 +
 
           Math.random() *
           0.12;
-
 
 
         duration =
@@ -976,23 +753,17 @@ AFRAME.registerComponent("music-emitter", {
       }
 
 
-
-      /* =================================================
+      /* ===============================================
          STAGE 2
+         BUBBLES SPREAD
+         =============================================== */
 
-         Bubbles start spreading everywhere
-         ================================================= */
-
-      else if (
-        stage === 2
-      ) {
-
+      else if (stage === 2) {
 
         endX =
 
           (Math.random() - 0.5) *
           1.35;
-
 
 
         endY =
@@ -1001,14 +772,12 @@ AFRAME.registerComponent("music-emitter", {
           1.40;
 
 
-
         size =
 
           0.16 +
 
           Math.random() *
           0.22;
-
 
 
         duration =
@@ -1021,23 +790,17 @@ AFRAME.registerComponent("music-emitter", {
       }
 
 
-
-      /* =================================================
+      /* ===============================================
          STAGE 3
-
-         BIG BUBBLE TAKEOVER
-
-         These cover much more of the view.
-         ================================================= */
+         BIG SCREEN-TAKEOVER BUBBLES
+         =============================================== */
 
       else {
-
 
         endX =
 
           (Math.random() - 0.5) *
           1.65;
-
 
 
         endY =
@@ -1046,14 +809,12 @@ AFRAME.registerComponent("music-emitter", {
           1.75;
 
 
-
         size =
 
           0.25 +
 
           Math.random() *
           0.38;
-
 
 
         duration =
@@ -1066,14 +827,12 @@ AFRAME.registerComponent("music-emitter", {
       }
 
 
-
       bubble.setAttribute(
         "src",
         svgToDataURL(
           bubbleSVG
         )
       );
-
 
 
       bubble.setAttribute(
@@ -1088,7 +847,6 @@ AFRAME.registerComponent("music-emitter", {
       );
 
 
-
       bubble.setAttribute(
         "width",
         size
@@ -1101,19 +859,12 @@ AFRAME.registerComponent("music-emitter", {
       );
 
 
-
-      /* EVERY BUBBLE STARTS
-         AT CIGARETTE TIP */
+      /* ALL BUBBLES START AT CIGARETTE */
 
       bubble.setAttribute(
         "position",
-        `
-        ${bubbleX}
-        ${bubbleY}
-        0.15
-        `
+        `${bubbleX} ${bubbleY} 0.15`
       );
-
 
 
       bubble.setAttribute(
@@ -1121,67 +872,29 @@ AFRAME.registerComponent("music-emitter", {
         "0.10 0.10 0.10"
       );
 
-/* START ALMOST WHITE */
-
-bubble.setAttribute(
-  "animation__colourReveal",
-  `
-  property: material.opacity;
-  from: 0.45;
-  to: 1;
-  dur: 650;
-  easing: easeInQuad;
-  `
-);
-
-      /* MOVE */
 
       bubble.setAttribute(
         "animation__move",
         `
         property: position;
-
-        from:
-        ${bubbleX}
-        ${bubbleY}
-        0.15;
-
-        to:
-        ${endX}
-        ${endY}
-        0.15;
-
-        dur:
-        ${duration};
-
-        easing:
-        easeOutSine;
+        from: ${bubbleX} ${bubbleY} 0.15;
+        to: ${endX} ${endY} 0.15;
+        dur: ${duration};
+        easing: easeOutSine;
         `
       );
 
-
-
-      /* GROW */
 
       bubble.setAttribute(
         "animation__grow",
         `
         property: scale;
-
-        from:
-        0.10 0.10 0.10;
-
-        to:
-        1 1 1;
-
-        dur:
-        ${duration * 0.75};
-
-        easing:
-        easeOutQuad;
+        from: 0.10 0.10 0.10;
+        to: 1 1 1;
+        dur: ${duration * 0.75};
+        easing: easeOutQuad;
         `
       );
-
 
 
       target.appendChild(
@@ -1189,22 +902,16 @@ bubble.setAttribute(
       );
 
 
+      /* Early bubbles disappear naturally.
+         Later bubbles stay until heart blast. */
 
-      /* Early bubbles eventually disappear.
-         Takeover bubbles remain until
-         the heart blasts them away. */
-
-      if (
-        stage === 1
-      ) {
+      if (stage === 1) {
 
         later(
 
           function () {
 
-            if (
-              bubble.parentNode
-            ) {
+            if (bubble.parentNode) {
 
               bubble.parentNode
                 .removeChild(
@@ -1224,9 +931,8 @@ bubble.setAttribute(
     }
 
 
-
     /* =====================================================
-       HEART BURSTS THROUGH BUBBLES
+       HEART BURSTS THROUGH
        ===================================================== */
 
     function heartBurst() {
@@ -1245,10 +951,7 @@ bubble.setAttribute(
         return;
 
 
-
-      /* =================================================
-         MAKE HEART VISIBLE
-         ================================================= */
+      /* HEART VISIBLE */
 
       heart.setAttribute(
         "material",
@@ -1262,7 +965,6 @@ bubble.setAttribute(
       );
 
 
-
       /* START TINY */
 
       heart.setAttribute(
@@ -1271,34 +973,22 @@ bubble.setAttribute(
       );
 
 
-
-      /* =================================================
-         HEART PUNCHES FORWARD
-         ================================================= */
+      /* PUNCH THROUGH */
 
       heart.setAttribute(
         "animation__burst",
         `
         property: scale;
-
-        from:
-        0.03 0.03 0.03;
-
-        to:
-        0.78 0.78 0.78;
-
-        dur:
-        360;
-
-        easing:
-        easeOutBack;
+        from: 0.03 0.03 0.03;
+        to: 0.78 0.78 0.78;
+        dur: 360;
+        easing: easeOutBack;
         `
       );
 
 
-
       /* =================================================
-         BLOW BUBBLES AWAY
+         BLOW ALL BUBBLES AWAY
          ================================================= */
 
       const bubbles =
@@ -1312,8 +1002,6 @@ bubble.setAttribute(
         function (bubble) {
 
 
-          /* Stop existing movement */
-
           bubble.removeAttribute(
             "animation__move"
           );
@@ -1324,12 +1012,10 @@ bubble.setAttribute(
           );
 
 
-
           const pos =
             bubble.getAttribute(
               "position"
             );
-
 
 
           let dx =
@@ -1338,7 +1024,6 @@ bubble.setAttribute(
 
           let dy =
             pos.y - heartY;
-
 
 
           let length =
@@ -1352,10 +1037,7 @@ bubble.setAttribute(
             );
 
 
-
-          if (
-            length < 0.02
-          ) {
+          if (length < 0.02) {
 
             dx =
               Math.random() - 0.5;
@@ -1378,10 +1060,8 @@ bubble.setAttribute(
           }
 
 
-
           dx /= length;
           dy /= length;
-
 
 
           const blastDistance =
@@ -1392,14 +1072,12 @@ bubble.setAttribute(
             0.80;
 
 
-
           const blastX =
 
             pos.x +
 
             dx *
             blastDistance;
-
 
 
           const blastY =
@@ -1410,67 +1088,39 @@ bubble.setAttribute(
             blastDistance;
 
 
-
-          /* SHOOT OUTWARD */
+          /* SHOOT BUBBLE OUT */
 
           bubble.setAttribute(
             "animation__blast",
             `
             property: position;
-
-            from:
-            ${pos.x}
-            ${pos.y}
-            0.15;
-
-            to:
-            ${blastX}
-            ${blastY}
-            0.15;
-
-            dur:
-            ${450 + Math.random() * 300};
-
-            easing:
-            easeOutQuad;
+            from: ${pos.x} ${pos.y} 0.15;
+            to: ${blastX} ${blastY} 0.15;
+            dur: ${450 + Math.random() * 300};
+            easing: easeOutQuad;
             `
           );
 
 
-
-          /* FADE WHILE FLYING */
+          /* FADE BUBBLE */
 
           bubble.setAttribute(
             "animation__blastfade",
             `
-            property:
-            material.opacity;
-
-            from:
-            0.92;
-
-            to:
-            0;
-
-            dur:
-            650;
-
-            easing:
-            easeOutQuad;
+            property: material.opacity;
+            from: 0.92;
+            to: 0;
+            dur: 650;
+            easing: easeOutQuad;
             `
           );
 
-
-
-          /* REMOVE BUBBLE */
 
           later(
 
             function () {
 
-              if (
-                bubble.parentNode
-              ) {
+              if (bubble.parentNode) {
 
                 bubble.parentNode
                   .removeChild(
@@ -1490,9 +1140,8 @@ bubble.setAttribute(
       );
 
 
-
       /* =================================================
-         HEART SETTLES DOWN
+         HEART SETTLES INTO SMALL PULSE
          ================================================= */
 
       later(
@@ -1514,31 +1163,16 @@ bubble.setAttribute(
           );
 
 
-
-          /* NORMAL HEARTBEAT */
-
           heart.setAttribute(
             "animation__pulse",
             `
             property: scale;
-
-            from:
-            0.46 0.46 0.46;
-
-            to:
-            0.52 0.52 0.52;
-
-            dur:
-            900;
-
-            dir:
-            alternate;
-
-            loop:
-            true;
-
-            easing:
-            easeInOutSine;
+            from: 0.46 0.46 0.46;
+            to: 0.52 0.52 0.52;
+            dur: 900;
+            dir: alternate;
+            loop: true;
+            easing: easeInOutSine;
             `
           );
 
@@ -1551,15 +1185,11 @@ bubble.setAttribute(
     }
 
 
-
     /* =====================================================
        CLEAR TARGET 0
        ===================================================== */
 
     function clearTarget0() {
-
-
-      /* STOP TIMERS */
 
       timers.forEach(
         clearTimeout
@@ -1569,44 +1199,27 @@ bubble.setAttribute(
       timers = [];
 
 
-
-      /* STOP BUBBLES */
-
-      if (
-        bubbleTimer
-      ) {
+      if (bubbleTimer) {
 
         clearInterval(
           bubbleTimer
         );
 
-
-        bubbleTimer =
-          null;
+        bubbleTimer = null;
 
       }
 
 
-
-      /* STOP NOTES */
-
-      if (
-        noteTimer
-      ) {
+      if (noteTimer) {
 
         clearInterval(
           noteTimer
         );
 
-
-        noteTimer =
-          null;
+        noteTimer = null;
 
       }
 
-
-
-      /* REMOVE TEMPORARY AR OBJECTS */
 
       target
         .querySelectorAll(
@@ -1616,9 +1229,7 @@ bubble.setAttribute(
 
           function (item) {
 
-            if (
-              item.parentNode
-            ) {
+            if (item.parentNode) {
 
               item.parentNode
                 .removeChild(
@@ -1632,7 +1243,6 @@ bubble.setAttribute(
         );
 
 
-
       /* RESET HEART */
 
       const heart =
@@ -1641,9 +1251,7 @@ bubble.setAttribute(
         );
 
 
-      if (
-        heart
-      ) {
+      if (heart) {
 
         heart.removeAttribute(
           "animation__burst"
@@ -1677,7 +1285,6 @@ bubble.setAttribute(
     }
 
 
-
     /* =====================================================
        TARGET FOUND
        ===================================================== */
@@ -1688,24 +1295,19 @@ bubble.setAttribute(
 
       function () {
 
-
-        running =
-          true;
+        running = true;
 
 
         clearTarget0();
 
 
-
-        /* =================================================
+        /* ===============================================
            PHASE 1
 
-           Cigarette starts blowing bubbles
-           ================================================= */
+           Gentle bubbles from cigarette
+           =============================================== */
 
-        let bubbleStage =
-          1;
-
+        let bubbleStage = 1;
 
 
         bubbleTimer =
@@ -1725,25 +1327,20 @@ bubble.setAttribute(
           );
 
 
-
-        /* =================================================
+        /* ===============================================
            PHASE 2 — 1 SECOND
 
-           More bubbles begin spreading
-           ================================================= */
+           More bubbles spread outward
+           =============================================== */
 
         later(
 
           function () {
 
-
-            bubbleStage =
-              2;
+            bubbleStage = 2;
 
 
-            if (
-              bubbleTimer
-            ) {
+            if (bubbleTimer) {
 
               clearInterval(
                 bubbleTimer
@@ -1752,13 +1349,11 @@ bubble.setAttribute(
             }
 
 
-
             bubbleTimer =
 
               setInterval(
 
                 function () {
-
 
                   createBubble(2);
 
@@ -1785,25 +1380,20 @@ bubble.setAttribute(
         );
 
 
-
-        /* =================================================
+        /* ===============================================
            PHASE 3 — 2 SECONDS
 
-           SCREEN TAKEOVER
-           ================================================= */
+           BUBBLE SCREEN TAKEOVER
+           =============================================== */
 
         later(
 
           function () {
 
-
-            bubbleStage =
-              3;
+            bubbleStage = 3;
 
 
-            if (
-              bubbleTimer
-            ) {
+            if (bubbleTimer) {
 
               clearInterval(
                 bubbleTimer
@@ -1812,15 +1402,11 @@ bubble.setAttribute(
             }
 
 
-
             bubbleTimer =
 
               setInterval(
 
                 function () {
-
-
-                  /* LOTS OF BUBBLES */
 
                   createBubble(3);
 
@@ -1849,28 +1435,21 @@ bubble.setAttribute(
         );
 
 
-
-        /* =================================================
-           3.25 SEC
-
-           STOP MAKING NEW BUBBLES
-           ================================================= */
+        /* ===============================================
+           STOP CREATING BUBBLES
+           =============================================== */
 
         later(
 
           function () {
 
-            if (
-              bubbleTimer
-            ) {
+            if (bubbleTimer) {
 
               clearInterval(
                 bubbleTimer
               );
 
-
-              bubbleTimer =
-                null;
+              bubbleTimer = null;
 
             }
 
@@ -1881,12 +1460,9 @@ bubble.setAttribute(
         );
 
 
-
-        /* =================================================
-           3.45 SEC
-
+        /* ===============================================
            HEART BURSTS THROUGH
-           ================================================= */
+           =============================================== */
 
         later(
 
@@ -1901,19 +1477,16 @@ bubble.setAttribute(
         );
 
 
+        /* ===============================================
+           MUSIC NOTES START
 
-        /* =================================================
-           3.85 SEC
-
-           MUSIC NOTES BEGIN
-
-           FROM THEIR ORIGINAL LOCATION
-           ================================================= */
+           ORIGINAL LOCATION:
+           -0.15 / -0.30
+           =============================================== */
 
         later(
 
           function () {
-
 
             if (!running)
               return;
@@ -1943,7 +1516,6 @@ bubble.setAttribute(
     );
 
 
-
     /* =====================================================
        TARGET LOST
        ===================================================== */
@@ -1954,10 +1526,7 @@ bubble.setAttribute(
 
       function () {
 
-
-        running =
-          false;
-
+        running = false;
 
         clearTarget0();
 
@@ -3119,7 +2688,7 @@ bubble.setAttribute(
 
 
 
- <!-- ======================================================
+<!-- ======================================================
      TARGET 0
      BUBBLES + HEART + MUSIC
      ====================================================== -->
@@ -3137,34 +2706,19 @@ bubble.setAttribute(
 >
 
 
-  <!-- =========================================
-       HOOK HEART
-
-       Starts invisible.
-       JavaScript makes it burst through bubbles.
-       ========================================= -->
-
   <a-image
 
     id="hookHeartAR"
 
     src="#hookHeart"
 
-    position="
-      .1
-      .25
-      0.02
-    "
+    position=".1 .25 0.02"
 
     width=".45"
 
     height=".45"
 
-    scale="
-      0.45
-      0.45
-      0.45
-    "
+    scale="0.45 0.45 0.45"
 
     material="
       shader: flat;
