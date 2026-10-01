@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
   <meta charset="utf-8">
 
   <meta
@@ -16,1245 +14,1724 @@
   <!-- MINDAR IMAGE -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
+
   <style>
 
     html,
     body {
-
       margin: 0;
-      padding: 0;
-
       width: 100%;
       height: 100%;
-
       overflow: hidden;
+      background: transparent;
+    }
 
-      background: black;
 
+    /* =====================================================
+       LET'S MEET THE BAND
+       ===================================================== */
+
+    #meetBandIntro {
+
+      position: fixed;
+
+      left: 50%;
+      top: 50%;
+
+      width: 88%;
+      max-width: 460px;
+
+      transform:
+        translate(-50%, -50%)
+        scale(.82);
+
+      opacity: 0;
+
+      display: none;
+
+      transition:
+        opacity .5s ease,
+        transform .5s ease;
+
+      z-index: 99999;
+
+      pointer-events: none;
+    }
+
+
+    #meetBandIntro.show {
+
+      opacity: 1;
+
+      transform:
+        translate(-50%, -50%)
+        scale(1);
+    }
+
+
+    #meetBandIntro img {
+
+      display: block;
+
+      width: 100%;
+      height: auto;
+    }
+
+
+    /* =====================================================
+       BAND NAMES
+       ===================================================== */
+
+    #bandNameStack {
+
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 99998;
+
+      pointer-events: none;
+    }
+
+
+    .band-screen-name {
+
+      position: fixed;
+
+      left: 50%;
+      top: 50%;
+
+      width: 88%;
+      max-width: 460px;
+
+      opacity: 0;
+
+      transform:
+        translate(-50%, -50%)
+        scale(.9);
+
+      transition:
+
+        left .65s ease,
+        top .65s ease,
+        width .65s ease,
+        opacity .3s ease,
+        transform .65s ease;
+
+      z-index: 99999;
+
+      pointer-events: none;
+    }
+
+
+    .band-screen-name.flash {
+
+      opacity: 1;
+
+      transform:
+        translate(-50%, -50%)
+        scale(1);
+    }
+
+
+    .band-screen-name.stacked {
+
+      left: var(--stack-left);
+
+      top: var(--stack-top);
+
+      width: 32%;
+
+      max-width: 175px;
+
+      opacity: 1;
+
+      transform:
+        translate(-50%, -50%)
+        scale(1);
+    }
+
+
+    .band-screen-name.fade-away {
+
+      opacity: 0;
+    }
+
+
+    /* =====================================================
+       THE HOOK BUTTON
+       ===================================================== */
+
+    #hookButton {
+
+      position: fixed;
+
+      left: 50%;
+      top: 50%;
+
+      width: 84%;
+      max-width: 430px;
+
+      padding: 0;
+
+      border: 0;
+
+      background: transparent;
+
+      opacity: 0;
+
+      display: none;
+
+      transform:
+        translate(-50%, -50%)
+        scale(.82);
+
+      transition:
+        opacity .5s ease,
+        transform .5s ease;
+
+      pointer-events: auto;
+
+      cursor: pointer;
+
+      z-index: 99999;
+    }
+
+
+    #hookButton.show {
+
+      opacity: 1;
+
+      transform:
+        translate(-50%, -50%)
+        scale(1);
+    }
+
+
+    #hookButton img {
+
+      display: block;
+
+      width: 100%;
+      height: auto;
     }
 
   </style>
 
-</head>
 
 
-<body>
+  <script>
 
+    /* =========================================================
+       TARGET 0
 
-<script>
+       BUBBLES
+       →
+       IRIDESCENT TAKEOVER
+       →
+       HUGE HEART
+       →
+       HEART FADES
+       →
+       MUSIC NOTES
+       ========================================================= */
 
-/* ==========================================================
-   TARGET 0
-   BUBBLES → IRIDESCENT TAKEOVER → GIANT HEART
-   → HEART FADES → MUSIC NOTES
-   ========================================================== */
 
-AFRAME.registerComponent("music-emitter", {
+    AFRAME.registerComponent(
 
-  init: function () {
+      "music-emitter",
 
-    const target = this.el;
+      {
 
-    let running = false;
-    let bubbleTimer = null;
-    let noteTimer = null;
-    let timers = [];
+        init: function () {
 
 
-    /* =====================================================
-       LOCATIONS
-       ===================================================== */
+          const target =
+            this.el;
 
-    /* MUSIC NOTES — AMP */
 
-    const ampX = -0.15;
-    const ampY = -0.30;
+          let running =
+            false;
 
 
-    /* BUBBLES — CIGARETTE TIP */
+          let bubbleTimer =
+            null;
 
-    const bubbleX = -0.15;
-    const bubbleY = 0.30;
 
+          let noteTimer =
+            null;
 
-    /* HEART */
 
-    const heartX = 0.10;
-    const heartY = 0.25;
+          let timers =
+            [];
 
 
-    /* THE HOOK ORANGE */
+          /* =================================================
+             LOCATIONS
+             ================================================= */
 
-    const orange = "#FF5A00";
 
+          /* MUSIC NOTES — AMP */
 
-    /* =====================================================
-       MUSIC NOTE ART
-       ===================================================== */
+          const ampX =
+            -0.15;
 
-    const notes = [
 
-      `
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="100"
-        height="100"
-        viewBox="0 0 100 100"
-      >
+          const ampY =
+            -0.30;
 
-        <text
-          x="50"
-          y="74"
-          text-anchor="middle"
-          font-size="78"
-          font-family="Arial, sans-serif"
-          fill="${orange}"
-        >♪</text>
 
-      </svg>
-      `,
 
+          /* BUBBLES — CIGARETTE */
 
-      `
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="100"
-        height="100"
-        viewBox="0 0 100 100"
-      >
+          const bubbleX =
+            -0.15;
 
-        <text
-          x="50"
-          y="74"
-          text-anchor="middle"
-          font-size="74"
-          font-family="Arial, sans-serif"
-          fill="${orange}"
-        >♫</text>
 
-      </svg>
-      `,
+          const bubbleY =
+            0.30;
 
 
-      `
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="100"
-        height="100"
-        viewBox="0 0 100 100"
-      >
 
-        <text
-          x="50"
-          y="74"
-          text-anchor="middle"
-          font-size="78"
-          font-family="Arial, sans-serif"
-          fill="${orange}"
-        >♩</text>
+          /* HEART */
 
-      </svg>
-      `
+          const heartX =
+            0.10;
 
-    ];
 
+          const heartY =
+            0.25;
 
-    /* =====================================================
-       SVG HELPER
-       ===================================================== */
 
-    function svgToDataURL(svg) {
 
-      return (
-        "data:image/svg+xml;charset=utf-8," +
-        encodeURIComponent(svg)
-      );
+          /* THE HOOK ORANGE */
 
-    }
+          const orange =
+            "#FF5A00";
 
 
-    /* =====================================================
-       TIMER HELPER
-       ===================================================== */
 
-    function later(fn, delay) {
+          /* =================================================
+             TIMER HELPER
+             ================================================= */
 
-      const timer =
-        setTimeout(
-          fn,
-          delay
-        );
-
-
-      timers.push(
-        timer
-      );
-
-
-      return timer;
-
-    }
-
-
-    /* =====================================================
-       CREATE MUSIC NOTE
-       ===================================================== */
-
-    function createNote() {
-
-      if (!running)
-        return;
-
-
-      const note =
-        document.createElement(
-          "a-plane"
-        );
-
-
-      note.classList.add(
-        "target0-effect"
-      );
-
-
-      const svg =
-
-        notes[
-          Math.floor(
-            Math.random() *
-            notes.length
-          )
-        ];
-
-
-      /* ORIGINAL AMP LOCATION */
-
-      const startX =
-
-        ampX +
-
-        (Math.random() - 0.5) *
-        0.025;
-
-
-      const startY =
-
-        ampY +
-
-        (Math.random() - 0.5) *
-        0.020;
-
-
-      const driftX =
-
-        (Math.random() - 0.5) *
-        0.45;
-
-
-      const rise =
-
-        0.32 +
-
-        Math.random() *
-        0.42;
-
-
-      const endX =
-        startX + driftX;
-
-
-      const endY =
-        startY + rise;
-
-
-      const duration =
-
-        1800 +
-
-        Math.random() *
-        1300;
-
-
-      const finalScale =
-
-        0.50 +
-
-        Math.random() *
-        0.30;
-
-
-      const rotateAmount =
-
-        18 +
-
-        Math.random() *
-        30;
-
-
-      note.setAttribute(
-        "src",
-        svgToDataURL(svg)
-      );
-
-
-      note.setAttribute(
-        "material",
-        `
-        shader: flat;
-        transparent: true;
-        opacity: 1;
-        side: double;
-        alphaTest: 0.01;
-        depthWrite: false;
-        `
-      );
-
-
-      note.setAttribute(
-        "width",
-        "0.28"
-      );
-
-
-      note.setAttribute(
-        "height",
-        "0.28"
-      );
-
-
-      note.setAttribute(
-        "position",
-        `${startX} ${startY} 0.12`
-      );
-
-
-      note.setAttribute(
-        "scale",
-        "0.30 0.30 0.30"
-      );
-
-
-      note.setAttribute(
-        "animation__move",
-        `
-        property: position;
-        from: ${startX} ${startY} 0.12;
-        to: ${endX} ${endY} 0.12;
-        dur: ${duration};
-        easing: easeOutSine;
-        `
-      );
-
-
-      note.setAttribute(
-        "animation__grow",
-        `
-        property: scale;
-        from: 0.30 0.30 0.30;
-        to: ${finalScale} ${finalScale} ${finalScale};
-        dur: ${duration};
-        easing: easeOutQuad;
-        `
-      );
-
-
-      note.setAttribute(
-        "animation__dance",
-        `
-        property: rotation;
-        from: 0 0 -${rotateAmount};
-        to: 0 0 ${rotateAmount};
-        dur: ${320 + Math.random() * 280};
-        dir: alternate;
-        loop: true;
-        easing: easeInOutSine;
-        `
-      );
-
-
-      note.setAttribute(
-        "animation__fade",
-        `
-        property: material.opacity;
-        from: 1;
-        to: 0;
-        delay: ${duration * 0.65};
-        dur: ${duration * 0.35};
-        easing: easeInQuad;
-        `
-      );
-
-
-      target.appendChild(
-        note
-      );
-
-
-      later(
-
-        function () {
-
-          if (
-            note.parentNode
+          function later(
+            fn,
+            delay
           ) {
 
-            note.parentNode.removeChild(
-              note
+            const id =
+              setTimeout(
+                fn,
+                delay
+              );
+
+
+            timers.push(
+              id
+            );
+
+
+            return id;
+
+          }
+
+
+
+          /* =================================================
+             SVG HELPER
+             ================================================= */
+
+          function svgURL(
+            svg
+          ) {
+
+            return (
+
+              "data:image/svg+xml;charset=utf-8," +
+
+              encodeURIComponent(
+                svg
+              )
+
             );
 
           }
 
-        },
-
-        duration + 200
-
-      );
-
-    }
-        /* =====================================================
-       CREATE BUBBLE
-       ===================================================== */
-
-    function createBubble(stage) {
-
-      if (!running)
-        return;
 
 
-      const bubble =
-        document.createElement(
-          "a-plane"
-        );
+          /* =================================================
+             MUSIC NOTE SVG
+             ================================================= */
+
+          function makeNoteSVG(
+            symbol
+          ) {
+
+            return `
+
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="100"
+                height="100"
+                viewBox="0 0 100 100"
+              >
+
+                <text
+
+                  x="50"
+
+                  y="76"
+
+                  text-anchor="middle"
+
+                  font-family="Arial,sans-serif"
+
+                  font-size="78"
+
+                  font-weight="700"
+
+                  fill="${orange}"
+
+                >${symbol}</text>
+
+              </svg>
+
+            `;
+
+          }
 
 
-      bubble.classList.add(
-        "target0-effect",
-        "hook-bubble"
-      );
 
+          const noteArt = [
 
-      /* =================================================
-         BUBBLE COLOURS
+            makeNoteSVG(
+              "♪"
+            ),
 
-         Stage 1 = white
-         Stage 2 = pearl
-         Stage 3 = solid iridescent
-         ================================================= */
+            makeNoteSVG(
+              "♫"
+            ),
 
-      let bubbleFill;
-      let bubbleStroke;
-      let reflection1;
-      let reflection2;
-
-
-      /* WHITE / CLEAR BUBBLES */
-
-      if (stage === 1) {
-
-        bubbleFill =
-          "rgba(255,255,255,0.18)";
-
-        bubbleStroke =
-          "rgba(255,255,255,0.95)";
-
-        reflection1 =
-          "rgba(255,255,255,0.95)";
-
-        reflection2 =
-          "rgba(255,255,255,0.60)";
-
-      }
-
-
-      /* PEARLY BUBBLES */
-
-      else if (stage === 2) {
-
-        const pearlColours = [
-
-          "rgba(255,210,245,0.72)",
-          "rgba(205,225,255,0.72)",
-          "rgba(210,255,245,0.72)",
-          "rgba(235,215,255,0.72)"
-
-        ];
-
-
-        bubbleFill =
-
-          pearlColours[
-            Math.floor(
-              Math.random() *
-              pearlColours.length
+            makeNoteSVG(
+              "♩"
             )
+
           ];
 
 
-        bubbleStroke =
-          "rgba(255,255,255,0.95)";
+
+          /* =================================================
+             CREATE MUSIC NOTE
+             ================================================= */
+
+          function createNote() {
 
 
-        reflection1 =
-          "rgba(255,255,255,0.95)";
+            if (!running)
+              return;
 
 
-        reflection2 =
-          "rgba(255,180,225,0.75)";
 
-      }
+            const note =
 
-
-      /* SOLID IRIDESCENT BUBBLES */
-
-      else {
-
-        const iridescentColours = [
-
-          "#F3B9FF",
-          "#B9DDFF",
-          "#BFFFF0",
-          "#FFD0EA",
-          "#D5C5FF",
-          "#FFF0BD"
-
-        ];
+              document.createElement(
+                "a-plane"
+              );
 
 
-        bubbleFill =
 
-          iridescentColours[
-            Math.floor(
+            note.classList.add(
+              "target0-effect"
+            );
+
+
+
+            const startX =
+
+              ampX +
+
+              (Math.random() - 0.5) *
+              0.025;
+
+
+
+            const startY =
+
+              ampY +
+
+              (Math.random() - 0.5) *
+              0.020;
+
+
+
+            const endX =
+
+              startX +
+
+              (Math.random() - 0.5) *
+              0.45;
+
+
+
+            const endY =
+
+              startY +
+
+              0.32 +
+
               Math.random() *
-              iridescentColours.length
-            )
-          ];
+              0.42;
 
 
-        bubbleStroke =
-          "#FFFFFF";
 
+            const duration =
 
-        reflection1 =
-          "rgba(255,255,255,0.95)";
+              1800 +
 
+              Math.random() *
+              1300;
 
-        reflection2 =
-          "rgba(255,255,255,0.55)";
 
-      }
 
+            const finalScale =
 
-      /* =================================================
-         DRAW BUBBLE
-         ================================================= */
+              0.50 +
 
-      const bubbleSVG = `
+              Math.random() *
+              0.30;
 
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="100"
-          height="100"
-          viewBox="0 0 100 100"
-        >
 
-          <circle
-            cx="50"
-            cy="50"
-            r="43"
-            fill="${bubbleFill}"
-            stroke="${bubbleStroke}"
-            stroke-width="3"
-          />
 
+            const rotate =
 
-          <ellipse
-            cx="34"
-            cy="29"
-            rx="10"
-            ry="6"
-            fill="${reflection1}"
-          />
+              18 +
 
+              Math.random() *
+              30;
 
-          <ellipse
-            cx="67"
-            cy="68"
-            rx="6"
-            ry="4"
-            fill="${reflection2}"
-          />
 
 
-          <circle
-            cx="29"
-            cy="24"
-            r="3"
-            fill="#FFFFFF"
-          />
+            note.setAttribute(
 
-        </svg>
+              "src",
 
-      `;
+              svgURL(
 
+                noteArt[
 
-      let endX;
-      let endY;
-      let size;
-      let duration;
+                  Math.floor(
 
+                    Math.random() *
+                    noteArt.length
 
-      /* =================================================
-         STAGE 1
-         SMALL WHITE BUBBLES FROM CIGARETTE
-         ================================================= */
+                  )
 
-      if (stage === 1) {
+                ]
 
-        endX =
+              )
 
-          bubbleX +
+            );
 
-          (Math.random() - 0.5) *
-          0.30;
 
 
-        endY =
+            note.setAttribute(
 
-          bubbleY +
+              "material",
 
-          0.18 +
+              `
+              shader: flat;
+              transparent: true;
+              opacity: 1;
+              side: double;
+              alphaTest: 0.01;
+              depthWrite: false;
+              `
 
-          Math.random() *
-          0.30;
+            );
 
 
-        size =
 
-          0.10 +
+            note.setAttribute(
+              "width",
+              "0.28"
+            );
 
-          Math.random() *
-          0.12;
 
+            note.setAttribute(
+              "height",
+              "0.28"
+            );
 
-        duration =
 
-          1200 +
 
-          Math.random() *
-          700;
+            note.setAttribute(
 
-      }
+              "position",
 
+              `${startX} ${startY} 0.12`
 
-      /* =================================================
-         STAGE 2
-         PEARLY BUBBLES SPREAD OUT
-         ================================================= */
+            );
 
-      else if (stage === 2) {
 
-        endX =
 
-          (Math.random() - 0.5) *
-          1.35;
+            note.setAttribute(
 
+              "scale",
 
-        endY =
+              "0.30 0.30 0.30"
 
-          (Math.random() - 0.5) *
-          1.40;
+            );
 
 
-        size =
 
-          0.16 +
+            note.setAttribute(
 
-          Math.random() *
-          0.22;
+              "animation__move",
 
+              `
+              property: position;
 
-        duration =
+              from:
+              ${startX}
+              ${startY}
+              0.12;
 
-          1000 +
+              to:
+              ${endX}
+              ${endY}
+              0.12;
 
-          Math.random() *
-          650;
+              dur:
+              ${duration};
 
-      }
+              easing:
+              easeOutSine;
+              `
 
+            );
 
-      /* =================================================
-         STAGE 3
-         BIG IRIDESCENT SCREEN TAKEOVER
-         ================================================= */
 
-      else {
 
-        endX =
+            note.setAttribute(
 
-          (Math.random() - 0.5) *
-          1.65;
+              "animation__grow",
 
+              `
+              property: scale;
 
-        endY =
+              from:
+              0.30 0.30 0.30;
 
-          (Math.random() - 0.5) *
-          1.75;
+              to:
+              ${finalScale}
+              ${finalScale}
+              ${finalScale};
 
+              dur:
+              ${duration};
 
-        size =
+              easing:
+              easeOutQuad;
+              `
 
-          0.25 +
+            );
 
-          Math.random() *
-          0.38;
 
 
-        duration =
+            note.setAttribute(
 
-          700 +
+              "animation__dance",
 
-          Math.random() *
-          500;
+              `
+              property: rotation;
 
-      }
+              from:
+              0 0 -${rotate};
 
+              to:
+              0 0 ${rotate};
 
-      /* =================================================
-         BUILD BUBBLE
-         ================================================= */
+              dur:
+              ${320 + Math.random() * 280};
 
-      bubble.setAttribute(
-        "src",
-        svgToDataURL(
-          bubbleSVG
-        )
-      );
+              dir:
+              alternate;
 
+              loop:
+              true;
 
-      bubble.setAttribute(
-        "material",
-        `
-        shader: flat;
-        transparent: true;
-        opacity: 0.92;
-        side: double;
-        depthWrite: false;
-        `
-      );
+              easing:
+              easeInOutSine;
+              `
 
+            );
 
-      bubble.setAttribute(
-        "width",
-        size
-      );
 
 
-      bubble.setAttribute(
-        "height",
-        size
-      );
+            note.setAttribute(
 
+              "animation__fade",
 
-      /* START AT CIGARETTE TIP */
+              `
+              property:
+              material.opacity;
 
-      bubble.setAttribute(
-        "position",
-        `${bubbleX} ${bubbleY} 0.15`
-      );
+              from:
+              1;
 
+              to:
+              0;
 
-      bubble.setAttribute(
-        "scale",
-        "0.10 0.10 0.10"
-      );
+              delay:
+              ${duration * 0.65};
 
+              dur:
+              ${duration * 0.35};
 
-      /* FLOAT OUT */
+              easing:
+              easeInQuad;
+              `
 
-      bubble.setAttribute(
-        "animation__move",
-        `
-        property: position;
-        from: ${bubbleX} ${bubbleY} 0.15;
-        to: ${endX} ${endY} 0.15;
-        dur: ${duration};
-        easing: easeOutSine;
-        `
-      );
+            );
 
 
-      /* GROW */
 
-      bubble.setAttribute(
-        "animation__grow",
-        `
-        property: scale;
-        from: 0.10 0.10 0.10;
-        to: 1 1 1;
-        dur: ${duration * 0.75};
-        easing: easeOutQuad;
-        `
-      );
+            target.appendChild(
+              note
+            );
 
 
-      target.appendChild(
-        bubble
-      );
 
+            later(
 
-      /* FIRST LITTLE WHITE BUBBLES
-         EVENTUALLY DISAPPEAR */
+              function () {
 
-      if (stage === 1) {
+                if (
+                  note.parentNode
+                ) {
 
-        later(
+                  note.remove();
 
-          function () {
+                }
+
+              },
+
+              duration + 250
+
+            );
+
+          }
+
+
+
+          /* =================================================
+             BUBBLE ART
+             ================================================= */
+
+          function bubbleSVG(
+            stage
+          ) {
+
+
+            let fill;
+
+            let stroke;
+
+            let shine2;
+
+
+
+            /* WHITE */
 
             if (
-              bubble.parentNode
+              stage === 1
             ) {
 
-              bubble.parentNode.removeChild(
-                bubble
+              fill =
+                "rgba(255,255,255,.16)";
+
+
+              stroke =
+                "rgba(255,255,255,.95)";
+
+
+              shine2 =
+                "rgba(255,255,255,.55)";
+
+            }
+
+
+
+            /* PEARL */
+
+            else if (
+              stage === 2
+            ) {
+
+
+              const pearls = [
+
+                "rgba(255,210,245,.72)",
+
+                "rgba(205,225,255,.72)",
+
+                "rgba(210,255,245,.72)",
+
+                "rgba(235,215,255,.72)"
+
+              ];
+
+
+
+              fill =
+
+                pearls[
+
+                  Math.floor(
+
+                    Math.random() *
+                    pearls.length
+
+                  )
+
+                ];
+
+
+
+              stroke =
+                "rgba(255,255,255,.95)";
+
+
+              shine2 =
+                "rgba(255,180,225,.72)";
+
+            }
+
+
+
+            /* IRIDESCENT */
+
+            else {
+
+
+              const colours = [
+
+                "#F3B9FF",
+
+                "#B9DDFF",
+
+                "#BFFFF0",
+
+                "#FFD0EA",
+
+                "#D5C5FF",
+
+                "#FFF0BD"
+
+              ];
+
+
+
+              fill =
+
+                colours[
+
+                  Math.floor(
+
+                    Math.random() *
+                    colours.length
+
+                  )
+
+                ];
+
+
+
+              stroke =
+                "#FFFFFF";
+
+
+              shine2 =
+                "rgba(255,255,255,.55)";
+
+            }
+
+
+
+            return `
+
+              <svg
+
+                xmlns="http://www.w3.org/2000/svg"
+
+                width="100"
+
+                height="100"
+
+                viewBox="0 0 100 100"
+
+              >
+
+
+                <circle
+
+                  cx="50"
+
+                  cy="50"
+
+                  r="43"
+
+                  fill="${fill}"
+
+                  stroke="${stroke}"
+
+                  stroke-width="3"
+
+                />
+
+
+                <ellipse
+
+                  cx="34"
+
+                  cy="29"
+
+                  rx="10"
+
+                  ry="6"
+
+                  fill="rgba(255,255,255,.95)"
+
+                />
+
+
+                <ellipse
+
+                  cx="67"
+
+                  cy="68"
+
+                  rx="6"
+
+                  ry="4"
+
+                  fill="${shine2}"
+
+                />
+
+
+                <circle
+
+                  cx="29"
+
+                  cy="24"
+
+                  r="3"
+
+                  fill="#FFFFFF"
+
+                />
+
+
+              </svg>
+
+            `;
+
+          }
+
+
+
+          /* =================================================
+             CREATE BUBBLE
+             ================================================= */
+
+          function createBubble(
+            stage
+          ) {
+
+
+            if (!running)
+              return;
+
+
+
+            const bubble =
+
+              document.createElement(
+                "a-plane"
+              );
+
+
+
+            bubble.classList.add(
+
+              "target0-effect",
+
+              "hook-bubble"
+
+            );
+
+
+
+            let endX;
+
+            let endY;
+
+            let size;
+
+            let duration;
+
+
+
+            /* SMALL WHITE */
+
+            if (
+              stage === 1
+            ) {
+
+
+              endX =
+
+                bubbleX +
+
+                (Math.random() - 0.5) *
+                0.30;
+
+
+
+              endY =
+
+                bubbleY +
+
+                0.18 +
+
+                Math.random() *
+                0.30;
+
+
+
+              size =
+
+                0.10 +
+
+                Math.random() *
+                0.12;
+
+
+
+              duration =
+
+                1200 +
+
+                Math.random() *
+                700;
+
+            }
+
+
+
+            /* PEARL SPREAD */
+
+            else if (
+              stage === 2
+            ) {
+
+
+              endX =
+
+                (Math.random() - 0.5) *
+                1.35;
+
+
+
+              endY =
+
+                (Math.random() - 0.5) *
+                1.40;
+
+
+
+              size =
+
+                0.16 +
+
+                Math.random() *
+                0.22;
+
+
+
+              duration =
+
+                1000 +
+
+                Math.random() *
+                650;
+
+            }
+
+
+
+            /* SCREEN TAKEOVER */
+
+            else {
+
+
+              endX =
+
+                (Math.random() - 0.5) *
+                1.65;
+
+
+
+              endY =
+
+                (Math.random() - 0.5) *
+                1.75;
+
+
+
+              size =
+
+                0.25 +
+
+                Math.random() *
+                0.38;
+
+
+
+              duration =
+
+                700 +
+
+                Math.random() *
+                500;
+
+            }
+
+
+
+            bubble.setAttribute(
+
+              "src",
+
+              svgURL(
+
+                bubbleSVG(
+                  stage
+                )
+
+              )
+
+            );
+
+
+
+            bubble.setAttribute(
+
+              "material",
+
+              `
+              shader: flat;
+              transparent: true;
+              opacity: 0.92;
+              side: double;
+              depthWrite: false;
+              `
+
+            );
+
+
+
+            bubble.setAttribute(
+              "width",
+              size
+            );
+
+
+            bubble.setAttribute(
+              "height",
+              size
+            );
+
+
+
+            bubble.setAttribute(
+
+              "position",
+
+              `${bubbleX} ${bubbleY} 0.15`
+
+            );
+
+
+
+            bubble.setAttribute(
+
+              "scale",
+
+              "0.10 0.10 0.10"
+
+            );
+
+
+
+            bubble.setAttribute(
+
+              "animation__move",
+
+              `
+              property: position;
+
+              from:
+              ${bubbleX}
+              ${bubbleY}
+              0.15;
+
+              to:
+              ${endX}
+              ${endY}
+              0.15;
+
+              dur:
+              ${duration};
+
+              easing:
+              easeOutSine;
+              `
+
+            );
+
+
+
+            bubble.setAttribute(
+
+              "animation__grow",
+
+              `
+              property: scale;
+
+              from:
+              0.10 0.10 0.10;
+
+              to:
+              1 1 1;
+
+              dur:
+              ${duration * 0.75};
+
+              easing:
+              easeOutQuad;
+              `
+
+            );
+
+
+
+            target.appendChild(
+              bubble
+            );
+
+
+
+            if (
+              stage === 1
+            ) {
+
+              later(
+
+                function () {
+
+                  if (
+                    bubble.parentNode
+                  ) {
+
+                    bubble.remove();
+
+                  }
+
+                },
+
+                duration + 500
+
               );
 
             }
 
-          },
-
-          duration + 500
-
-        );
-
-      }
-
-    }
-        /* =====================================================
-       HEART BURST
-       ===================================================== */
-
-    function heartBurst() {
-
-      if (!running)
-        return;
-
-
-      /* =================================================
-         ORANGE IMPACT FLASH
-         ================================================= */
-
-      const flash =
-        document.createElement(
-          "a-circle"
-        );
-
-
-      flash.classList.add(
-        "target0-effect"
-      );
-
-
-      flash.setAttribute(
-        "position",
-        `${heartX} ${heartY} 0.01`
-      );
-
-
-      flash.setAttribute(
-        "radius",
-        "0.20"
-      );
-
-
-      flash.setAttribute(
-        "segments",
-        "32"
-      );
-
-
-      flash.setAttribute(
-        "material",
-        `
-        shader: flat;
-        color: #FF5A00;
-        transparent: true;
-        opacity: 0.90;
-        side: double;
-        depthWrite: false;
-        `
-      );
-
-
-      flash.setAttribute(
-        "scale",
-        "0.05 0.05 0.05"
-      );
-
-
-      flash.setAttribute(
-        "animation__flashgrow",
-        `
-        property: scale;
-        from: 0.05 0.05 0.05;
-        to: 2.8 2.8 2.8;
-        dur: 300;
-        easing: easeOutQuad;
-        `
-      );
-
-
-      flash.setAttribute(
-        "animation__flashfade",
-        `
-        property: material.opacity;
-        from: 0.90;
-        to: 0;
-        dur: 320;
-        easing: easeOutQuad;
-        `
-      );
-
-
-      target.appendChild(
-        flash
-      );
-
-
-      later(
-
-        function () {
-
-          if (flash.parentNode) {
-
-            flash.parentNode.removeChild(
-              flash
-            );
-
           }
 
-        },
-
-        400
-
-      );
 
 
-      /* =================================================
-         GET THE HOOK HEART
-         ================================================= */
+          /* =================================================
+             GIANT HEART
+             ================================================= */
 
-      const heart =
-        target.querySelector(
-          "#hookHeartAR"
-        );
+          function heartBurst() {
 
 
-      if (!heart)
-        return;
+            if (!running)
+              return;
 
 
-      /* REMOVE ANY OLD ANIMATIONS */
 
-      heart.removeAttribute(
-        "animation__pulse"
-      );
+            const heart =
 
-
-      heart.removeAttribute(
-        "animation__shrinkaway"
-      );
+              target.querySelector(
+                "#hookHeartAR"
+              );
 
 
-      heart.removeAttribute(
-        "animation__heartfade"
-      );
+
+            if (!heart)
+              return;
 
 
-      /* MAKE HEART VISIBLE */
 
-      heart.setAttribute(
-        "material",
-        `
-        shader: flat;
-        transparent: true;
-        opacity: 1;
-        side: double;
-        depthWrite: false;
-        `
-      );
-
-
-      /* START TINY */
-
-      heart.setAttribute(
-        "scale",
-        "0.03 0.03 0.03"
-      );
-
-
-      /* =================================================
-         HEART EXPLODES HUGE
-         ================================================= */
-
-      heart.setAttribute(
-        "animation__burst",
-        `
-        property: scale;
-        from: 0.03 0.03 0.03;
-        to: 3.2 3.2 3.2;
-        dur: 420;
-        easing: easeOutBack;
-        `
-      );
-
-
-      /* =================================================
-         PUSH ALL BUBBLES AWAY
-         ================================================= */
-
-      const bubbles =
-        target.querySelectorAll(
-          ".hook-bubble"
-        );
-
-
-      bubbles.forEach(
-
-        function (bubble) {
-
-
-          /* STOP THEIR NORMAL FLOAT */
-
-          bubble.removeAttribute(
-            "animation__move"
-          );
-
-
-          bubble.removeAttribute(
-            "animation__grow"
-          );
-
-
-          const pos =
-            bubble.getAttribute(
-              "position"
+            heart.removeAttribute(
+              "animation__burst"
             );
 
 
-          let dx =
-            pos.x - heartX;
+            heart.removeAttribute(
+              "animation__shrink"
+            );
 
 
-          let dy =
-            pos.y - heartY;
+            heart.removeAttribute(
+              "animation__fade"
+            );
 
 
-          let length =
 
-            Math.sqrt(
+            heart.setAttribute(
 
-              dx * dx +
+              "material",
 
-              dy * dy
+              `
+              shader: flat;
+              transparent: true;
+              opacity: 1;
+              side: double;
+              depthWrite: false;
+              `
 
             );
 
 
-          /* PREVENT DIVIDE-BY-ZERO */
 
-          if (length < 0.02) {
+            heart.setAttribute(
 
-            dx =
-              Math.random() - 0.5;
+              "scale",
 
+              "0.03 0.03 0.03"
 
-            dy =
-              Math.random() - 0.5;
+            );
 
 
-            length =
 
-              Math.sqrt(
+            /* HUGE HEART */
 
-                dx * dx +
+            heart.setAttribute(
 
-                dy * dy
+              "animation__burst",
+
+              `
+              property: scale;
+
+              from:
+              0.03 0.03 0.03;
+
+              to:
+              3.2 3.2 3.2;
+
+              dur:
+              420;
+
+              easing:
+              easeOutBack;
+              `
+
+            );
+
+
+
+            /* =============================================
+               BLAST BUBBLES AWAY
+               ============================================= */
+
+            target
+              .querySelectorAll(
+                ".hook-bubble"
+              )
+              .forEach(
+
+                function (
+                  bubble
+                ) {
+
+
+                  bubble.removeAttribute(
+                    "animation__move"
+                  );
+
+
+                  bubble.removeAttribute(
+                    "animation__grow"
+                  );
+
+
+
+                  const p =
+
+                    bubble.object3D.position;
+
+
+
+                  let dx =
+                    p.x - heartX;
+
+
+                  let dy =
+                    p.y - heartY;
+
+
+
+                  let len =
+
+                    Math.hypot(
+                      dx,
+                      dy
+                    );
+
+
+
+                  if (
+                    len < 0.02
+                  ) {
+
+                    dx =
+                      Math.random() - 0.5;
+
+
+                    dy =
+                      Math.random() - 0.5;
+
+
+                    len =
+
+                      Math.hypot(
+                        dx,
+                        dy
+                      ) || 1;
+
+                  }
+
+
+
+                  dx /= len;
+
+                  dy /= len;
+
+
+
+                  const distance =
+
+                    0.9 +
+
+                    Math.random() *
+                    0.9;
+
+
+
+                  const blastX =
+
+                    p.x +
+
+                    dx *
+                    distance;
+
+
+
+                  const blastY =
+
+                    p.y +
+
+                    dy *
+                    distance;
+
+
+
+                  bubble.setAttribute(
+
+                    "animation__blast",
+
+                    `
+                    property: position;
+
+                    to:
+                    ${blastX}
+                    ${blastY}
+                    0.15;
+
+                    dur:
+                    ${420 + Math.random() * 250};
+
+                    easing:
+                    easeOutQuad;
+                    `
+
+                  );
+
+
+
+                  bubble.setAttribute(
+
+                    "animation__blastfade",
+
+                    `
+                    property:
+                    material.opacity;
+
+                    from:
+                    0.92;
+
+                    to:
+                    0;
+
+                    dur:
+                    650;
+
+                    easing:
+                    easeOutQuad;
+                    `
+
+                  );
+
+
+
+                  later(
+
+                    function () {
+
+                      if (
+                        bubble.parentNode
+                      ) {
+
+                        bubble.remove();
+
+                      }
+
+                    },
+
+                    750
+
+                  );
+
+                }
 
               );
 
-          }
 
 
-          dx /= length;
-          dy /= length;
+            /* =============================================
+               HEART SHRINKS AND FADES
+               NO PULSING HEART
+               ============================================= */
+
+            later(
+
+              function () {
 
 
-          /* HOW FAR HEART THROWS EACH BUBBLE */
-
-          const blastDistance =
-
-            0.75 +
-
-            Math.random() *
-            0.80;
+                if (!running)
+                  return;
 
 
-          const blastX =
 
-            pos.x +
-
-            dx *
-            blastDistance;
-
-
-          const blastY =
-
-            pos.y +
-
-            dy *
-            blastDistance;
-
-
-          /* SHOOT BUBBLE AWAY */
-
-          bubble.setAttribute(
-            "animation__blast",
-            `
-            property: position;
-            from: ${pos.x} ${pos.y} 0.15;
-            to: ${blastX} ${blastY} 0.15;
-            dur: ${450 + Math.random() * 300};
-            easing: easeOutQuad;
-            `
-          );
-
-
-          /* FADE BUBBLE AS IT FLIES */
-
-          bubble.setAttribute(
-            "animation__blastfade",
-            `
-            property: material.opacity;
-            from: 0.92;
-            to: 0;
-            dur: 650;
-            easing: easeOutQuad;
-            `
-          );
-
-
-          /* REMOVE BUBBLE */
-
-          later(
-
-            function () {
-
-              if (
-                bubble.parentNode
-              ) {
-
-                bubble.parentNode.removeChild(
-                  bubble
+                heart.removeAttribute(
+                  "animation__burst"
                 );
 
-              }
-
-            },
-
-            800
-
-          );
-
-        }
-
-      );
 
 
-      /* =================================================
-         BIG HEART SHRINKS + FADES AWAY
+                heart.setAttribute(
 
-         NO LITTLE PULSING HEART
-         ================================================= */
+                  "scale",
 
-      later(
+                  "3.2 3.2 3.2"
 
-        function () {
-
-          if (!running)
-            return;
+                );
 
 
-          heart.removeAttribute(
-            "animation__burst"
-          );
+
+                heart.setAttribute(
+
+                  "animation__shrink",
+
+                  `
+                  property: scale;
+
+                  from:
+                  3.2 3.2 3.2;
+
+                  to:
+                  0.45 0.45 0.45;
+
+                  dur:
+                  1400;
+
+                  easing:
+                  easeInOutSine;
+                  `
+
+                );
 
 
-          /* BEGIN AT HUGE SIZE */
 
-          heart.setAttribute(
-            "scale",
-            "3.2 3.2 3.2"
-          );
+                heart.setAttribute(
 
+                  "animation__fade",
 
-          /* SLOWLY SHRINK */
+                  `
+                  property:
+                  material.opacity;
 
-          heart.setAttribute(
-            "animation__shrinkaway",
-            `
-            property: scale;
-            from: 3.2 3.2 3.2;
-            to: 0.45 0.45 0.45;
-            dur: 1400;
-            easing: easeInOutSine;
-            `
-          );
+                  from:
+                  1;
 
+                  to:
+                  0;
 
-          /* SLOWLY DISAPPEAR */
+                  dur:
+                  1400;
 
-          heart.setAttribute(
-            "animation__heartfade",
-            `
-            property: material.opacity;
-            from: 1;
-            to: 0;
-            dur: 1400;
-            easing: easeInOutSine;
-            `
-          );
+                  easing:
+                  easeInOutSine;
+                  `
+
+                );
+
+              },
+
+              520
+
+            );
+
+          }
 
 
-          /* COMPLETELY HIDE WHEN FINISHED */
 
-          later(
+          /* =================================================
+             RESET TARGET 0
+             ================================================= */
 
-            function () {
+          function clearTarget0() {
 
-              if (!running)
-                return;
+
+            timers.forEach(
+              clearTimeout
+            );
+
+
+            timers =
+              [];
+
+
+
+            if (
+              bubbleTimer
+            ) {
+
+              clearInterval(
+                bubbleTimer
+              );
+
+            }
+
+
+
+            if (
+              noteTimer
+            ) {
+
+              clearInterval(
+                noteTimer
+              );
+
+            }
+
+
+
+            bubbleTimer =
+              null;
+
+
+            noteTimer =
+              null;
+
+
+
+            target
+              .querySelectorAll(
+                ".target0-effect"
+              )
+              .forEach(
+
+                function (
+                  element
+                ) {
+
+                  element.remove();
+
+                }
+
+              );
+
+
+
+            const heart =
+
+              target.querySelector(
+                "#hookHeartAR"
+              );
+
+
+
+            if (
+              heart
+            ) {
 
 
               heart.removeAttribute(
-                "animation__shrinkaway"
+                "animation__burst"
               );
 
 
               heart.removeAttribute(
-                "animation__heartfade"
+                "animation__shrink"
               );
+
+
+              heart.removeAttribute(
+                "animation__fade"
+              );
+
 
 
               heart.setAttribute(
+
                 "scale",
+
                 "0.45 0.45 0.45"
+
               );
 
 
+
               heart.setAttribute(
+
                 "material",
+
                 `
                 shader: flat;
                 transparent: true;
@@ -1262,618 +1739,106 @@ AFRAME.registerComponent("music-emitter", {
                 side: double;
                 depthWrite: false;
                 `
-              );
 
-            },
-
-            1450
-
-          );
-
-        },
-
-        520
-
-      );
-
-    }
-        /* =====================================================
-       CLEAR / RESET TARGET 0
-       ===================================================== */
-
-    function clearTarget0() {
-
-      /* CLEAR DELAYED EVENTS */
-
-      timers.forEach(
-        clearTimeout
-      );
-
-      timers = [];
-
-
-      /* STOP BUBBLE GENERATOR */
-
-      if (bubbleTimer) {
-
-        clearInterval(
-          bubbleTimer
-        );
-
-        bubbleTimer = null;
-
-      }
-
-
-      /* STOP MUSIC NOTES */
-
-      if (noteTimer) {
-
-        clearInterval(
-          noteTimer
-        );
-
-        noteTimer = null;
-
-      }
-
-
-      /* REMOVE TEMPORARY EFFECTS */
-
-      target
-        .querySelectorAll(
-          ".target0-effect"
-        )
-        .forEach(
-
-          function (item) {
-
-            if (item.parentNode) {
-
-              item.parentNode.removeChild(
-                item
               );
 
             }
 
           }
 
-        );
 
 
-      /* RESET HEART */
+          /* =================================================
+             TARGET 0 FOUND
+             ================================================= */
 
-      const heart =
-        target.querySelector(
-          "#hookHeartAR"
-        );
+          target.addEventListener(
 
-
-      if (heart) {
-
-        heart.removeAttribute(
-          "animation__burst"
-        );
-
-
-        heart.removeAttribute(
-          "animation__pulse"
-        );
-
-
-        heart.removeAttribute(
-          "animation__shrinkaway"
-        );
-
-
-        heart.removeAttribute(
-          "animation__heartfade"
-        );
-
-
-        heart.setAttribute(
-          "scale",
-          "0.45 0.45 0.45"
-        );
-
-
-        heart.setAttribute(
-          "material",
-          `
-          shader: flat;
-          transparent: true;
-          opacity: 0;
-          side: double;
-          depthWrite: false;
-          `
-        );
-
-      }
-
-    }
-
-
-    /* =====================================================
-       TARGET FOUND
-       ===================================================== */
-
-    target.addEventListener(
-
-      "targetFound",
-
-      function () {
-
-        running = true;
-
-
-        /* CLEAN RESET FIRST */
-
-        clearTarget0();
-
-
-        /* =================================================
-           PHASE 1
-           WHITE BUBBLES FROM CIGARETTE
-           ================================================= */
-
-        let bubbleStage = 1;
-
-
-        bubbleTimer =
-
-          setInterval(
+            "targetFound",
 
             function () {
 
-              createBubble(
-                bubbleStage
-              );
 
-            },
+              clearTarget0();
 
-            180
 
-          );
+              running =
+                true;
 
 
-        /* =================================================
-           PHASE 2 — 1 SECOND
-           PEARLY BUBBLES
-           ================================================= */
 
-        later(
+              let stage =
+                1;
 
-          function () {
 
-            bubbleStage = 2;
 
+              /* WHITE BUBBLES */
 
-            if (bubbleTimer) {
+              bubbleTimer =
 
-              clearInterval(
-                bubbleTimer
-              );
+                setInterval(
 
-            }
+                  function () {
 
+                    createBubble(
+                      stage
+                    );
 
-            bubbleTimer =
+                  },
 
-              setInterval(
+                  180
 
-                function () {
-
-                  createBubble(2);
-
-
-                  if (
-                    Math.random() >
-                    0.45
-                  ) {
-
-                    createBubble(2);
-
-                  }
-
-                },
-
-                120
-
-              );
-
-          },
-
-          1000
-
-        );
-
-
-        /* =================================================
-           PHASE 3 — 2 SECONDS
-           IRIDESCENT BUBBLE TAKEOVER
-           ================================================= */
-
-        later(
-
-          function () {
-
-            bubbleStage = 3;
-
-
-            if (bubbleTimer) {
-
-              clearInterval(
-                bubbleTimer
-              );
-
-            }
-
-
-            bubbleTimer =
-
-              setInterval(
-
-                function () {
-
-                  createBubble(3);
-
-                  createBubble(3);
-
-
-                  if (
-                    Math.random() >
-                    0.35
-                  ) {
-
-                    createBubble(3);
-
-                  }
-
-                },
-
-                90
-
-              );
-
-          },
-
-          2000
-
-        );
-
-
-        /* =================================================
-           3.25 SEC
-           STOP MAKING NEW BUBBLES
-           ================================================= */
-
-        later(
-
-          function () {
-
-            if (bubbleTimer) {
-
-              clearInterval(
-                bubbleTimer
-              );
-
-              bubbleTimer = null;
-
-            }
-
-          },
-
-          3250
-
-        );
-
-
-        /* =================================================
-           3.45 SEC
-           GIANT HEART BREAKS THROUGH
-           ================================================= */
-
-        later(
-
-          function () {
-
-            heartBurst();
-
-          },
-
-          3450
-
-        );
-
-
-        /* =================================================
-           3.85 SEC
-           ORANGE MUSIC NOTES START FROM AMP
-
-           AMP:
-           X = -0.15
-           Y = -0.30
-           ================================================= */
-
-        later(
-
-          function () {
-
-            if (!running)
-              return;
-
-
-            createNote();
-
-
-            noteTimer =
-
-              setInterval(
-
-                createNote,
-
-                350
-
-              );
-
-          },
-
-          3850
-
-        );
-
-      }
-
-    );
-
-
-    /* =====================================================
-       TARGET LOST
-       ===================================================== */
-
-    target.addEventListener(
-
-      "targetLost",
-
-      function () {
-
-        running = false;
-
-        clearTarget0();
-
-      }
-
-    );
-
-
-  }
-
-});
-
-
-/* ==========================================================
-   END TARGET 0
-   ========================================================== */
-    /* ==========================================================
-       TARGET 1
-       BAND FORMATION NAMES
-       ========================================================== */
-
-
-    AFRAME.registerComponent(
-      "spray-names",
-      {
-
-        init: function () {
-
-          const target =
-            this.el;
-
-          let running =
-            false;
-
-          let timers =
-            [];
-
-
-          const names = [
-
-            /* GAZ */
-
-            {
-              image: "#gazImage",
-              x: -0.58,
-              y: -0.30,
-              rotation: -4,
-              width: 1.24,
-              height: 0.50,
-              color: "#39ff14"
-            },
-
-
-            /* MICHAEL */
-
-            {
-              image: "#michaelImage",
-              x: -0.58,
-              y: -0.38,
-              rotation: -2,
-              width: 1.68,
-              height: 0.50,
-              color: "#bf00ff"
-            },
-
-
-            /* RYAN */
-
-            {
-              image: "#ryanImage",
-              x: 0.58,
-              y: 0.16,
-              rotation: 4,
-              width: 1.30,
-              height: 0.50,
-              color: "#ff1493"
-            },
-
-
-            /* NICK */
-
-            {
-              image: "#nickImage",
-              x: 0.00,
-              y: -0.38,
-              rotation: 0,
-              width: 1.32,
-              height: 0.50,
-              color: "#ffd700"
-            },
-
-
-            /* SEAN */
-
-            {
-              image: "#seanImage",
-              x: 0.58,
-              y: -0.30,
-              rotation: 4,
-              width: 1.32,
-              height: 0.50,
-              color: "#ff5a00"
-            }
-
-          ];
-
-
-
-          /* =====================================================
-             SPRAY MIST
-             ===================================================== */
-
-          function createSprayMist(
-            x,
-            y,
-            color
-          ) {
-
-            for (
-              let i = 0;
-              i < 18;
-              i++
-            ) {
-
-              const dot =
-                document.createElement(
-                  "a-circle"
                 );
 
 
-              const offsetX =
 
-                (Math.random() - 0.5) *
-                0.42;
+              /* PEARL BUBBLES */
 
+              later(
 
-              const offsetY =
-
-                (Math.random() - 0.5) *
-                0.15;
-
-
-              const dotSize =
-
-                0.004 +
-
-                Math.random() *
-                0.012;
-
-
-              dot.classList.add(
-                "spray-effect"
-              );
-
-
-              dot.setAttribute(
-                "radius",
-                dotSize
-              );
-
-
-              dot.setAttribute(
-                "color",
-                color
-              );
-
-
-              dot.setAttribute(
-                "position",
-                `
-                  ${x + offsetX}
-                  ${y + offsetY}
-                  0.10
-                `
-              );
-
-
-              dot.setAttribute(
-                "material",
-                `
-                  shader: flat;
-                  transparent: true;
-                  opacity: 0.85;
-                  side: double;
-                  depthWrite: false;
-                `
-              );
-
-
-              dot.setAttribute(
-                "scale",
-                "0 0 0"
-              );
-
-
-              dot.setAttribute(
-                "animation__appear",
-                `
-                  property: scale;
-                  from: 0 0 0;
-                  to: 1 1 1;
-                  dur: ${100 + Math.random() * 220};
-                  easing: easeOutQuad;
-                `
-              );
-
-
-              dot.setAttribute(
-                "animation__fade",
-                `
-                  property: material.opacity;
-                  from: 0.85;
-                  to: 0;
-                  delay: 250;
-                  dur: 650;
-                  easing: easeOutQuad;
-                `
-              );
-
-
-              target.appendChild(
-                dot
-              );
-
-
-              setTimeout(
                 function () {
 
-                  if (dot.parentNode) {
 
-                    dot.parentNode
-                      .removeChild(
-                        dot
-                      );
+                  stage =
+                    2;
 
-                  }
+
+
+                  clearInterval(
+                    bubbleTimer
+                  );
+
+
+
+                  bubbleTimer =
+
+                    setInterval(
+
+                      function () {
+
+
+                        createBubble(
+                          2
+                        );
+
+
+
+                        if (
+                          Math.random() >
+                          0.45
+                        ) {
+
+                          createBubble(
+                            2
+                          );
+
+                        }
+
+                      },
+
+                      120
+
+                    );
 
                 },
 
@@ -1881,701 +1846,169 @@ AFRAME.registerComponent("music-emitter", {
 
               );
 
-            }
-
-          }
 
 
+              /* IRIDESCENT TAKEOVER */
 
-          /* =====================================================
-             CREATE NAME
-             ===================================================== */
+              later(
 
-          function createName(
-            info,
-            index
-          ) {
-
-            if (!running)
-              return;
-
-
-            createSprayMist(
-              info.x,
-              info.y,
-              info.color
-            );
-
-
-            const name =
-              document.createElement(
-                "a-image"
-              );
-
-
-            name.classList.add(
-              "spray-name"
-            );
-
-
-            name.setAttribute(
-              "src",
-              info.image
-            );
-
-
-            /* ===============================================
-               START HUGE + FLAT IN THE CENTRE
-
-               The name begins at the centre of the target,
-               straight-on and very large so it reads like a
-               full-screen flash before retracting.
-               =============================================== */
-
-            name.setAttribute(
-              "position",
-              "0 0 0.01"
-            );
-
-
-            name.setAttribute(
-              "rotation",
-              "0 0 0"
-            );
-
-
-            name.setAttribute(
-              "width",
-              info.width
-            );
-
-
-            name.setAttribute(
-              "height",
-              info.height
-            );
-
-
-            name.setAttribute(
-              "material",
-              `
-                shader: flat;
-                transparent: true;
-                opacity: 1;
-                alphaTest: 0.05;
-                side: double;
-                depthWrite: false;
-              `
-            );
-
-
-            /* Huge initial flash. Increase 2.8 if you want
-               the name to fill even more of the screen. */
-
-            name.setAttribute(
-              "scale",
-              "2.8 2.8 2.8"
-            );
-
-
-            target.appendChild(
-              name
-            );
-
-
-            /* Hold the big name briefly, then retract it to
-               its permanent band-member location. */
-
-            name.setAttribute(
-              "animation__retractPosition",
-              `
-                property: position;
-                from: 0 0 0.01;
-                to: ${info.x} ${info.y} 0;
-                delay: 500;
-                dur: 700;
-                easing: easeInOutCubic;
-              `
-            );
-
-
-            name.setAttribute(
-              "animation__retractScale",
-              `
-                property: scale;
-                from: 2.8 2.8 2.8;
-                to: 0.52 0.52 0.52;
-                delay: 500;
-                dur: 700;
-                easing: easeInOutCubic;
-              `
-            );
-
-
-            name.setAttribute(
-              "animation__retractRotation",
-              `
-                property: rotation;
-                from: 0 0 0;
-                to: 0 0 ${info.rotation};
-                delay: 500;
-                dur: 700;
-                easing: easeInOutCubic;
-              `
-            );
-
-
-            /* After the retract finishes, force the exact
-               final values so the name stays completely
-               steady with Z = 0. */
-
-            timers.push(
-              setTimeout(
                 function () {
 
-                  if (!running || !name.parentNode)
-                    return;
 
-                  name.removeAttribute(
-                    "animation__retractPosition"
+                  stage =
+                    3;
+
+
+
+                  clearInterval(
+                    bubbleTimer
                   );
 
-                  name.removeAttribute(
-                    "animation__retractScale"
-                  );
 
-                  name.removeAttribute(
-                    "animation__retractRotation"
-                  );
 
-                  name.setAttribute(
-                    "position",
-                    `${info.x} ${info.y} 0`
-                  );
+                  bubbleTimer =
 
-                  name.setAttribute(
-                    "scale",
-                    "0.52 0.52 0.52"
-                  );
+                    setInterval(
 
-                  name.setAttribute(
-                    "rotation",
-                    `0 0 ${info.rotation}`
-                  );
+                      function () {
+
+
+                        createBubble(
+                          3
+                        );
+
+
+                        createBubble(
+                          3
+                        );
+
+
+
+                        if (
+                          Math.random() >
+                          0.35
+                        ) {
+
+                          createBubble(
+                            3
+                          );
+
+                        }
+
+                      },
+
+                      90
+
+                    );
 
                 },
-                1250
-              )
-            );
 
-          }
+                2000
 
-
-
-          /* =====================================================
-             SHOW / HIDE LET'S MEET THE BAND INTRO
-             ===================================================== */
-
-          function showMeetBandIntro() {
-
-            if (!running)
-              return;
-
-
-            const intro =
-              document.getElementById(
-                "meetBandIntro"
               );
 
 
-            if (!intro)
-              return;
 
+              /* STOP MAKING BUBBLES */
 
-            intro.style.display =
-              "block";
+              later(
 
-
-            requestAnimationFrame(
-              function () {
-
-                intro.classList.add(
-                  "show"
-                );
-
-              }
-            );
-
-          }
-
-
-
-          function hideMeetBandIntro() {
-
-            const intro =
-              document.getElementById(
-                "meetBandIntro"
-              );
-
-
-            if (!intro)
-              return;
-
-
-            intro.classList.remove(
-              "show"
-            );
-
-
-            setTimeout(
-              function () {
-
-                if (
-                  !intro.classList.contains(
-                    "show"
-                  )
-                ) {
-
-                  intro.style.display =
-                    "none";
-
-                }
-
-              },
-              700
-            );
-
-          }
-
-
-
-          /* =====================================================
-             SCREEN NAME OVERLAY
-             ===================================================== */
-
-          function resetScreenNames() {
-
-            const screenNames =
-              document.querySelectorAll(
-                ".band-screen-name"
-              );
-
-
-            screenNames.forEach(
-              function (img) {
-
-                img.classList.remove(
-                  "flash",
-                  "stacked",
-                  "fade-away"
-                );
-
-                img.style.opacity =
-                  "0";
-
-              }
-            );
-
-          }
-
-
-
-          function revealScreenName(id) {
-
-            if (!running)
-              return;
-
-
-            const img =
-              document.getElementById(id);
-
-
-            if (!img)
-              return;
-
-
-            img.classList.remove(
-              "stacked",
-              "fade-away"
-            );
-
-
-            img.style.opacity =
-              "";
-
-
-            /* Large, centred reveal */
-
-            requestAnimationFrame(
-              function () {
-
-                img.classList.add(
-                  "flash"
-                );
-
-              }
-            );
-
-
-            /* Shrink smoothly into its stack position */
-
-            timers.push(
-              setTimeout(
                 function () {
+
+
+                  clearInterval(
+                    bubbleTimer
+                  );
+
+
+                  bubbleTimer =
+                    null;
+
+                },
+
+                3250
+
+              );
+
+
+
+              /* GIANT HEART */
+
+              later(
+
+                heartBurst,
+
+                3450
+
+              );
+
+
+
+              /* ===========================================
+                 MUSIC NOTES
+
+                 AFTER BIG HEART BEGINS CLEARING
+
+                 AMP:
+                 -0.15
+                 -0.30
+                 =========================================== */
+
+              later(
+
+                function () {
+
 
                   if (!running)
                     return;
 
 
-                  img.classList.remove(
-                    "flash"
-                  );
+
+                  createNote();
 
 
-                  img.classList.add(
-                    "stacked"
-                  );
+
+                  noteTimer =
+
+                    setInterval(
+
+                      createNote,
+
+                      350
+
+                    );
 
                 },
 
-                700
+                4800
 
-              )
-            );
-
-          }
-
-
-
-          function fadeScreenNames() {
-
-            const screenNames =
-              document.querySelectorAll(
-                ".band-screen-name.stacked"
-              );
-
-
-            screenNames.forEach(
-              function (img) {
-
-                img.classList.add(
-                  "fade-away"
-                );
-
-              }
-            );
-
-          }
-
-
-
-
-          /* =====================================================
-             SHOW THE HOOK BUTTON
-             ===================================================== */
-
-          function showHookButton() {
-
-            if (!running)
-              return;
-
-
-            const button =
-              document.getElementById(
-                "hookButton"
-              );
-
-
-            button.style.display =
-              "block";
-
-
-            requestAnimationFrame(
-              function () {
-
-                button.classList.add(
-                  "show"
-                );
-
-              }
-            );
-
-          }
-
-
-
-          /* =====================================================
-             HIDE THE HOOK BUTTON
-             ===================================================== */
-
-          function hideHookButton() {
-
-            const button =
-              document.getElementById(
-                "hookButton"
-              );
-
-
-            if (!button)
-              return;
-
-
-            button.classList.remove(
-              "show"
-            );
-
-
-            button.style.display =
-              "none";
-
-          }
-
-
-
-          /* =====================================================
-             CLEAR EFFECTS
-             ===================================================== */
-
-          function clearEffects() {
-
-            const effects =
-              target.querySelectorAll(
-                ".spray-name, .spray-effect"
-              );
-
-
-            effects.forEach(
-              function (item) {
-
-                if (item.parentNode) {
-
-                  item.parentNode
-                    .removeChild(
-                      item
-                    );
-
-                }
-
-              }
-            );
-
-
-            hideHookButton();
-
-            hideMeetBandIntro();
-
-            resetScreenNames();
-
-          }
-
-
-
-          /* =====================================================
-             TARGET FOUND
-             ===================================================== */
-
-          target.addEventListener(
-            "targetFound",
-            function () {
-
-              running =
-                true;
-
-
-              clearEffects();
-
-
-              timers.forEach(
-                clearTimeout
-              );
-
-
-              timers =
-                [];
-
-
-              /* LET'S MEET THE BAND INTRO */
-
-              showMeetBandIntro();
-
-
-              timers.push(
-                setTimeout(
-                  function () {
-
-                    hideMeetBandIntro();
-
-                  },
-
-                  1900
-
-                )
-              );
-
-
-              /* =================================================
-                 BAND NAMES
-                 Order:
-                 NICK -> SEAN -> GAZ -> RYAN -> MICHAEL
-
-                 Each name:
-                 1. appears large in the centre
-                 2. shrinks into the vertical stack
-                 3. stays completely steady
-                 ================================================= */
-
-
-              /* NICK */
-
-              timers.push(
-                setTimeout(
-                  function () {
-
-                    revealScreenName(
-                      "screenNick"
-                    );
-
-                  },
-
-                  2200
-
-                )
-              );
-
-
-              /* SEAN */
-
-              timers.push(
-                setTimeout(
-                  function () {
-
-                    revealScreenName(
-                      "screenSean"
-                    );
-
-                  },
-
-                  3500
-
-                )
-              );
-
-
-              /* GAZ */
-
-              timers.push(
-                setTimeout(
-                  function () {
-
-                    revealScreenName(
-                      "screenGaz"
-                    );
-
-                  },
-
-                  4800
-
-                )
-              );
-
-
-              /* RYAN */
-
-              timers.push(
-                setTimeout(
-                  function () {
-
-                    revealScreenName(
-                      "screenRyan"
-                    );
-
-                  },
-
-                  6100
-
-                )
-              );
-
-
-              /* MICHAEL */
-
-              timers.push(
-                setTimeout(
-                  function () {
-
-                    revealScreenName(
-                      "screenMichael"
-                    );
-
-                  },
-
-                  7400
-
-                )
-              );
-
-
-              /* Hold the full five-name stack briefly,
-                 then fade it away */
-
-              timers.push(
-                setTimeout(
-                  function () {
-
-                    fadeScreenNames();
-
-                  },
-
-                  10100
-
-                )
-              );
-
-
-              /* FINAL THE HOOK FACE FILTER BUTTON */
-
-              timers.push(
-                setTimeout(
-                  function () {
-
-                    showHookButton();
-
-                  },
-
-                  10800
-
-                )
               );
 
             }
+
           );
 
 
 
-          /* =====================================================
-             TARGET LOST
-             ===================================================== */
+          /* =================================================
+             TARGET 0 LOST
+             ================================================= */
 
           target.addEventListener(
+
             "targetLost",
+
             function () {
+
 
               running =
                 false;
 
 
-              timers.forEach(
-                clearTimeout
-              );
-
-
-              timers =
-                [];
-
-
-              clearEffects();
+              clearTarget0();
 
             }
+
           );
 
         }
@@ -2586,285 +2019,864 @@ AFRAME.registerComponent("music-emitter", {
 
 
 
-    /* ==========================================================
-       THE HOOK BUTTON CLICK
-       ========================================================== */
+    /* =========================================================
+       TARGET 1
+       LET'S MEET THE BAND
+       ========================================================= */
 
-    document.addEventListener(
+
+    AFRAME.registerComponent(
+
+      "band-intro",
+
+      {
+
+        init: function () {
+
+
+          const target =
+            this.el;
+
+
+          let running =
+            false;
+
+
+          let timers =
+            [];
+
+
+
+          const nameIds = [
+
+            "screenNick",
+
+            "screenSean",
+
+            "screenGaz",
+
+            "screenRyan",
+
+            "screenMichael"
+
+          ];
+
+
+
+          function later(
+            fn,
+            delay
+          ) {
+
+            const id =
+
+              setTimeout(
+                fn,
+                delay
+              );
+
+
+            timers.push(
+              id
+            );
+
+          }
+
+
+
+          function reset() {
+
+
+            timers.forEach(
+              clearTimeout
+            );
+
+
+            timers =
+              [];
+
+
+
+            const intro =
+
+              document.getElementById(
+                "meetBandIntro"
+              );
+
+
+
+            if (
+              intro
+            ) {
+
+              intro.classList.remove(
+                "show"
+              );
+
+
+              intro.style.display =
+                "none";
+
+            }
+
+
+
+            nameIds.forEach(
+
+              function (
+                id
+              ) {
+
+
+                const element =
+
+                  document.getElementById(
+                    id
+                  );
+
+
+
+                if (!element)
+                  return;
+
+
+
+                element.classList.remove(
+
+                  "flash",
+
+                  "stacked",
+
+                  "fade-away"
+
+                );
+
+              }
+
+            );
+
+
+
+            const button =
+
+              document.getElementById(
+                "hookButton"
+              );
+
+
+
+            if (
+              button
+            ) {
+
+              button.classList.remove(
+                "show"
+              );
+
+
+              button.style.display =
+                "none";
+
+            }
+
+          }
+
+
+
+          function showName(
+            id
+          ) {
+
+
+            if (!running)
+              return;
+
+
+
+            const element =
+
+              document.getElementById(
+                id
+              );
+
+
+
+            if (!element)
+              return;
+
+
+
+            /* FULL SCREEN */
+
+            element.classList.add(
+              "flash"
+            );
+
+
+
+            /* SHRINK TO STACK */
+
+            later(
+
+              function () {
+
+
+                if (!running)
+                  return;
+
+
+
+                element.classList.remove(
+                  "flash"
+                );
+
+
+                element.classList.add(
+                  "stacked"
+                );
+
+              },
+
+              850
+
+            );
+
+          }
+
+
+
+          function showNameAfter(
+            id,
+            delay
+          ) {
+
+            later(
+
+              function () {
+
+                showName(
+                  id
+                );
+
+              },
+
+              delay
+
+            );
+
+          }
+
+
+
+          /* =================================================
+             TARGET 1 FOUND
+             ================================================= */
+
+          target.addEventListener(
+
+            "targetFound",
+
+            function () {
+
+
+              reset();
+
+
+              running =
+                true;
+
+
+
+              const intro =
+
+                document.getElementById(
+                  "meetBandIntro"
+                );
+
+
+
+              /* LET'S MEET THE BAND */
+
+              if (
+                intro
+              ) {
+
+
+                intro.style.display =
+                  "block";
+
+
+
+                requestAnimationFrame(
+
+                  function () {
+
+                    intro.classList.add(
+                      "show"
+                    );
+
+                  }
+
+                );
+
+              }
+
+
+
+              later(
+
+                function () {
+
+
+                  if (
+                    intro
+                  ) {
+
+
+                    intro.classList.remove(
+                      "show"
+                    );
+
+
+
+                    later(
+
+                      function () {
+
+                        intro.style.display =
+                          "none";
+
+                      },
+
+                      500
+
+                    );
+
+                  }
+
+                },
+
+                1800
+
+              );
+
+
+
+              /* NAMES */
+
+              showNameAfter(
+                "screenNick",
+                2300
+              );
+
+
+              showNameAfter(
+                "screenSean",
+                3700
+              );
+
+
+              showNameAfter(
+                "screenGaz",
+                5100
+              );
+
+
+              showNameAfter(
+                "screenRyan",
+                6500
+              );
+
+
+              showNameAfter(
+                "screenMichael",
+                7900
+              );
+
+
+
+              /* KEEP STACK FOR 2 SEC THEN FADE */
+
+              later(
+
+                function () {
+
+
+                  nameIds.forEach(
+
+                    function (
+                      id
+                    ) {
+
+
+                      const element =
+
+                        document.getElementById(
+                          id
+                        );
+
+
+
+                      if (
+                        element
+                      ) {
+
+                        element.classList.add(
+                          "fade-away"
+                        );
+
+                      }
+
+                    }
+
+                  );
+
+                },
+
+                9700
+
+              );
+
+
+
+              /* THE HOOK LOGO */
+
+              later(
+
+                function () {
+
+
+                  if (!running)
+                    return;
+
+
+
+                  const button =
+
+                    document.getElementById(
+                      "hookButton"
+                    );
+
+
+
+                  if (
+                    button
+                  ) {
+
+
+                    button.style.display =
+                      "block";
+
+
+
+                    requestAnimationFrame(
+
+                      function () {
+
+                        button.classList.add(
+                          "show"
+                        );
+
+                      }
+
+                    );
+
+                  }
+
+                },
+
+                10300
+
+              );
+
+            }
+
+          );
+
+
+
+          /* =================================================
+             TARGET 1 LOST
+             ================================================= */
+
+          target.addEventListener(
+
+            "targetLost",
+
+            function () {
+
+
+              running =
+                false;
+
+
+              reset();
+
+            }
+
+          );
+
+        }
+
+      }
+
+    );
+
+
+
+    /* =========================================================
+       HOOK LOGO CLICK
+       OPEN FACE FILTER
+       ========================================================= */
+
+    window.addEventListener(
+
       "DOMContentLoaded",
+
       function () {
 
+
         const hookButton =
+
           document.getElementById(
             "hookButton"
           );
 
 
-        hookButton.addEventListener(
-          "click",
-          function () {
 
-            window.location.href =
-              "./face.html";
+        if (
+          hookButton
+        ) {
 
-          }
-        );
+
+          hookButton.addEventListener(
+
+            "click",
+
+            function () {
+
+
+              window.location.href =
+                "./face.html";
+
+            }
+
+          );
+
+        }
 
       }
+
     );
 
+  </script>
 
-   </script>
-
-
-<!-- ======================================================
-     TARGET 1 INTRO: LET'S MEET THE BAND
-     ====================================================== -->
-
-<div id="meetBandIntro">
-
-  <img
-    src="./meettheband.png"
-    alt="Let's Meet The Band"
-  >
-
-</div>
-
-
-<!-- ======================================================
-     SCREEN-FIXED BAND NAME STACK
-
-     Final stack order:
-     NICK
-     SEAN
-     GAZ
-     RYAN
-     MICHAEL
-     ====================================================== -->
-
-<div id="bandNameStack">
-
-  <img
-    id="screenNick"
-    class="band-screen-name"
-    src="./nick.png"
-    alt="Nick"
-    style="--stack-top: 18%; --stack-left: 40%;"
-  >
-
-  <img
-    id="screenSean"
-    class="band-screen-name"
-    src="./sean.png"
-    alt="Sean"
-    style="--stack-top: 34%; --stack-left: 60%;"
-  >
-
-  <img
-    id="screenGaz"
-    class="band-screen-name"
-    src="./gaz.png"
-    alt="Gaz"
-    style="--stack-top: 50%; --stack-left: 40%;"
-  >
-
-  <img
-    id="screenRyan"
-    class="band-screen-name"
-    src="./ryan.png"
-    alt="Ryan"
-    style="--stack-top: 66%; --stack-left: 60%;"
-  >
-
-  <img
-    id="screenMichael"
-    class="band-screen-name"
-    src="./michael.png"
-    alt="Michael"
-    style="--stack-top: 82%; --stack-left: 40%;"
-  >
-
-</div>
+</head>
 
 
 
-<!-- ======================================================
-     FINAL THE HOOK FACE FILTER BUTTON
-     ====================================================== -->
-
-<button
-  id="hookButton"
-  type="button"
-  aria-label="Open The Hook face filter"
->
-
-  <img
-    src="./hooklogo.png"
-    alt="The Hook"
-  >
-
-  <small>
-  
-  </small>
-
-</button>
-
-
-
-<a-scene
-
-  mindar-image="
-    imageTargetSrc: ./targets.mind;
-    autoStart: true;
-  "
-
-  embedded
-
-  vr-mode-ui="enabled: false"
-
-  device-orientation-permission-ui="enabled: false"
-
-  renderer="
-    colorManagement: true;
-    physicallyCorrectLights: true;
-    alpha: true;
-  "
-
->
+<body>
 
 
   <!-- ======================================================
-       ASSETS
+       LET'S MEET THE BAND INTRO
        ====================================================== -->
 
-  <a-assets>
-
+  <div
+    id="meetBandIntro"
+  >
 
     <img
-      id="hookHeart"
-      src="./hookheart.png"
-      crossorigin="anonymous"
+
+      src="./meettheband.png"
+
+      alt="Let's Meet The Band"
+
     >
 
+  </div>
+
+
+
+  <!-- ======================================================
+       BAND NAME STACK
+       ====================================================== -->
+
+  <div
+    id="bandNameStack"
+  >
+
 
     <img
-      id="seanImage"
-      src="./sean.png"
-      crossorigin="anonymous"
-    >
 
+      id="screenNick"
 
-    <img
-      id="nickImage"
+      class="band-screen-name"
+
       src="./nick.png"
-      crossorigin="anonymous"
+
+      alt="Nick"
+
+      style="
+        --stack-top:18%;
+        --stack-left:40%;
+      "
+
     >
 
 
     <img
-      id="ryanImage"
-      src="./ryan.png"
-      crossorigin="anonymous"
+
+      id="screenSean"
+
+      class="band-screen-name"
+
+      src="./sean.png"
+
+      alt="Sean"
+
+      style="
+        --stack-top:34%;
+        --stack-left:60%;
+      "
+
     >
 
 
     <img
-      id="gazImage"
+
+      id="screenGaz"
+
+      class="band-screen-name"
+
       src="./gaz.png"
-      crossorigin="anonymous"
+
+      alt="Gaz"
+
+      style="
+        --stack-top:50%;
+        --stack-left:40%;
+      "
+
     >
 
 
     <img
-      id="michaelImage"
-      src="./michael.png"
-      crossorigin="anonymous"
+
+      id="screenRyan"
+
+      class="band-screen-name"
+
+      src="./ryan.png"
+
+      alt="Ryan"
+
+      style="
+        --stack-top:66%;
+        --stack-left:60%;
+      "
+
     >
 
 
-  </a-assets>
+    <img
+
+      id="screenMichael"
+
+      class="band-screen-name"
+
+      src="./michael.png"
+
+      alt="Michael"
+
+      style="
+        --stack-top:82%;
+        --stack-left:40%;
+      "
+
+    >
+
+
+  </div>
 
 
 
   <!-- ======================================================
-       CAMERA
+       THE HOOK FACE FILTER BUTTON
        ====================================================== -->
 
-  <a-camera
-    position="0 0 0"
-    look-controls="enabled: false"
+  <button
+
+    id="hookButton"
+
+    type="button"
+
+    aria-label="Open The Hook face filter"
+
   >
-  </a-camera>
+
+    <img
+
+      src="./hooklogo.png"
+
+      alt="The Hook"
+
+    >
+
+  </button>
 
 
 
-<!-- ======================================================
-     TARGET 0
-     HOOK BUBBLES STICKER
-     ====================================================== -->
+  <!-- ======================================================
+       AR SCENE
+       ====================================================== -->
 
-<a-entity
+  <a-scene
 
-  id="hookedTarget"
+    mindar-image="
+      imageTargetSrc: ./targets.mind;
+      autoStart: true;
+    "
 
-  mindar-image-target="
-    targetIndex: 0
-  "
+    embedded
 
-  music-emitter
+    vr-mode-ui="
+      enabled: false
+    "
 
->
+    device-orientation-permission-ui="
+      enabled: false
+    "
 
-
-  <!-- =========================================
-       HOOK HEART
-
-       Hidden at first.
-       JavaScript makes it burst through.
-       ========================================= -->
-
-  <a-image
-
-    id="hookHeartAR"
-
-    src="#hookHeart"
-
-    position=".1 .25 0.02"
-
-    width=".45"
-
-    height=".45"
-
-    scale="0.45 0.45 0.45"
-
-    material="
-      shader: flat;
-      transparent: true;
-      opacity: 0;
-      side: double;
-      depthWrite: false;
+    renderer="
+      colorManagement: true;
+      physicallyCorrectLights: true;
+      alpha: true;
     "
 
   >
 
-  </a-image>
+
+    <!-- ==================================================
+         ASSETS
+         ================================================== -->
+
+    <a-assets>
 
 
-</a-entity>
+      <img
 
-  <!-- ======================================================
-       TARGET 1
-       ====================================================== -->
+        id="hookHeart"
 
-  <a-entity
-    id="hookCatTarget"
-    mindar-image-target="targetIndex: 1"
-    spray-names
-  >
-  </a-entity>
+        src="./hookheart.png"
+
+        crossorigin="anonymous"
+
+      >
 
 
-</a-scene>
+    </a-assets>
+
+
+
+    <!-- ==================================================
+         CAMERA
+         ================================================== -->
+
+    <a-camera
+
+      position="0 0 0"
+
+      look-controls="
+        enabled: false
+      "
+
+    >
+
+    </a-camera>
+
+
+
+    <!-- ==================================================
+         TARGET 0
+         HOOK BUBBLES STICKER
+         ================================================== -->
+
+    <a-entity
+
+      id="hookedTarget"
+
+      mindar-image-target="
+        targetIndex: 0
+      "
+
+      music-emitter
+
+    >
+
+
+      <!-- BIG HEART -->
+
+      <a-image
+
+        id="hookHeartAR"
+
+        src="#hookHeart"
+
+        position="
+          .1 .25 .02
+        "
+
+        width="
+          .45
+        "
+
+        height="
+          .45
+        "
+
+        scale="
+          .45 .45 .45
+        "
+
+        material="
+          shader: flat;
+          transparent: true;
+          opacity: 0;
+          side: double;
+          depthWrite: false;
+        "
+
+      >
+
+      </a-image>
+
+
+    </a-entity>
+
+
+
+    <!-- ==================================================
+         TARGET 1
+         BAND
+         ================================================== -->
+
+    <a-entity
+
+      id="hookCatTarget"
+
+      mindar-image-target="
+        targetIndex: 1
+      "
+
+      band-intro
+
+    >
+
+    </a-entity>
+
+
+  </a-scene>
 
 
 </body>
