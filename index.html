@@ -431,217 +431,480 @@ AFRAME.registerComponent("music-emitter", {
 
     }
 
+/* =====================================================
+   CREATE MUSIC NOTE INSIDE A BUBBLE
+   ===================================================== */
 
-    /* =====================================================
-       CREATE MUSIC NOTE
-       ===================================================== */
+function createNote() {
 
-    function createNote() {
-
-      if (!running)
-        return;
-
-
-      const note =
-        document.createElement("a-plane");
+  if (!running)
+    return;
 
 
-      note.classList.add(
-        "target0-effect"
-      );
+  /* =========================================
+     CONTAINER
+
+     The bubble and note travel together.
+     ========================================= */
+
+  const noteBubble =
+    document.createElement(
+      "a-entity"
+    );
 
 
-      const svg =
-
-        notes[
-          Math.floor(
-            Math.random() *
-            notes.length
-          )
-        ];
+  noteBubble.classList.add(
+    "target0-effect"
+  );
 
 
-      /* ORIGINAL NOTE LOCATION */
+  /* =========================================
+     START AT AMP
+     ========================================= */
 
-      const startX =
+  const startX =
 
-        ampX +
+    ampX +
 
-        (Math.random() - 0.5) *
-        0.025;
-
-
-      const startY =
-
-        ampY +
-
-        (Math.random() - 0.5) *
-        0.020;
+    (Math.random() - 0.5) *
+    0.025;
 
 
-      const driftX =
+  const startY =
 
-        (Math.random() - 0.5) *
-        0.45;
+    ampY +
+
+    (Math.random() - 0.5) *
+    0.020;
 
 
-      const rise =
+  /* =========================================
+     FLOAT UP AND ACROSS
+     ========================================= */
 
-        0.32 +
+  const driftX =
 
+    (Math.random() - 0.5) *
+    0.45;
+
+
+  const rise =
+
+    0.40 +
+
+    Math.random() *
+    0.48;
+
+
+  const endX =
+    startX + driftX;
+
+
+  const endY =
+    startY + rise;
+
+
+  const duration =
+
+    2200 +
+
+    Math.random() *
+    1400;
+
+
+  noteBubble.setAttribute(
+    "position",
+    `${startX} ${startY} 0.14`
+  );
+
+
+  /* =========================================
+     BUBBLE ART
+     ========================================= */
+
+  const musicBubbleSVG = `
+
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="100"
+      height="100"
+      viewBox="0 0 100 100"
+    >
+
+      <!-- CLEAR PEARLY BUBBLE -->
+
+      <circle
+        cx="50"
+        cy="50"
+        r="43"
+
+        fill="rgba(225,235,255,0.20)"
+
+        stroke="rgba(255,255,255,0.92)"
+
+        stroke-width="3"
+      />
+
+
+      <!-- WHITE SHINE -->
+
+      <ellipse
+        cx="34"
+        cy="29"
+
+        rx="9"
+        ry="6"
+
+        fill="rgba(255,255,255,0.90)"
+      />
+
+
+      <!-- PALE IRIDESCENT REFLECTION -->
+
+      <ellipse
+        cx="68"
+        cy="68"
+
+        rx="7"
+        ry="4"
+
+        fill="rgba(245,190,255,0.55)"
+      />
+
+
+      <!-- SMALL GLINT -->
+
+      <circle
+        cx="29"
+        cy="24"
+
+        r="3"
+
+        fill="#FFFFFF"
+      />
+
+    </svg>
+
+  `;
+
+
+  /* =========================================
+     CREATE BUBBLE
+     ========================================= */
+
+  const bubble =
+    document.createElement(
+      "a-plane"
+    );
+
+
+  const bubbleSize =
+
+    0.16 +
+
+    Math.random() *
+    0.08;
+
+
+  bubble.setAttribute(
+    "src",
+    svgToDataURL(
+      musicBubbleSVG
+    )
+  );
+
+
+  bubble.setAttribute(
+    "material",
+    `
+    shader: flat;
+    transparent: true;
+    opacity: 0.82;
+    side: double;
+    depthWrite: false;
+    `
+  );
+
+
+  bubble.setAttribute(
+    "width",
+    bubbleSize
+  );
+
+
+  bubble.setAttribute(
+    "height",
+    bubbleSize
+  );
+
+
+  bubble.setAttribute(
+    "position",
+    "0 0 0"
+  );
+
+
+  bubble.setAttribute(
+    "scale",
+    "0.25 0.25 0.25"
+  );
+
+
+  bubble.setAttribute(
+    "animation__bubblegrow",
+    `
+    property: scale;
+
+    from:
+    0.25 0.25 0.25;
+
+    to:
+    1 1 1;
+
+    dur:
+    600;
+
+    easing:
+    easeOutBack;
+    `
+  );
+
+
+  /* =========================================
+     CREATE ORANGE NOTE
+     ========================================= */
+
+  const note =
+    document.createElement(
+      "a-plane"
+    );
+
+
+  const svg =
+
+    notes[
+      Math.floor(
         Math.random() *
-        0.42;
+        notes.length
+      )
+    ];
 
 
-      const endX =
-        startX + driftX;
+  note.setAttribute(
+    "src",
+    svgToDataURL(svg)
+  );
 
 
-      const endY =
-        startY + rise;
+  note.setAttribute(
+    "material",
+    `
+    shader: flat;
+    transparent: true;
+    opacity: 1;
+    side: double;
+    alphaTest: 0.01;
+    depthWrite: false;
+    `
+  );
 
 
-      const duration =
+  /*
+    Note is smaller than its bubble.
+  */
 
-        1800 +
-
-        Math.random() *
-        1300;
-
-
-      const finalScale =
-
-        0.50 +
-
-        Math.random() *
-        0.30;
+  note.setAttribute(
+    "width",
+    bubbleSize * 0.72
+  );
 
 
-      const rotateAmount =
-
-        18 +
-
-        Math.random() *
-        30;
+  note.setAttribute(
+    "height",
+    bubbleSize * 0.72
+  );
 
 
-      note.setAttribute(
-        "src",
-        svgToDataURL(svg)
-      );
+  /*
+    Slightly in front of bubble
+    so the note remains crisp.
+  */
+
+  note.setAttribute(
+    "position",
+    "0 0 0.01"
+  );
 
 
-      note.setAttribute(
-        "material",
-        `
-        shader: flat;
-        transparent: true;
-        opacity: 1;
-        side: double;
-        alphaTest: 0.01;
-        depthWrite: false;
-        `
-      );
+  note.setAttribute(
+    "scale",
+    "0.65 0.65 0.65"
+  );
 
 
-      note.setAttribute(
-        "width",
-        "0.28"
-      );
+  /* =========================================
+     PUT NOTE INSIDE BUBBLE
+     ========================================= */
+
+  noteBubble.appendChild(
+    bubble
+  );
 
 
-      note.setAttribute(
-        "height",
-        "0.28"
-      );
+  noteBubble.appendChild(
+    note
+  );
 
 
-      note.setAttribute(
-        "position",
-        `${startX} ${startY} 0.12`
-      );
+  /* =========================================
+     FLOAT WHOLE BUBBLE
+     ========================================= */
+
+  noteBubble.setAttribute(
+    "animation__float",
+    `
+    property: position;
+
+    from:
+    ${startX}
+    ${startY}
+    0.14;
+
+    to:
+    ${endX}
+    ${endY}
+    0.14;
+
+    dur:
+    ${duration};
+
+    easing:
+    easeOutSine;
+    `
+  );
 
 
-      note.setAttribute(
-        "scale",
-        "0.30 0.30 0.30"
-      );
+  /* =========================================
+     GENTLE SIDE-TO-SIDE ROTATION
+     ========================================= */
+
+  noteBubble.setAttribute(
+    "animation__dance",
+    `
+    property: rotation;
+
+    from:
+    0 0 -8;
+
+    to:
+    0 0 8;
+
+    dur:
+    ${650 + Math.random() * 350};
+
+    dir:
+    alternate;
+
+    loop:
+    true;
+
+    easing:
+    easeInOutSine;
+    `
+  );
 
 
-      note.setAttribute(
-        "animation__move",
-        `
-        property: position;
-        from: ${startX} ${startY} 0.12;
-        to: ${endX} ${endY} 0.12;
-        dur: ${duration};
-        easing: easeOutSine;
-        `
-      );
+  /* =========================================
+     BUBBLE FADES NEAR TOP
+     ========================================= */
+
+  bubble.setAttribute(
+    "animation__fade",
+    `
+    property:
+    material.opacity;
+
+    from:
+    0.82;
+
+    to:
+    0;
+
+    delay:
+    ${duration * 0.70};
+
+    dur:
+    ${duration * 0.30};
+
+    easing:
+    easeInQuad;
+    `
+  );
 
 
-      note.setAttribute(
-        "animation__grow",
-        `
-        property: scale;
-        from: 0.30 0.30 0.30;
-        to: ${finalScale} ${finalScale} ${finalScale};
-        dur: ${duration};
-        easing: easeOutQuad;
-        `
-      );
+  /* =========================================
+     NOTE FADES WITH BUBBLE
+     ========================================= */
+
+  note.setAttribute(
+    "animation__fade",
+    `
+    property:
+    material.opacity;
+
+    from:
+    1;
+
+    to:
+    0;
+
+    delay:
+    ${duration * 0.70};
+
+    dur:
+    ${duration * 0.30};
+
+    easing:
+    easeInQuad;
+    `
+  );
 
 
-      note.setAttribute(
-        "animation__dance",
-        `
-        property: rotation;
-        from: 0 0 -${rotateAmount};
-        to: 0 0 ${rotateAmount};
-        dur: ${320 + Math.random() * 280};
-        dir: alternate;
-        loop: true;
-        easing: easeInOutSine;
-        `
-      );
+  /* =========================================
+     ADD TO TARGET
+     ========================================= */
+
+  target.appendChild(
+    noteBubble
+  );
 
 
-      note.setAttribute(
-        "animation__fade",
-        `
-        property: material.opacity;
-        from: 1;
-        to: 0;
-        delay: ${duration * 0.65};
-        dur: ${duration * 0.35};
-        easing: easeInQuad;
-        `
-      );
+  /* =========================================
+     CLEAN UP
+     ========================================= */
 
+  later(
 
-      target.appendChild(note);
+    function () {
 
+      if (
+        noteBubble.parentNode
+      ) {
 
-      later(
+        noteBubble.parentNode
+          .removeChild(
+            noteBubble
+          );
 
-        function () {
+      }
 
-          if (note.parentNode) {
+    },
 
-            note.parentNode
-              .removeChild(note);
+    duration + 250
 
-          }
+  );
 
-        },
-
-        duration + 200
-
-      );
-
-    }
-
-
+}
     /* =====================================================
        CREATE GLASS BUBBLE
        ===================================================== */
