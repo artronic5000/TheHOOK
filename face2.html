@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
+
+  <title>HOOKED Face Filter</title>
+
+  <!-- A-FRAME -->
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+  <!-- MINDAR FACE -->
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* -------------------------------
+       TOP TITLE
+       ------------------------------- */
+
+    #title {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      z-index: 1000;
+
+      color: #fff5e6;
+      background: rgba(0, 0, 0, 0.65);
+
+      padding: 9px 18px;
+
+      border: 2px solid #cf6537;
+      border-radius: 22px;
+
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 2px;
+
+      white-space: nowrap;
+
+      pointer-events: none;
+    }
+
+    /* -------------------------------
+       BOTTOM CONTROLS
+       ------------------------------- */
+
+    #controls {
+      position: fixed;
+
+      left: 0;
+      right: 0;
+      bottom: 25px;
+
+      z-index: 1000;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      gap: 14px;
+    }
+
+    button {
+      appearance: none;
+      -webkit-appearance: none;
+
+      border: 2px solid #fff5e6;
+
+      background: #cf6537;
+      color: #fff5e6;
+
+      padding: 12px 19px;
+
+      border-radius: 24px;
+
+      font-size: 13px;
+      font-weight: bold;
+
+      letter-spacing: 1px;
+
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    button:active {
+      transform: scale(0.96);
+    }
+
+    /* -------------------------------
+       BUBBLES
+       ------------------------------- */
+
+    #bubbleLayer {
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 800;
+
+      overflow: hidden;
+
+      pointer-events: none;
+    }
+
+    .bubble {
+      position: absolute;
+
+      width: 18px;
+      height: 18px;
+
+      border-radius: 50%;
+
+      border: 3px solid #e9ffff;
+
+      background: rgba(0, 174, 205, 0.75);
+
+      box-shadow:
+        inset 3px 3px 0 rgba(255, 255, 255, 0.75),
+        0 0 7px rgba(0, 220, 255, 0.45);
+
+      animation: floatBubble 2.8s ease-out forwards;
+    }
+
+    @keyframes floatBubble {
+      0% {
+        opacity: 0;
+        transform:
+          translate(0, 0)
+          scale(0.35);
+      }
+
+      12% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+
+        transform:
+          translate(
+            var(--drift),
+            var(--rise)
+          )
+          scale(1.35);
+      }
+    }
+
+    /* MindAR/A-Frame needs the scene full screen */
+
+    a-scene {
+      position: fixed !important;
+      inset: 0 !important;
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <div id="title">
+    THE HOOK • FACE FILTER
+  </div>
+
+
+  <div id="bubbleLayer"></div>
+
+
+  <div id="controls">
+
+    <button id="bubbleButton">
+      BUBBLES
+    </button>
+
+  </div>
+
+
+  <!-- ==================================================
+       FACE FILTER
+       ================================================== -->
+
+  <a-scene
+    mindar-face
+    embedded
+    color-space="sRGB"
+
+    renderer="
+      colorManagement: true;
+      physicallyCorrectLights: true;
+      alpha: true;
+    "
+
+    vr-mode-ui="enabled: false"
+
+    device-orientation-permission-ui="enabled: false"
+  >
+
+
+    <!-- ==================================================
+         ASSETS
+         ================================================== -->
+
+    <a-assets>
+
+      <img
+        id="faceGraphic"
+        src="./bubblesAMPface.png"
+      />
+
+      <img
+        id="flowerGraphic"
+        src="./bubblesAMPflower.png"
+      />
+
+    </a-assets>
+
+
+    <!-- ==================================================
+         CAMERA
+         ================================================== -->
+
+    <a-camera
+      active="false"
+      position="0 0 0"
+    >
+    </a-camera>
+
+
+    <!-- ==================================================
+         FLOWER
+
+         Landmark 10 = forehead region.
+
+         This is intentionally separate from the
+         nose/whiskers graphic so we can position
+         each piece independently.
+         ================================================== -->
+
+    <a-entity
+      mindar-face-target="anchorIndex: 10"
+    >
+
+      <a-image
+        src="#flowerGraphic"
+
+        position="-0.34 0.45 0.05"
+
+        width="0.55"
+        height="0.55"
+
+        material="
+          shader: flat;
+          transparent: true;
+          side: double;
+          depthWrite: false;
+        "
+      >
+      </a-image>
+
+    </a-entity>
+
+
+    <!-- ==================================================
+         NOSE + WHISKERS + BUBBLE CIGARETTE
+
+         Landmark 1 = nose region.
+         ================================================== -->
+
+    <a-entity
+      id="faceFilterAnchor"
+      mindar-face-target="anchorIndex: 1"
+    >
+
+      <a-image
+        id="faceFilterGraphic"
+
+        src="#faceGraphic"
+
+        position="0 -0.10 0.06"
+
+        width="2.35"
+        height="0.84"
+
+        material="
+          shader: flat;
+          transparent: true;
+          side: double;
+          depthWrite: false;
+        "
+      >
+      </a-image>
+
+    </a-entity>
+
+
+  </a-scene>
+
+
+  <script>
+
+    /* ==================================================
+       BUBBLE EFFECT
+
+       These are screen-space bubbles.
+       They appear primarily from the right side of
+       the face, approximately where the cigarette
+       tip appears.
+
+       Once we see it on your actual phone we can
+       fine-tune the origin.
+       ================================================== */
+
+    const bubbleLayer =
+      document.getElementById("bubbleLayer");
+
+
+    function makeBubble() {
+
+      const bubble =
+        document.createElement("div");
+
+      bubble.className = "bubble";
+
+
+      /* random bubble size */
+
+      const size =
+        9 + Math.random() * 22;
+
+      bubble.style.width =
+        size + "px";
+
+      bubble.style.height =
+        size + "px";
+
+
+      /*
+       Start near centre-right of screen.
+
+       This approximates the end of the cigarette
+       when the face is centred.
+      */
+
+      const startX =
+        window.innerWidth * (0.64 + Math.random() * 0.06);
+
+      const startY =
+        window.innerHeight * (0.48 + Math.random() * 0.07);
+
+
+      bubble.style.left =
+        startX + "px";
+
+      bubble.style.top =
+        startY + "px";
+
+
+      /* float upward/right */
+
+      const drift =
+        35 + Math.random() * 100;
+
+      const rise =
+        -(100 + Math.random() * 190);
+
+
+      bubble.style.setProperty(
+        "--drift",
+        drift + "px"
+      );
+
+      bubble.style.setProperty(
+        "--rise",
+        rise + "px"
+      );
+
+
+      bubbleLayer.appendChild(bubble);
+
+
+      setTimeout(() => {
+        bubble.remove();
+      }, 3000);
+    }
+
+
+    /* gentle automatic bubbles */
+
+    let bubbleTimer =
+      setInterval(makeBubble, 600);
+
+
+    /* BUBBLES button creates a burst */
+
+    document
+      .getElementById("bubbleButton")
+      .addEventListener("click", () => {
+
+        for (let i = 0; i < 10; i++) {
+
+          setTimeout(() => {
+            makeBubble();
+          }, i * 80);
+
+        }
+
+      });
+
+  </script>
+
+</body>
+</html>
