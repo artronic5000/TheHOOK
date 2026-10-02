@@ -2648,6 +2648,279 @@ if (wink) {
       }
 
     );
+    /* =========================================================
+   TARGET 2 FACE FILTER BUTTON
+   ========================================================= */
+
+function showTarget2FaceButton() {
+
+  const button =
+    document.getElementById(
+      "target2FaceButton"
+    );
+
+  if (button) {
+
+    button.style.display =
+      "block";
+
+  }
+
+}
+
+
+function hideTarget2FaceButton() {
+
+  const button =
+    document.getElementById(
+      "target2FaceButton"
+    );
+
+  if (button) {
+
+    button.style.display =
+      "none";
+
+  }
+
+}
+
+
+window.addEventListener(
+
+  "DOMContentLoaded",
+
+  function () {
+
+    const button =
+      document.getElementById(
+        "target2FaceButton"
+      );
+
+
+    if (button) {
+
+      button.addEventListener(
+
+        "click",
+
+        function () {
+
+          window.location.href =
+            "./face2.html";
+
+        }
+
+      );
+
+    }
+
+  }
+
+);
+    /* =========================================================
+   TARGET 2
+   BUBBLESAMP 20-FRAME ANIMATION
+   ========================================================= */
+
+AFRAME.registerComponent("bubblesamp-animation", {
+
+  init: function () {
+
+    const target = this.el;
+
+    const animation =
+      target.querySelector(
+        "#bubblesAmpAnimationAR"
+      );
+
+    const frames = [
+
+      "#bubblesAmpFrame01",
+      "#bubblesAmpFrame02",
+      "#bubblesAmpFrame03",
+      "#bubblesAmpFrame04",
+      "#bubblesAmpFrame05",
+      "#bubblesAmpFrame06",
+      "#bubblesAmpFrame07",
+      "#bubblesAmpFrame08",
+      "#bubblesAmpFrame09",
+      "#bubblesAmpFrame10",
+
+      "#bubblesAmpFrame11",
+      "#bubblesAmpFrame12",
+      "#bubblesAmpFrame13",
+      "#bubblesAmpFrame14",
+      "#bubblesAmpFrame15",
+      "#bubblesAmpFrame16",
+      "#bubblesAmpFrame17",
+      "#bubblesAmpFrame18",
+      "#bubblesAmpFrame19",
+      "#bubblesAmpFrame20"
+
+    ];
+
+
+    let frame = 0;
+
+    let timer = null;
+
+    let running = false;
+
+
+    /* =========================================
+       ANIMATION SPEED
+
+       140 = 0.14 seconds per frame
+       ========================================= */
+
+    const frameSpeed = 140;
+
+
+    /* =========================================
+       RESET
+       ========================================= */
+
+    function resetAnimation() {
+
+      running = false;
+
+      frame = 0;
+
+
+      if (timer) {
+
+        clearTimeout(
+          timer
+        );
+
+        timer = null;
+
+      }
+
+
+      if (animation) {
+
+        animation.setAttribute(
+          "src",
+          frames[0]
+        );
+
+
+        animation.setAttribute(
+          "material",
+          "opacity",
+          0
+        );
+
+      }
+
+    }
+
+
+    /* =========================================
+       PLAY NEXT FRAME
+       ========================================= */
+
+    function nextFrame() {
+
+      if (
+        !running ||
+        !animation
+      ) {
+
+        return;
+
+      }
+
+
+      animation.setAttribute(
+        "src",
+        frames[frame]
+      );
+
+
+      animation.setAttribute(
+        "material",
+        "opacity",
+        1
+      );
+
+
+      /* LAST FRAME */
+
+      if (
+        frame ===
+        frames.length - 1
+      ) {
+
+        timer = null;
+
+        showTarget2FaceButton();
+
+        return;
+
+      }
+
+
+      frame++;
+
+
+      timer = setTimeout(
+
+        nextFrame,
+
+        frameSpeed
+
+      );
+
+    }
+
+
+    /* =========================================
+       TARGET FOUND
+       ========================================= */
+
+    target.addEventListener(
+
+      "targetFound",
+
+      function () {
+
+        resetAnimation();
+
+        running = true;
+
+        frame = 0;
+
+        nextFrame();
+
+      }
+
+    );
+
+
+    /* =========================================
+       TARGET LOST
+       ========================================= */
+
+    target.addEventListener(
+
+      "targetLost",
+
+      function () {
+
+        resetAnimation();
+
+        hideTarget2FaceButton();
+
+      }
+
+    );
+
+  }
+
+});
 /* =========================================================
    CAT TAIL — FLICK FLICK, PAUSE, REPEAT
    ========================================================= */
@@ -2697,7 +2970,36 @@ AFRAME.registerComponent("cat-tail-flick", {
 
 
 <body>
+<!-- TARGET 2 FACE FILTER BUTTON -->
 
+<button
+  id="target2FaceButton"
+  type="button"
+  style="
+    display:none;
+    position:fixed;
+    left:50%;
+    bottom:7%;
+    transform:translateX(-50%);
+    z-index:999999;
+
+    padding:15px 24px;
+
+    border:3px solid #F4E4C1;
+    border-radius:30px;
+
+    background:#000000;
+    color:#F4E4C1;
+
+    font-size:16px;
+    font-weight:bold;
+    letter-spacing:1px;
+
+    cursor:pointer;
+  "
+>
+  CLICK HERE FOR FACE FILTER
+</button>
 
   <!-- ======================================================
        LET'S MEET THE BAND INTRO
@@ -2908,6 +3210,28 @@ AFRAME.registerComponent("cat-tail-flick", {
   src="./wink.png"
   crossorigin="anonymous"
 >
+      <!-- TARGET 2 BUBBLESAMP ANIMATION FRAMES -->
+
+<img id="bubblesAmpFrame01" src="./bubblesAmpFrame01.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame02" src="./bubblesAmpFrame02.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame03" src="./bubblesAmpFrame03.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame04" src="./bubblesAmpFrame04.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame05" src="./bubblesAmpFrame05.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame06" src="./bubblesAmpFrame06.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame07" src="./bubblesAmpFrame07.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame08" src="./bubblesAmpFrame08.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame09" src="./bubblesAmpFrame09.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame10" src="./bubblesAmpFrame10.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame11" src="./bubblesAmpFrame11.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame12" src="./bubblesAmpFrame12.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame13" src="./bubblesAmpFrame13.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame14" src="./bubblesAmpFrame14.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame15" src="./bubblesAmpFrame15.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame16" src="./bubblesAmpFrame16.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame17" src="./bubblesAmpFrame17.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame18" src="./bubblesAmpFrame18.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame19" src="./bubblesAmpFrame19.png" crossorigin="anonymous">
+<img id="bubblesAmpFrame20" src="./bubblesAmpFrame20.png" crossorigin="anonymous">
     </a-assets>
 
 
@@ -3086,7 +3410,39 @@ AFRAME.registerComponent("cat-tail-flick", {
       band-intro
 
     >
+<!-- ==================================================
+     TARGET 2
+     BUBBLESAMP
+     ================================================== -->
 
+<a-entity
+  id="bubblesAmpTarget2"
+  mindar-image-target="
+    targetIndex: 2
+  "
+  bubblesamp-animation
+>
+
+  <a-image
+    id="bubblesAmpAnimationAR"
+    src="#bubblesAmpFrame01"
+
+    position="0 0 0.03"
+
+    width="1"
+    height="1.35"
+
+    material="
+      shader: flat;
+      transparent: true;
+      opacity: 0;
+      side: double;
+      depthWrite: false;
+    "
+  >
+  </a-image>
+
+</a-entity>
     </a-entity>
 
 
