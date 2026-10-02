@@ -3394,22 +3394,19 @@ AFRAME.registerComponent("cat-tail-flick", {
 
 
 
-    <!-- ==================================================
-         TARGET 1
-         BAND
-         ================================================== -->
+ <!-- ==================================================
+     TARGET 1
+     BAND
+     ================================================== -->
 
-    <a-entity
+<a-entity
+  id="hookCatTarget"
+  mindar-image-target="targetIndex: 1"
+  band-intro
+>
+</a-entity>
 
-      id="hookCatTarget"
 
-      mindar-image-target="
-        targetIndex: 1
-      "
-
-      band-intro
-
-    >
 <!-- ==================================================
      TARGET 2
      BUBBLESAMP
@@ -3417,9 +3414,7 @@ AFRAME.registerComponent("cat-tail-flick", {
 
 <a-entity
   id="bubblesAmpTarget2"
-  mindar-image-target="
-    targetIndex: 2
-  "
+  mindar-image-target="targetIndex: 2"
   bubblesamp-animation
 >
 
@@ -3443,8 +3438,6 @@ AFRAME.registerComponent("cat-tail-flick", {
   </a-image>
 
 </a-entity>
-    </a-entity>
-
 
   </a-scene>
 
