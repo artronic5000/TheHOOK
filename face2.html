@@ -118,8 +118,28 @@
       pointer-events: none;
     }
 
-  .bubble 
-    /* LITTLE RING CREATED WHEN A BUBBLE POPS */
+/* -------------------------------
+   BUBBLES
+   ------------------------------- */
+
+.bubble {
+  position: absolute;
+
+  border-radius: 50%;
+
+  border: 1.5px solid rgba(255, 255, 255, 0.90);
+
+  background: rgba(255, 255, 255, 0.10);
+
+  box-shadow:
+    inset 3px 3px 3px rgba(255, 255, 255, 0.38),
+    0 0 4px rgba(255, 255, 255, 0.22);
+
+  animation: floatBubble 3.2s ease-out forwards;
+}
+
+
+/* LITTLE RING WHEN BUBBLE POPS */
 
 .pop-ring {
   position: fixed;
@@ -153,49 +173,34 @@
     opacity: 0;
     transform: scale(1.45);
   }
-
-}
-    {
-  position: absolute;
-
-  border-radius: 50%;
-
-  /* thin but brighter white rim */
-  border: 1.5px solid rgba(255, 255, 255, 0.90);
-
-  /* still transparent, but more visible */
-  background: rgba(255, 255, 255, 0.10);
-
-  box-shadow:
-    inset 3px 3px 3px rgba(255, 255, 255, 0.38),
-    0 0 4px rgba(255, 255, 255, 0.22);
-
-  animation: floatBubble 3.2s ease-out forwards;
 }
 
-    @keyframes floatBubble {
-      0% {
-        opacity: 0;
-        transform:
-          translate(0, 0)
-          scale(0.35);
-      }
 
-      12% {
-        opacity: 1;
-      }
+@keyframes floatBubble {
 
-      100% {
-        opacity: 0;
+  0% {
+    opacity: 0;
 
-        transform:
-          translate(
-            var(--drift),
-            var(--rise)
-          )
-          scale(1.35);
-      }
-    }
+    transform:
+      translate(0, 0)
+      scale(0.35);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+
+    transform:
+      translate(
+        var(--drift),
+        var(--rise)
+      )
+      scale(1.35);
+  }
+}
 
     /* MindAR/A-Frame needs the scene full screen */
 
@@ -510,7 +515,11 @@ if (willPop) {
 
   }, popTime);
 
-}
+} // END willPop
+
+
+} // END makeBubble
+
     /* automatic bubbles OFF */
 /* bubbles only appear when BUBBLES button is pressed */
 
