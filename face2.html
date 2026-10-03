@@ -1,795 +1,334 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
   <meta
     name="viewport"
-    content="width=device-width,
-             initial-scale=1.0,
-             maximum-scale=1.0,
-             user-scalable=no"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
   >
 
   <title>HOOKED Face Filter</title>
 
-
-  <!-- A-FRAME -->
-
-  <script
-    src="https://aframe.io/releases/1.6.0/aframe.min.js">
-  </script>
-
-
-  <!-- MINDAR FACE -->
-
-  <script
-    src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js">
-  </script>
-
+  <!-- A-FRAME + MINDAR -->
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
 
   <style>
-
     html,
     body {
-
       margin: 0;
       padding: 0;
-
       width: 100%;
       height: 100%;
-
       overflow: hidden;
-
       background: transparent;
-
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
     }
-
-
-
-    /* =========================================
-       BACK BUTTON
-       ========================================= */
-
-    #backButton {
-
-      position: fixed;
-
-      top: 18px;
-      left: 16px;
-
-      z-index: 2000;
-
-      border:
-        2px solid #fff5e6;
-
-      background:
-        rgba(0,0,0,0.70);
-
-      color:
-        #fff5e6;
-
-      padding:
-        10px 14px;
-
-      border-radius:
-        22px;
-
-      font-size:
-        13px;
-
-      font-weight:
-        bold;
-
-      letter-spacing:
-        1px;
-    }
-
-
-
-    /* =========================================
-       CAMERA FLIP
-       ========================================= */
-
-    #cameraButton {
-
-      position: fixed;
-
-      top: 18px;
-      right: 16px;
-
-      z-index: 2000;
-
-      border:
-        2px solid #fff5e6;
-
-      background:
-        rgba(0,0,0,0.70);
-
-      color:
-        #fff5e6;
-
-      padding:
-        10px 14px;
-
-      border-radius:
-        22px;
-
-      font-size:
-        18px;
-
-      font-weight:
-        bold;
-    }
-
-
-
-    /* =========================================
-       GENERAL BUTTON
-       ========================================= */
 
     button {
-
       appearance: none;
       -webkit-appearance: none;
-
-      border:
-        2px solid #fff5e6;
-
-      background:
-        #cf6537;
-
-      color:
-        #fff5e6;
-
-      padding:
-        12px 17px;
-
-      border-radius:
-        24px;
-
-      font-size:
-        12px;
-
-      font-weight:
-        bold;
-
-      letter-spacing:
-        1px;
-
-      box-shadow:
-        0 4px 12px
-        rgba(0,0,0,0.4);
+      border: 2px solid #fff5e6;
+      background: #cf6537;
+      color: #fff5e6;
+      padding: 12px 17px;
+      border-radius: 24px;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     }
-
 
     button:active {
-
-      transform:
-        scale(0.96);
+      transform: scale(0.96);
     }
 
+    /* TOP BUTTONS */
 
+    #backButton,
+    #cameraButton {
+      position: fixed;
+      top: 18px;
+      z-index: 2000;
+      background: rgba(0, 0, 0, 0.70);
+    }
 
-    /* =========================================
-       BOTTOM CONTROLS
-       ========================================= */
+    #backButton {
+      left: 16px;
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+
+    #cameraButton {
+      right: 16px;
+      padding: 10px 14px;
+      font-size: 18px;
+    }
+
+    /* BOTTOM CONTROLS */
 
     #controls {
-
       position: fixed;
-
       left: 0;
       right: 0;
-
       bottom: 25px;
-
       z-index: 2000;
-
       display: flex;
-
-      justify-content:
-        center;
-
-      align-items:
-        center;
-
+      justify-content: center;
+      align-items: center;
       gap: 12px;
     }
 
-
-
-    /* =========================================
-       BUBBLE LAYER
-       ========================================= */
+    /* BUBBLES */
 
     #bubbleLayer {
-
       position: fixed;
-
       inset: 0;
-
       z-index: 800;
-
       overflow: hidden;
-
       pointer-events: none;
     }
 
-
-
     .bubble {
-
       position: absolute;
-
-      border-radius:
-        50%;
-
-      border:
-        1.5px solid
-        rgba(255,255,255,0.90);
-
-      background:
-        rgba(255,255,255,0.10);
-
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.90);
+      background: rgba(255, 255, 255, 0.10);
       box-shadow:
-
-        inset 3px 3px 3px
-        rgba(255,255,255,0.38),
-
-        0 0 4px
-        rgba(255,255,255,0.22);
-
-      animation:
-        floatBubble
-        3.2s
-        ease-out
-        forwards;
+        inset 3px 3px 3px rgba(255, 255, 255, 0.38),
+        0 0 4px rgba(255, 255, 255, 0.22);
+      animation: floatBubble 3.2s ease-out forwards;
     }
-
-
 
     .pop-ring {
-
       position: fixed;
-
-      border-radius:
-        50%;
-
-      border:
-        1.5px solid
-        rgba(255,255,255,0.9);
-
-      background:
-        transparent;
-
-      pointer-events:
-        none;
-
-      z-index:
-        801;
-
-      animation:
-        bubblePopRing
-        220ms
-        ease-out
-        forwards;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
+      background: transparent;
+      pointer-events: none;
+      z-index: 801;
+      animation: bubblePopRing 220ms ease-out forwards;
     }
 
-
-
-    @keyframes bubblePopRing {
-
+    @keyframes floatBubble {
       0% {
-
-        opacity: 1;
-
-        transform:
-          scale(0.7);
+        opacity: 0;
+        transform: translate(0, 0) scale(0.35);
       }
 
+      12% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(var(--drift), var(--rise)) scale(1.35);
+      }
+    }
+
+    @keyframes bubblePopRing {
+      0% {
+        opacity: 1;
+        transform: scale(0.7);
+      }
 
       60% {
-
         opacity: 0.8;
       }
 
-
       100% {
-
         opacity: 0;
-
-        transform:
-          scale(1.45);
+        transform: scale(1.45);
       }
-
     }
 
-
-
-    @keyframes floatBubble {
-
-      0% {
-
-        opacity: 0;
-
-        transform:
-          translate(0,0)
-          scale(0.35);
-      }
-
-
-      12% {
-
-        opacity: 1;
-      }
-
-
-      100% {
-
-        opacity: 0;
-
-        transform:
-
-          translate(
-            var(--drift),
-            var(--rise)
-          )
-
-          scale(1.35);
-      }
-
-    }
-
-
-
-    /* =========================================
-       CLICK KITTY
-       ========================================= */
+    /* CLICK KITTY */
 
     #kittyPanel {
-
       position: fixed;
-
       left: 18px;
-
       bottom: 82px;
-
       z-index: 2000;
     }
 
-
-
     #kittyButton {
-
       display: flex;
-
-      flex-direction:
-        column;
-
-      align-items:
-        center;
-
+      flex-direction: column;
+      align-items: center;
       gap: 3px;
-
-      padding:
-        5px 8px;
-
-      border:
-        none;
-
-      background:
-        transparent;
-
-      color:
-        #fff5e6;
-
-      font-size:
-        10px;
-
-      font-weight:
-        bold;
-
-      letter-spacing:
-        1px;
-
-      box-shadow:
-        none;
+      padding: 5px 8px;
+      border: none;
+      background: transparent;
+      color: #fff5e6;
+      font-size: 10px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      box-shadow: none;
     }
-
-
 
     #kittyImage {
-
       width: 82px;
       height: 82px;
-
-      object-fit:
-        contain;
-
-      filter:
-
-        drop-shadow(
-          0 3px 5px
-          rgba(0,0,0,0.55)
-        );
+      object-fit: contain;
+      filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.55));
     }
 
-
-
-    /* =========================================
-       TIP POPUP
-       ========================================= */
+    /* TIP POPUP */
 
     #tipOverlay {
-
       position: fixed;
-
       inset: 0;
-
       z-index: 5000;
-
       display: none;
-
-      justify-content:
-        center;
-
-      align-items:
-        center;
-
-      background:
-        rgba(0,0,0,0.72);
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.72);
     }
-
-
 
     #tipBox {
-
-      width:
-        min(82vw,330px);
-
-      padding:
-        28px 22px;
-
-      text-align:
-        center;
-
-      color:
-        #fff5e6;
-
-      background:
-        rgba(20,20,20,0.96);
-
-      border:
-        2px solid #cf6537;
-
-      border-radius:
-        24px;
-
-      box-shadow:
-        0 8px 30px
-        rgba(0,0,0,0.55);
+      width: min(82vw, 330px);
+      padding: 28px 22px;
+      text-align: center;
+      color: #fff5e6;
+      background: rgba(20, 20, 20, 0.96);
+      border: 2px solid #cf6537;
+      border-radius: 24px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
     }
-
-
 
     #tipThankYou {
-
-      font-size:
-        24px;
-
-      font-weight:
-        bold;
-
-      letter-spacing:
-        2px;
-
-      margin-bottom:
-        18px;
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      margin-bottom: 18px;
     }
-
-
 
     #tipFind {
-
-      font-size:
-        17px;
-
-      font-weight:
-        bold;
-
-      letter-spacing:
-        2px;
-
-      line-height:
-        1.35;
+      font-size: 17px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      line-height: 1.35;
     }
-
-
 
     #tipOr {
-
-      margin:
-        14px 0;
-
-      font-size:
-        13px;
-
-      opacity:
-        0.75;
+      margin: 14px 0;
+      font-size: 13px;
+      opacity: 0.75;
     }
-
-
 
     #tipTransfer {
-
-      margin-bottom:
-        7px;
-
-      font-size:
-        12px;
-
-      font-weight:
-        bold;
-
-      letter-spacing:
-        1px;
+      margin-bottom: 7px;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 1px;
     }
-
-
 
     #emailButton {
-
-      font-size:
-        12px;
-
-      padding:
-        10px 12px;
+      font-size: 12px;
+      padding: 10px 12px;
     }
-
-
 
     #copiedMessage {
-
-      min-height:
-        18px;
-
-      margin-top:
-        8px;
-
-      color:
-        #fff5e6;
-
-      font-size:
-        11px;
-
-      font-weight:
-        bold;
-
+      min-height: 18px;
+      margin-top: 8px;
+      color: #fff5e6;
+      font-size: 11px;
+      font-weight: bold;
       opacity: 0;
     }
-
-
 
     #closeTipButton {
-
-      margin-top:
-        15px;
-
-      background:
-        rgba(0,0,0,0.55);
+      margin-top: 15px;
+      background: rgba(0, 0, 0, 0.55);
     }
 
-
-
-    /* =========================================
-       PHOTO COUNTDOWN
-       ========================================= */
+    /* PHOTO COUNTDOWN */
 
     #countdownOverlay {
-
       position: fixed;
-
       inset: 0;
-
       z-index: 8000;
-
       display: none;
-
-      flex-direction:
-        column;
-
-      justify-content:
-        center;
-
-      align-items:
-        center;
-
-      pointer-events:
-        none;
-
-      color:
-        white;
-
-      text-align:
-        center;
-
-      background:
-        rgba(0,0,0,0.12);
-
-      text-shadow:
-        0 3px 12px
-        rgba(0,0,0,0.9);
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      color: white;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.12);
+      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.9);
     }
-
-
 
     #lookText {
-
-      font-size:
-        clamp(22px,6vw,38px);
-
-      font-weight:
-        900;
-
-      letter-spacing:
-        3px;
-
-      line-height:
-        1.2;
-
-      margin-bottom:
-        25px;
+      font-size: clamp(22px, 6vw, 38px);
+      font-weight: 900;
+      letter-spacing: 3px;
+      line-height: 1.2;
+      margin-bottom: 25px;
     }
-
-
 
     #countdownNumber {
-
-      font-size:
-        clamp(90px,30vw,180px);
-
-      font-weight:
-        900;
-
-      line-height:
-        1;
+      font-size: clamp(90px, 30vw, 180px);
+      font-weight: 900;
+      line-height: 1;
     }
 
-
-
-    /* =========================================
-       POLAROID RESULT
-       ========================================= */
+    /* FINISHED PHOTO */
 
     #photoResult {
-
       position: fixed;
-
       inset: 0;
-
       z-index: 9000;
-
       display: none;
-
-      flex-direction:
-        column;
-
-      justify-content:
-        center;
-
-      align-items:
-        center;
-
-      background:
-        rgba(0,0,0,0.92);
-
-      padding:
-        18px;
-
-      box-sizing:
-        border-box;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.92);
+      padding: 18px;
+      box-sizing: border-box;
     }
-
-
 
     #finishedPhoto {
-
       display: block;
-
-      max-width:
-        94vw;
-
-      max-height:
-        76vh;
-
+      max-width: 94vw;
+      max-height: 76vh;
       width: auto;
       height: auto;
-
-      object-fit:
-        contain;
-
-      filter:
-
-        drop-shadow(
-          0 10px 24px
-          rgba(0,0,0,0.65)
-        );
+      object-fit: contain;
+      filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.65));
     }
-
-
 
     #photoButtons {
-
       display: flex;
-
-      justify-content:
-        center;
-
+      justify-content: center;
       gap: 12px;
-
-      margin-top:
-        18px;
+      margin-top: 18px;
     }
-
-
 
     #savePhotoButton {
-
-      background:
-        #cf6537;
+      background: #cf6537;
     }
-
-
 
     #retakeButton {
-
-      background:
-        rgba(0,0,0,0.65);
+      background: rgba(0, 0, 0, 0.65);
     }
 
-
-
-    /* =========================================
-       FLASH
-       ========================================= */
+    /* CAMERA FLASH */
 
     #cameraFlash {
-
       position: fixed;
-
       inset: 0;
-
       z-index: 8500;
-
       background: white;
-
       opacity: 0;
-
-      pointer-events:
-        none;
+      pointer-events: none;
     }
-
-
 
     #cameraFlash.flash {
-
-      animation:
-        cameraFlashAnimation
-        260ms
-        ease-out;
+      animation: cameraFlashAnimation 260ms ease-out;
     }
 
-
-
     @keyframes cameraFlashAnimation {
-
       0% {
         opacity: 0;
       }
@@ -801,83 +340,38 @@
       100% {
         opacity: 0;
       }
-
     }
-
-
-
-    /* =========================================
-       A-FRAME
-       ========================================= */
 
     a-scene {
-
-      position:
-        fixed !important;
-
-      inset:
-        0 !important;
+      position: fixed !important;
+      inset: 0 !important;
     }
-
-
   </style>
-
 </head>
-
-
 
 <body>
 
+  <!-- TOP CONTROLS -->
 
-
-  <!-- BACK -->
-
-  <button
-    id="backButton"
-    type="button"
-  >
+  <button id="backButton" type="button">
     ← BACK
   </button>
 
-
-
-  <!-- CAMERA FLIP -->
-
-  <button
-    id="cameraButton"
-    type="button"
-  >
+  <button id="cameraButton" type="button">
     ↻
   </button>
 
 
+  <!-- BUBBLES + FLASH -->
 
-  <!-- BUBBLES -->
-
-  <div
-    id="bubbleLayer">
-  </div>
+  <div id="bubbleLayer"></div>
+  <div id="cameraFlash"></div>
 
 
-
-  <!-- CAMERA FLASH -->
-
-  <div
-    id="cameraFlash">
-  </div>
-
-
-
-  <!-- =========================================
-       CLICK KITTY
-       ========================================= -->
+  <!-- CLICK KITTY -->
 
   <div id="kittyPanel">
-
-    <button
-      id="kittyButton"
-      type="button"
-    >
+    <button id="kittyButton" type="button">
 
       <img
         id="kittyImage"
@@ -885,213 +379,132 @@
         alt="Tip The Hook"
       >
 
-      <span>
-        CLICK KITTY
-      </span>
+      <span>CLICK KITTY</span>
 
     </button>
-
   </div>
 
 
-
-  <!-- =========================================
-       TIP POPUP
-       ========================================= -->
+  <!-- TIP POPUP -->
 
   <div id="tipOverlay">
 
     <div id="tipBox">
 
-
       <div id="tipThankYou">
         THANK YOU!
       </div>
 
-
       <div id="tipFind">
-
         FIND THE KITTY
-
         <br>
-
         ON STAGE
-
       </div>
-
 
       <div id="tipOr">
         or
       </div>
 
-
       <div id="tipTransfer">
         E-TRANSFER:
       </div>
 
-
-      <button
-        id="emailButton"
-        type="button"
-      >
+      <button id="emailButton" type="button">
         thehooksechelt@gmail.com
       </button>
-
 
       <div id="copiedMessage">
         EMAIL COPIED ✓
       </div>
 
-
-      <button
-        id="closeTipButton"
-        type="button"
-      >
+      <button id="closeTipButton" type="button">
         CLOSE
       </button>
 
-
     </div>
 
   </div>
 
 
-
-  <!-- =========================================
-       BOTTOM CONTROLS
-       ========================================= -->
+  <!-- BOTTOM CONTROLS -->
 
   <div id="controls">
 
-
-    <button
-      id="bubbleButton"
-      type="button"
-    >
+    <button id="bubbleButton" type="button">
       BUBBLES
     </button>
 
-
-    <button
-      id="photoButton"
-      type="button"
-    >
+    <button id="photoButton" type="button">
       📷 PHOTO
     </button>
-
 
   </div>
 
 
-
-  <!-- =========================================
-       COUNTDOWN
-       ========================================= -->
+  <!-- PHOTO COUNTDOWN -->
 
   <div id="countdownOverlay">
 
-
     <div id="lookText">
-
       LOOK AT THE
-
       <br>
-
       CAMERA LENS
-
     </div>
-
 
     <div id="countdownNumber">
       3
     </div>
 
-
   </div>
 
 
-
-  <!-- =========================================
-       FINISHED POLAROID
-       ========================================= -->
+  <!-- FINISHED POLAROID -->
 
   <div id="photoResult">
-
 
     <img
       id="finishedPhoto"
       alt="The Hook Polaroid"
     >
 
-
     <div id="photoButtons">
 
-
-      <button
-        id="savePhotoButton"
-        type="button"
-      >
+      <button id="savePhotoButton" type="button">
         SAVE PHOTO
       </button>
 
-
-      <button
-        id="retakeButton"
-        type="button"
-      >
+      <button id="retakeButton" type="button">
         RETAKE
       </button>
 
-
     </div>
-
 
   </div>
 
 
-
-  <!-- =========================================
-       FACE FILTER
-       ========================================= -->
+  <!-- FACE FILTER -->
 
   <a-scene
-
     id="faceScene"
-
     mindar-face="
       autoStart: true;
       uiLoading: no;
       uiScanning: no;
       uiError: no;
     "
-
     embedded
-
     color-space="sRGB"
-
     renderer="
       colorManagement: true;
       physicallyCorrectLights: true;
       alpha: true;
       preserveDrawingBuffer: true;
     "
-
-    vr-mode-ui="
-      enabled: false
-    "
-
-    device-orientation-permission-ui="
-      enabled: false
-    "
-
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
   >
 
-
-
-    <!-- ASSETS -->
-
     <a-assets>
-
 
       <img
         id="earsGraphic"
@@ -1099,15 +512,11 @@
         crossorigin="anonymous"
       >
 
-
       <img
         id="mouthGraphic"
         src="./mouth.png"
         crossorigin="anonymous"
       >
-
-
-      <!-- YOUR TRANSPARENT POLAROID -->
 
       <img
         id="polaroidGraphic"
@@ -1115,12 +524,8 @@
         crossorigin="anonymous"
       >
 
-
     </a-assets>
 
-
-
-    <!-- CAMERA -->
 
     <a-camera
       active="true"
@@ -1129,1522 +534,1466 @@
     </a-camera>
 
 
-
-    <!-- =========================================
-         CAT EARS
-         ========================================= -->
+    <!-- EARS -->
 
     <a-entity
-
       id="earsAnchor"
-
-      mindar-face-target="
-        anchorIndex: 10
-      "
-
+      mindar-face-target="anchorIndex: 10"
     >
 
-
       <a-image
-
         id="earsOverlay"
-
         src="#earsGraphic"
-
-        position="
-          -.3
-          0.25
-          0.04
-        "
-
+        position="-.3 0.25 0.04"
         width="1.15"
-
         height="0.65"
-
         material="
           shader: flat;
           transparent: true;
           side: double;
           depthWrite: false;
         "
-
       >
       </a-image>
-
 
     </a-entity>
 
 
-
-    <!-- =========================================
-         MOUTH + WHISKERS + CIGARETTE
-         ========================================= -->
+    <!-- MOUTH / WHISKERS / CIGARETTE -->
 
     <a-entity
-
       id="mouthAnchor"
-
-      mindar-face-target="
-        anchorIndex: 1
-      "
-
+      mindar-face-target="anchorIndex: 1"
     >
 
-
       <a-image
-
         id="mouthOverlay"
-
         src="#mouthGraphic"
-
-        position="
-          -.25
-          -0.20
-          0.06
-        "
-
+        position="-.25 -0.20 0.06"
         width="1.65"
-
         height="0.59"
-
         material="
           shader: flat;
           transparent: true;
           side: double;
           depthWrite: false;
         "
-
       >
       </a-image>
 
-
     </a-entity>
-
 
   </a-scene>
 
 
+  <script>
 
-<script>
+    /* =========================================
+       MAIN ELEMENTS
+       ========================================= */
 
+    const bubbleLayer =
+      document.getElementById("bubbleLayer");
 
-/* =========================================
-   MAIN ELEMENTS
-   ========================================= */
+    const scene =
+      document.getElementById("faceScene");
 
+    const kittyButton =
+      document.getElementById("kittyButton");
 
-const bubbleLayer =
-  document.getElementById(
-    "bubbleLayer"
-  );
+    const kittyImage =
+      document.getElementById("kittyImage");
 
+    const tipOverlay =
+      document.getElementById("tipOverlay");
 
-const scene =
-  document.getElementById(
-    "faceScene"
-  );
+    const copiedMessage =
+      document.getElementById("copiedMessage");
 
+    const photoButton =
+      document.getElementById("photoButton");
 
+    const countdownOverlay =
+      document.getElementById("countdownOverlay");
 
-/* =========================================
-   BACK
-   ========================================= */
+    const countdownNumber =
+      document.getElementById("countdownNumber");
 
+    const photoResult =
+      document.getElementById("photoResult");
 
-document
-  .getElementById(
-    "backButton"
-  )
-  .addEventListener(
-    "click",
-    () => {
+    const finishedPhoto =
+      document.getElementById("finishedPhoto");
 
-      window.location.href =
-        "./index.html";
+    const savePhotoButton =
+      document.getElementById("savePhotoButton");
 
-    }
-  );
+    const retakeButton =
+      document.getElementById("retakeButton");
 
+    const cameraFlash =
+      document.getElementById("cameraFlash");
 
-
-/* =========================================
-   CLICK KITTY
-   ========================================= */
-
-
-const kittyButton =
-  document.getElementById(
-    "kittyButton"
-  );
+    let finishedPhotoURL = null;
+    let kittyRunning = false;
 
 
-const kittyImage =
-  document.getElementById(
-    "kittyImage"
-  );
+    /* =========================================
+       BACK
+       ========================================= */
+
+    document
+      .getElementById("backButton")
+      .addEventListener("click", () => {
+
+        window.location.href =
+          "./index.html";
+
+      });
 
 
-const tipOverlay =
-  document.getElementById(
-    "tipOverlay"
-  );
+    /* =========================================
+       CLICK KITTY
+       ========================================= */
 
-
-const closeTipButton =
-  document.getElementById(
-    "closeTipButton"
-  );
-
-
-const emailButton =
-  document.getElementById(
-    "emailButton"
-  );
-
-
-const copiedMessage =
-  document.getElementById(
-    "copiedMessage"
-  );
-
-
-let kittyRunning =
-  false;
-
-
-
-kittyButton.addEventListener(
-  "click",
-  () => {
-
-
-    if (kittyRunning) {
-      return;
-    }
-
-
-    kittyRunning =
-      true;
-
-
-
-    kittyImage.src =
-      "./tip1.png";
-
-
-
-    setTimeout(
+    kittyButton.addEventListener(
+      "click",
       () => {
 
-        kittyImage.src =
-          "./tip2.png";
+        if (kittyRunning) {
+          return;
+        }
 
-      },
-      350
-    );
-
-
-
-    setTimeout(
-      () => {
-
-        kittyImage.src =
-          "./tip3.png";
-
-      },
-      700
-    );
-
-
-
-    setTimeout(
-      () => {
-
-        kittyImage.src =
-          "./tip4.png";
-
-      },
-      1120
-    );
-
-
-
-    setTimeout(
-      () => {
-
-        kittyImage.src =
-          "./tip5.png";
-
-      },
-      1540
-    );
-
-
-
-    setTimeout(
-      () => {
+        kittyRunning = true;
 
         kittyImage.src =
           "./tip1.png";
 
-        kittyRunning =
-          false;
+        setTimeout(() => {
+          kittyImage.src =
+            "./tip2.png";
+        }, 350);
 
-        tipOverlay.style.display =
-          "flex";
+        setTimeout(() => {
+          kittyImage.src =
+            "./tip3.png";
+        }, 700);
 
-      },
-      2040
+        setTimeout(() => {
+          kittyImage.src =
+            "./tip4.png";
+        }, 1120);
+
+        setTimeout(() => {
+          kittyImage.src =
+            "./tip5.png";
+        }, 1540);
+
+        setTimeout(() => {
+
+          kittyImage.src =
+            "./tip1.png";
+
+          kittyRunning = false;
+
+          tipOverlay.style.display =
+            "flex";
+
+        }, 2040);
+
+      }
     );
 
 
-  }
-);
+    /* =========================================
+       TIP POPUP
+       ========================================= */
+
+    document
+      .getElementById("closeTipButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          tipOverlay.style.display =
+            "none";
+
+        }
+      );
 
 
+    document
+      .getElementById("emailButton")
+      .addEventListener(
+        "click",
+        async () => {
 
-/* =========================================
-   COPY EMAIL
-   ========================================= */
+          try {
+
+            await navigator.clipboard.writeText(
+              "thehooksechelt@gmail.com"
+            );
+
+            copiedMessage.style.opacity =
+              "1";
+
+            setTimeout(() => {
+              copiedMessage.style.opacity =
+                "0";
+            }, 1800);
+
+          }
+
+          catch (error) {
+
+            console.log(
+              "Clipboard error:",
+              error
+            );
+
+          }
+
+        }
+      );
 
 
-emailButton.addEventListener(
-  "click",
-  async () => {
+    /* =========================================
+       BUBBLES
+       ========================================= */
+
+    function makeBubble() {
+
+      const bubble =
+        document.createElement("div");
+
+      bubble.className =
+        "bubble";
 
 
-    try {
+      /* Random bubble size */
+
+      const size =
+        28 + Math.random() * 42;
+
+      bubble.style.width =
+        size + "px";
+
+      bubble.style.height =
+        size + "px";
 
 
-      await navigator
-        .clipboard
-        .writeText(
-          "thehooksechelt@gmail.com"
+      /* Find cigarette tip */
+
+      const mouth =
+        document.getElementById(
+          "mouthOverlay"
+        );
+
+      const cameraElement =
+        document.querySelector(
+          "a-camera"
+        );
+
+      if (
+        !mouth ||
+        !mouth.object3D ||
+        !cameraElement
+      ) {
+        return;
+      }
+
+
+      const camera =
+        cameraElement.getObject3D(
+          "camera"
+        );
+
+      if (!camera) {
+        return;
+      }
+
+
+      const tipPosition =
+        new THREE.Vector3();
+
+
+      /* Working cigarette-tip location */
+
+      tipPosition.set(
+        0.72,
+        -0.05,
+        0
+      );
+
+
+      mouth.object3D.localToWorld(
+        tipPosition
+      );
+
+      tipPosition.project(
+        camera
+      );
+
+
+      const startX =
+        (
+          tipPosition.x *
+          0.5 +
+          0.5
+        ) *
+        window.innerWidth;
+
+
+      const startY =
+        (
+          -tipPosition.y *
+          0.5 +
+          0.5
+        ) *
+        window.innerHeight;
+
+
+      bubble.style.left =
+        startX + "px";
+
+      bubble.style.top =
+        startY + "px";
+
+
+      /* Bubble movement */
+
+      const drift =
+        35 +
+        Math.random() * 100;
+
+      const rise =
+        -(
+          100 +
+          Math.random() * 190
         );
 
 
-      copiedMessage
-        .style
-        .opacity =
-        "1";
+      bubble.style.setProperty(
+        "--drift",
+        drift + "px"
+      );
 
+      bubble.style.setProperty(
+        "--rise",
+        rise + "px"
+      );
+
+
+      bubbleLayer.appendChild(
+        bubble
+      );
+
+
+      /* Random pop */
+
+      const willPop =
+        Math.random() < 0.65;
+
+
+      if (willPop) {
+
+        const popTime =
+          900 +
+          Math.random() * 1600;
+
+
+        setTimeout(
+          () => {
+
+            if (!bubble.isConnected) {
+              return;
+            }
+
+
+            const rect =
+              bubble.getBoundingClientRect();
+
+
+            const ring =
+              document.createElement(
+                "div"
+              );
+
+            ring.className =
+              "pop-ring";
+
+            ring.style.width =
+              rect.width + "px";
+
+            ring.style.height =
+              rect.height + "px";
+
+            ring.style.left =
+              rect.left + "px";
+
+            ring.style.top =
+              rect.top + "px";
+
+            bubbleLayer.appendChild(
+              ring
+            );
+
+
+            bubble.style.animation =
+              "none";
+
+
+            bubble.animate(
+              [
+                {
+                  transform:
+                    "scale(1)",
+                  opacity: 1
+                },
+
+                {
+                  transform:
+                    "scale(1.18)",
+                  opacity: 0
+                }
+              ],
+
+              {
+                duration: 100,
+                easing: "ease-out",
+                fill: "forwards"
+              }
+            );
+
+
+            setTimeout(
+              () => {
+                bubble.remove();
+              },
+              110
+            );
+
+
+            setTimeout(
+              () => {
+                ring.remove();
+              },
+              240
+            );
+
+          },
+          popTime
+        );
+
+      }
+
+
+      /* Remove bubble after animation */
 
       setTimeout(
         () => {
 
-          copiedMessage
-            .style
-            .opacity =
-            "0";
+          if (bubble.isConnected) {
+            bubble.remove();
+          }
 
         },
-        1800
+        3300
       );
-
 
     }
 
 
-    catch (error) {
-
-
-      console.log(
-        "Clipboard error:",
-        error
-      );
-
-
-    }
-
-
-  }
-);
-
-
-
-/* =========================================
-   CLOSE TIP
-   ========================================= */
-
-
-closeTipButton.addEventListener(
-  "click",
-  () => {
-
-    tipOverlay.style.display =
-      "none";
-
-  }
-);
-
-
-
-/* =========================================
-   BUBBLE CREATOR
-   ========================================= */
-
-
-function makeBubble() {
-
-
-  const bubble =
-    document.createElement(
-      "div"
-    );
-
-
-  bubble.className =
-    "bubble";
-
-
-
-  /* SIZE */
-
-  const size =
-    28 +
-    Math.random() * 42;
-
-
-  bubble.style.width =
-    size + "px";
-
-
-  bubble.style.height =
-    size + "px";
-
-
-
-  /* =====================================
-     FIND CIGARETTE TIP
-     ===================================== */
-
-
-  const mouth =
-    document.getElementById(
-      "mouthOverlay"
-    );
-
-
-  const cameraElement =
-    document.querySelector(
-      "a-camera"
-    );
-
-
-  if (
-
-    !mouth ||
-
-    !mouth.object3D ||
-
-    !cameraElement
-
-  ) {
-
-    return;
-
-  }
-
-
-
-  const camera =
-    cameraElement
-      .getObject3D(
-        "camera"
-      );
-
-
-  if (!camera) {
-
-    return;
-
-  }
-
-
-
-  const tipPosition =
-    new THREE.Vector3();
-
-
-
-  /* YOUR WORKING CIGARETTE TIP LOCATION */
-
-  tipPosition.set(
-
-    0.72,
-
-    -0.05,
-
-    0
-
-  );
-
-
-
-  mouth
-    .object3D
-    .localToWorld(
-      tipPosition
-    );
-
-
-
-  tipPosition.project(
-    camera
-  );
-
-
-
-  const startX =
-
-    (
-      tipPosition.x *
-      0.5 +
-      0.5
-    )
-
-    *
-
-    window.innerWidth;
-
-
-
-  const startY =
-
-    (
-      -tipPosition.y *
-      0.5 +
-      0.5
-    )
-
-    *
-
-    window.innerHeight;
-
-
-
-  bubble.style.left =
-    startX + "px";
-
-
-  bubble.style.top =
-    startY + "px";
-
-
-
-  /* MOVEMENT */
-
-
-  const drift =
-    35 +
-    Math.random() *
-    100;
-
-
-  const rise =
-    -(
-      100 +
-      Math.random() *
-      190
-    );
-
-
-
-  bubble.style.setProperty(
-    "--drift",
-    drift + "px"
-  );
-
-
-  bubble.style.setProperty(
-    "--rise",
-    rise + "px"
-  );
-
-
-
-  bubbleLayer.appendChild(
-    bubble
-  );
-
-
-
-  /* RANDOM POP */
-
-
-  const willPop =
-    Math.random() <
-    0.65;
-
-
-
-  if (willPop) {
-
-
-    const popTime =
-
-      900 +
-
-      Math.random() *
-      1600;
-
-
-
-    setTimeout(
-      () => {
-
-
-        if (
-          !bubble.isConnected
-        ) {
-
-          return;
-
-        }
-
-
-
-        const rect =
-          bubble
-            .getBoundingClientRect();
-
-
-
-        const ring =
-          document.createElement(
-            "div"
-          );
-
-
-        ring.className =
-          "pop-ring";
-
-
-        ring.style.width =
-          rect.width + "px";
-
-
-        ring.style.height =
-          rect.height + "px";
-
-
-        ring.style.left =
-          rect.left + "px";
-
-
-        ring.style.top =
-          rect.top + "px";
-
-
-        bubbleLayer
-          .appendChild(
-            ring
-          );
-
-
-
-        bubble.style.animation =
-          "none";
-
-
-
-        bubble.animate(
-
-          [
-
-            {
-
-              transform:
-                "scale(1)",
-
-              opacity:
-                1
-
-            },
-
-            {
-
-              transform:
-                "scale(1.18)",
-
-              opacity:
-                0
-
-            }
-
-          ],
-
-          {
-
-            duration:
-              100,
-
-            easing:
-              "ease-out",
-
-            fill:
-              "forwards"
+    document
+      .getElementById("bubbleButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          for (
+            let i = 0;
+            i < 6;
+            i++
+          ) {
+
+            setTimeout(
+              () => {
+                makeBubble();
+              },
+              i * 180
+            );
 
           }
 
+        }
+      );
+
+
+    /* =========================================
+       CAMERA FLIP
+       ========================================= */
+
+    document
+      .getElementById("cameraButton")
+      .addEventListener(
+        "click",
+        async () => {
+
+          try {
+
+            const system =
+              scene.systems[
+                "mindar-face-system"
+              ];
+
+            if (
+              system &&
+              system.switchCamera
+            ) {
+
+              await system.switchCamera();
+
+            }
+
+          }
+
+          catch (error) {
+
+            console.log(
+              "Camera switch:",
+              error
+            );
+
+          }
+
+        }
+      );
+
+
+    /* =========================================
+       WAIT
+       ========================================= */
+
+    function wait(ms) {
+
+      return new Promise(
+        resolve =>
+          setTimeout(
+            resolve,
+            ms
+          )
+      );
+
+    }
+
+
+    /* =========================================
+       PHOTO BUTTON
+       ========================================= */
+
+    photoButton.addEventListener(
+      "click",
+      async () => {
+
+        countdownOverlay.style.display =
+          "flex";
+
+        countdownNumber.textContent =
+          "3";
+
+        await wait(800);
+
+        countdownNumber.textContent =
+          "2";
+
+        await wait(800);
+
+        countdownNumber.textContent =
+          "1";
+
+        await wait(800);
+
+        countdownOverlay.style.display =
+          "none";
+
+
+        /* Flash */
+
+        cameraFlash.classList.remove(
+          "flash"
         );
 
+        void cameraFlash.offsetWidth;
 
-
-        setTimeout(
-          () => {
-
-            bubble.remove();
-
-          },
-          110
+        cameraFlash.classList.add(
+          "flash"
         );
 
+        await wait(100);
 
+        await createPolaroid();
 
-        setTimeout(
-          () => {
-
-            ring.remove();
-
-          },
-          240
-        );
-
-
-      },
-      popTime
+      }
     );
 
 
-  }
+    /* =========================================
+       ILLUSTRATION FILTER
+       ========================================= */
+
+    function comicIllustrationFilter(
+      sourceCanvas
+    ) {
+
+      const canvas =
+        document.createElement(
+          "canvas"
+        );
+
+      canvas.width =
+        sourceCanvas.width;
+
+      canvas.height =
+        sourceCanvas.height;
 
 
-
-  setTimeout(
-    () => {
-
-
-      if (
-        bubble.isConnected
-      ) {
-
-        bubble.remove();
-
-      }
+      const ctx =
+        canvas.getContext(
+          "2d",
+          {
+            willReadFrequently: true
+          }
+        );
 
 
-    },
-    3300
-  );
+      ctx.drawImage(
+        sourceCanvas,
+        0,
+        0
+      );
 
 
-}
+      const w =
+        canvas.width;
+
+      const h =
+        canvas.height;
 
 
+      /* -----------------------------------------
+         WARM POSTERIZED COLOUR
+         ----------------------------------------- */
 
-/* =========================================
-   BUBBLES BUTTON
-   ========================================= */
+      const image =
+        ctx.getImageData(
+          0,
+          0,
+          w,
+          h
+        );
 
-
-document
-  .getElementById(
-    "bubbleButton"
-  )
-  .addEventListener(
-    "click",
-    () => {
+      const data =
+        image.data;
 
 
       for (
         let i = 0;
-        i < 6;
-        i++
+        i < data.length;
+        i += 4
       ) {
 
+        let r =
+          data[i];
 
-        setTimeout(
-          () => {
+        let g =
+          data[i + 1];
 
-            makeBubble();
+        let b =
+          data[i + 2];
 
-          },
-          i * 180
-        );
 
+        /* Contrast */
+
+        r =
+          (r - 128) *
+          1.22 +
+          128;
+
+        g =
+          (g - 128) *
+          1.18 +
+          128;
+
+        b =
+          (b - 128) *
+          1.15 +
+          128;
+
+
+        /* Warm palette */
+
+        r += 14;
+        g += 4;
+        b -= 10;
+
+
+        /* Flatten colours */
+
+        const step = 42;
+
+        r =
+          Math.round(
+            r / step
+          ) * step;
+
+        g =
+          Math.round(
+            g / step
+          ) * step;
+
+        b =
+          Math.round(
+            b / step
+          ) * step;
+
+
+        data[i] =
+          Math.max(
+            0,
+            Math.min(
+              255,
+              r
+            )
+          );
+
+        data[i + 1] =
+          Math.max(
+            0,
+            Math.min(
+              255,
+              g
+            )
+          );
+
+        data[i + 2] =
+          Math.max(
+            0,
+            Math.min(
+              255,
+              b
+            )
+          );
 
       }
 
 
-    }
-  );
+      ctx.putImageData(
+        image,
+        0,
+        0
+      );
 
 
+      /* -----------------------------------------
+         DARK ILLUSTRATED EDGES
+         ----------------------------------------- */
 
-/* =========================================
-   CAMERA FLIP
-   ========================================= */
+      const coloured =
+        ctx.getImageData(
+          0,
+          0,
+          w,
+          h
+        );
 
-
-document
-  .getElementById(
-    "cameraButton"
-  )
-  .addEventListener(
-    "click",
-    async () => {
-
-
-      try {
+      const src =
+        coloured.data;
 
 
-        const system =
-          scene.systems[
-            "mindar-face-system"
-          ];
+      const edgeCanvas =
+        document.createElement(
+          "canvas"
+        );
+
+      edgeCanvas.width = w;
+      edgeCanvas.height = h;
 
 
-        if (
+      const edgeCtx =
+        edgeCanvas.getContext(
+          "2d"
+        );
 
-          system &&
 
-          system.switchCamera
+      const edgeImage =
+        edgeCtx.createImageData(
+          w,
+          h
+        );
 
+      const edges =
+        edgeImage.data;
+
+
+      for (
+        let y = 1;
+        y < h - 1;
+        y += 2
+      ) {
+
+        for (
+          let x = 1;
+          x < w - 1;
+          x += 2
         ) {
 
+          const i =
+            (
+              y * w +
+              x
+            ) * 4;
 
-          await system
-            .switchCamera();
+          const right =
+            (
+              y * w +
+              x + 1
+            ) * 4;
 
+          const below =
+            (
+              (y + 1) * w +
+              x
+            ) * 4;
+
+
+          const here =
+            src[i] * 0.30 +
+            src[i + 1] * 0.59 +
+            src[i + 2] * 0.11;
+
+
+          const next =
+            src[right] * 0.30 +
+            src[right + 1] * 0.59 +
+            src[right + 2] * 0.11;
+
+
+          const down =
+            src[below] * 0.30 +
+            src[below + 1] * 0.59 +
+            src[below + 2] * 0.11;
+
+
+          const difference =
+            Math.abs(
+              here - next
+            ) +
+            Math.abs(
+              here - down
+            );
+
+
+          if (
+            difference > 48
+          ) {
+
+            for (
+              let yy = 0;
+              yy < 2;
+              yy++
+            ) {
+
+              for (
+                let xx = 0;
+                xx < 2;
+                xx++
+              ) {
+
+                const p =
+                  (
+                    (y + yy) *
+                    w +
+                    (x + xx)
+                  ) * 4;
+
+
+                edges[p] = 12;
+                edges[p + 1] = 10;
+                edges[p + 2] = 8;
+
+                edges[p + 3] =
+                  Math.min(
+                    190,
+                    60 +
+                    difference
+                  );
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+
+      edgeCtx.putImageData(
+        edgeImage,
+        0,
+        0
+      );
+
+
+      ctx.drawImage(
+        edgeCanvas,
+        0,
+        0
+      );
+
+
+      /* -----------------------------------------
+         LIGHT GRAIN
+         ----------------------------------------- */
+
+      ctx.globalAlpha =
+        0.08;
+
+
+      for (
+        let i = 0;
+        i < 2500;
+        i++
+      ) {
+
+        const x =
+          Math.random() * w;
+
+        const y =
+          Math.random() * h;
+
+        const size =
+          Math.random() * 2.2;
+
+
+        ctx.fillStyle =
+          Math.random() > 0.5
+            ? "#000000"
+            : "#fff0d2";
+
+
+        ctx.fillRect(
+          x,
+          y,
+          size,
+          size
+        );
+
+      }
+
+
+      ctx.globalAlpha =
+        1;
+
+
+      return canvas;
+
+    }
+
+
+    /* =========================================
+       CREATE POLAROID
+       ========================================= */
+
+    async function createPolaroid() {
+
+      const outputSize =
+        1400;
+
+
+      const outputCanvas =
+        document.createElement(
+          "canvas"
+        );
+
+      outputCanvas.width =
+        outputSize;
+
+      outputCanvas.height =
+        outputSize;
+
+
+      const ctx =
+        outputCanvas.getContext(
+          "2d"
+        );
+
+
+      /* Polaroid photo opening */
+
+      const photoX =
+        outputSize * 0.105;
+
+      const photoY =
+        outputSize * 0.055;
+
+      const photoW =
+        outputSize * 0.79;
+
+      const photoH =
+        outputSize * 0.69;
+
+
+      /* Get live camera */
+
+      const video =
+        document.querySelector(
+          "video"
+        );
+
+
+      if (
+        !video ||
+        !video.videoWidth ||
+        !video.videoHeight
+      ) {
+
+        alert(
+          "Camera is still loading. Try again."
+        );
+
+        return;
+
+      }
+
+
+      /* Screen-sized composite */
+
+      const pixelRatio =
+        window.devicePixelRatio || 1;
+
+
+      const screenCanvas =
+        document.createElement(
+          "canvas"
+        );
+
+      screenCanvas.width =
+        window.innerWidth *
+        pixelRatio;
+
+      screenCanvas.height =
+        window.innerHeight *
+        pixelRatio;
+
+
+      const screenCtx =
+        screenCanvas.getContext(
+          "2d"
+        );
+
+
+      const sw =
+        screenCanvas.width;
+
+      const sh =
+        screenCanvas.height;
+
+
+      /* Camera crop */
+
+      const videoRatio =
+        video.videoWidth /
+        video.videoHeight;
+
+      const screenRatio =
+        sw / sh;
+
+
+      let sx = 0;
+      let sy = 0;
+
+      let sWidth =
+        video.videoWidth;
+
+      let sHeight =
+        video.videoHeight;
+
+
+      if (
+        videoRatio >
+        screenRatio
+      ) {
+
+        sWidth =
+          video.videoHeight *
+          screenRatio;
+
+        sx =
+          (
+            video.videoWidth -
+            sWidth
+          ) / 2;
+
+      }
+
+      else {
+
+        sHeight =
+          video.videoWidth /
+          screenRatio;
+
+        sy =
+          (
+            video.videoHeight -
+            sHeight
+          ) / 2;
+
+      }
+
+
+      /* Mirror camera */
+
+      screenCtx.save();
+
+      screenCtx.translate(
+        sw,
+        0
+      );
+
+      screenCtx.scale(
+        -1,
+        1
+      );
+
+      screenCtx.drawImage(
+        video,
+
+        sx,
+        sy,
+        sWidth,
+        sHeight,
+
+        0,
+        0,
+        sw,
+        sh
+      );
+
+      screenCtx.restore();
+
+
+      /* Draw current A-Frame face filter */
+
+      const aframeCanvas =
+        scene.canvas;
+
+
+      if (aframeCanvas) {
+
+        if (
+          scene.renderer &&
+          scene.object3D &&
+          scene.camera
+        ) {
+
+          scene.renderer.render(
+            scene.object3D,
+            scene.camera
+          );
 
         }
 
 
+        screenCtx.drawImage(
+          aframeCanvas,
+
+          0,
+          0,
+          aframeCanvas.width,
+          aframeCanvas.height,
+
+          0,
+          0,
+          sw,
+          sh
+        );
+
       }
 
 
-      catch (error) {
+      /* Create illustrated copy */
 
-
-        console.log(
-          "Camera switch:",
-          error
+      const illustratedSelfie =
+        comicIllustrationFilter(
+          screenCanvas
         );
 
 
+      /* Calculate crop into Polaroid */
+
+      const compositeRatio =
+        sw / sh;
+
+      const targetRatio =
+        photoW / photoH;
+
+
+      let csx = 0;
+      let csy = 0;
+      let csw = sw;
+      let csh = sh;
+
+
+      if (
+        compositeRatio >
+        targetRatio
+      ) {
+
+        csw =
+          sh *
+          targetRatio;
+
+        csx =
+          (
+            sw -
+            csw
+          ) / 2;
+
+      }
+
+      else {
+
+        csh =
+          sw /
+          targetRatio;
+
+        csy =
+          (
+            sh -
+            csh
+          ) / 2;
+
       }
 
 
-    }
-  );
+      /* Draw illustrated selfie */
+
+      ctx.save();
+
+      ctx.beginPath();
+
+      ctx.rect(
+        photoX,
+        photoY,
+        photoW,
+        photoH
+      );
+
+      ctx.clip();
 
 
+      ctx.drawImage(
+        illustratedSelfie,
 
-/* =========================================
-   PHOTO SYSTEM
-   ========================================= */
+        csx,
+        csy,
+        csw,
+        csh,
 
-
-const photoButton =
-  document.getElementById(
-    "photoButton"
-  );
-
-
-const countdownOverlay =
-  document.getElementById(
-    "countdownOverlay"
-  );
-
-
-const countdownNumber =
-  document.getElementById(
-    "countdownNumber"
-  );
-
-
-const photoResult =
-  document.getElementById(
-    "photoResult"
-  );
-
-
-const finishedPhoto =
-  document.getElementById(
-    "finishedPhoto"
-  );
-
-
-const savePhotoButton =
-  document.getElementById(
-    "savePhotoButton"
-  );
-
-
-const retakeButton =
-  document.getElementById(
-    "retakeButton"
-  );
-
-
-const cameraFlash =
-  document.getElementById(
-    "cameraFlash"
-  );
-
-
-let finishedPhotoURL =
-  null;
-
-
-
-/* =========================================
-   WAIT FUNCTION
-   ========================================= */
-
-
-function wait(ms) {
-
-  return new Promise(
-    resolve =>
-      setTimeout(
-        resolve,
-        ms
-      )
-  );
-
-}
-
-
-
-/* =========================================
-   PHOTO BUTTON
-   ========================================= */
-
-
-photoButton.addEventListener(
-  "click",
-  async () => {
-
-
-    countdownOverlay
-      .style
-      .display =
-      "flex";
-
-
-    countdownNumber
-      .textContent =
-      "3";
-
-
-    await wait(800);
-
-
-    countdownNumber
-      .textContent =
-      "2";
-
-
-    await wait(800);
-
-
-    countdownNumber
-      .textContent =
-      "1";
-
-
-    await wait(800);
-
-
-    countdownOverlay
-      .style
-      .display =
-      "none";
-
-
-
-    /* FLASH */
-
-
-    cameraFlash
-      .classList
-      .remove(
-        "flash"
+        photoX,
+        photoY,
+        photoW,
+        photoH
       );
 
 
-    void cameraFlash
-      .offsetWidth;
+      ctx.restore();
 
 
-    cameraFlash
-      .classList
-      .add(
-        "flash"
+      /* Draw Polaroid/band artwork */
+
+      const polaroid =
+        document.getElementById(
+          "polaroidGraphic"
+        );
+
+
+      if (!polaroid.complete) {
+
+        await new Promise(
+          resolve => {
+
+            polaroid.onload =
+              resolve;
+
+          }
+        );
+
+      }
+
+
+      ctx.drawImage(
+        polaroid,
+        0,
+        0,
+        outputSize,
+        outputSize
       );
 
 
-
-    await wait(100);
-
-
-
-    await createPolaroid();
-
-
-  }
-);
-
-
-async function createPolaroid() {
-
-  const outputSize = 1400;
-
-  const outputCanvas =
-    document.createElement("canvas");
-
-  outputCanvas.width = outputSize;
-  outputCanvas.height = outputSize;
-
-  const ctx =
-    outputCanvas.getContext("2d");
-
-
-  /* =====================================
-     POLAROID PHOTO OPENING
-     ===================================== */
-
-  const photoX = outputSize * 0.105;
-  const photoY = outputSize * 0.055;
-  const photoW = outputSize * 0.79;
-  const photoH = outputSize * 0.69;
-
-
-  /* =====================================
-     GET LIVE CAMERA
-     ===================================== */
-
-  const video =
-    document.querySelector("video");
-
-  if (
-    !video ||
-    !video.videoWidth ||
-    !video.videoHeight
-  ) {
-
-    alert(
-      "Camera is still loading. Try again."
-    );
-
-    return;
-  }
-
-
-  /* =====================================
-     CREATE A SCREEN-SHAPED COMPOSITE
-
-     This canvas combines:
-     CAMERA
-     +
-     A-FRAME FILTER
-     ===================================== */
-
-  const screenCanvas =
-    document.createElement("canvas");
-
-  screenCanvas.width =
-    window.innerWidth *
-    window.devicePixelRatio;
-
-  screenCanvas.height =
-    window.innerHeight *
-    window.devicePixelRatio;
-
-
-  const screenCtx =
-    screenCanvas.getContext("2d");
-
-
-  const sw =
-    screenCanvas.width;
-
-  const sh =
-    screenCanvas.height;
-
-
-  /* =====================================
-     DRAW CAMERA AS IT APPEARS ON SCREEN
-     ===================================== */
-
-  const videoRatio =
-    video.videoWidth /
-    video.videoHeight;
-
-  const screenRatio =
-    sw / sh;
-
-
-  let sx = 0;
-  let sy = 0;
-
-  let sWidth =
-    video.videoWidth;
-
-  let sHeight =
-    video.videoHeight;
-
-
-  if (videoRatio > screenRatio) {
-
-    sWidth =
-      video.videoHeight *
-      screenRatio;
-
-    sx =
-      (
-        video.videoWidth -
-        sWidth
-      ) / 2;
-
-  }
-
-  else {
-
-    sHeight =
-      video.videoWidth /
-      screenRatio;
-
-    sy =
-      (
-        video.videoHeight -
-        sHeight
-      ) / 2;
-
-  }
-
-
-  /* MIRROR FRONT CAMERA */
-
-  screenCtx.save();
-
-  screenCtx.translate(
-    sw,
-    0
-  );
-
-  screenCtx.scale(
-    -1,
-    1
-  );
-
-
-  screenCtx.drawImage(
-
-    video,
-
-    sx,
-    sy,
-    sWidth,
-    sHeight,
-
-    0,
-    0,
-    sw,
-    sh
-
-  );
-
-
-  screenCtx.restore();
-
-
-  /* =====================================
-     NOW DRAW THE FILTER OVER THE CAMERA
-     ===================================== */
-
-  const aframeCanvas =
-    scene.canvas;
-
-
-  if (aframeCanvas) {
-
-    /*
-      Force one fresh A-Frame render before
-      grabbing the canvas.
-    */
-
-    if (
-      scene.renderer &&
-      scene.object3D &&
-      scene.camera
-    ) {
-
-      scene.renderer.render(
-        scene.object3D,
-        scene.camera
+      /* Date */
+
+      const today =
+        new Date();
+
+
+      const dateText =
+        String(
+          today.getMonth() + 1
+        ).padStart(
+          2,
+          "0"
+        )
+        +
+        "/"
+        +
+        String(
+          today.getDate()
+        ).padStart(
+          2,
+          "0"
+        )
+        +
+        "/"
+        +
+        String(
+          today.getFullYear()
+        ).slice(-2);
+
+
+      ctx.save();
+
+      ctx.fillStyle =
+        "#111";
+
+      ctx.font =
+        "bold 30px Arial";
+
+      ctx.textAlign =
+        "left";
+
+      ctx.textBaseline =
+        "middle";
+
+      ctx.fillText(
+        dateText,
+        outputSize * 0.817,
+        outputSize * 0.885
       );
+
+      ctx.restore();
+
+
+      /* Finished image */
+
+      finishedPhotoURL =
+        outputCanvas.toDataURL(
+          "image/png"
+        );
+
+      finishedPhoto.src =
+        finishedPhotoURL;
+
+      photoResult.style.display =
+        "flex";
 
     }
 
 
-    screenCtx.drawImage(
+    /* =========================================
+       RETAKE
+       ========================================= */
 
-      aframeCanvas,
+    retakeButton.addEventListener(
+      "click",
+      () => {
 
-      0,
-      0,
-      aframeCanvas.width,
-      aframeCanvas.height,
+        photoResult.style.display =
+          "none";
 
-      0,
-      0,
-      sw,
-      sh
+        finishedPhoto.src =
+          "";
 
-    );
-
-  }
-
-
-  /* =====================================
-     PUT COMBINED SELFIE INTO POLAROID
-     ===================================== */
-
-  ctx.save();
-
-
-  ctx.beginPath();
-
-  ctx.rect(
-    photoX,
-    photoY,
-    photoW,
-    photoH
-  );
-
-  ctx.clip();
-
-
-  /*
-    Crop the SCREEN composite rather than
-    cropping the raw video.
-
-    This is important because the face filter
-    now stays aligned with the person's face.
-  */
-
-  const compositeRatio =
-    sw / sh;
-
-  const targetRatio =
-    photoW / photoH;
-
-
-  let csx = 0;
-  let csy = 0;
-
-  let csw = sw;
-  let csh = sh;
-
-
-  if (
-    compositeRatio >
-    targetRatio
-  ) {
-
-    csw =
-      sh *
-      targetRatio;
-
-    csx =
-      (
-        sw -
-        csw
-      ) / 2;
-
-  }
-
-  else {
-
-    csh =
-      sw /
-      targetRatio;
-
-    csy =
-      (
-        sh -
-        csh
-      ) / 2;
-
-  }
-
-
-  ctx.drawImage(
-
-    screenCanvas,
-
-    csx,
-    csy,
-    csw,
-    csh,
-
-    photoX,
-    photoY,
-    photoW,
-    photoH
-
-  );
-
-
-  ctx.restore();
-
-
-  /* =====================================
-     POLAROID ART ON TOP
-     ===================================== */
-
-  const polaroid =
-    document.getElementById(
-      "polaroidGraphic"
-    );
-
-
-  if (!polaroid.complete) {
-
-    await new Promise(
-      resolve => {
-
-        polaroid.onload =
-          resolve;
+        finishedPhotoURL =
+          null;
 
       }
     );
 
-  }
+
+    /* =========================================
+       SAVE PHOTO
+       ========================================= */
+
+    savePhotoButton.addEventListener(
+      "click",
+      () => {
+
+        if (!finishedPhotoURL) {
+          return;
+        }
 
 
-  ctx.drawImage(
+        const link =
+          document.createElement(
+            "a"
+          );
 
-    polaroid,
-
-    0,
-    0,
-
-    outputSize,
-    outputSize
-
-  );
+        const today =
+          new Date();
 
 
-  /* =====================================
-     CURRENT DATE
-     ===================================== */
-
-  const today =
-    new Date();
-
-
-  const dateText =
-
-    String(
-      today.getMonth() + 1
-    ).padStart(2, "0")
-
-    +
-
-    "/"
-
-    +
-
-    String(
-      today.getDate()
-    ).padStart(2, "0")
-
-    +
-
-    "/"
-
-    +
-
-    String(
-      today.getFullYear()
-    ).slice(-2);
+        const filename =
+          "the-hook-" +
+          today.getFullYear() +
+          "-" +
+          String(
+            today.getMonth() + 1
+          ).padStart(
+            2,
+            "0"
+          ) +
+          "-" +
+          String(
+            today.getDate()
+          ).padStart(
+            2,
+            "0"
+          ) +
+          ".png";
 
 
-  ctx.save();
+        link.href =
+          finishedPhotoURL;
+
+        link.download =
+          filename;
 
 
-  ctx.fillStyle =
-    "#111";
+        document.body.appendChild(
+          link
+        );
 
+        link.click();
 
-  ctx.font =
-    "bold 30px Arial";
+        link.remove();
 
-
-  ctx.textAlign =
-    "left";
-
-
-  ctx.textBaseline =
-    "middle";
-
-
-  ctx.fillText(
-
-    dateText,
-
-    outputSize * 0.817,
-
-    outputSize * 0.885
-
-  );
-
-
-  ctx.restore();
-
-
-  /* =====================================
-     FINISHED POLAROID
-     ===================================== */
-
-  finishedPhotoURL =
-    outputCanvas.toDataURL(
-      "image/png"
+      }
     );
 
-
-  finishedPhoto.src =
-    finishedPhotoURL;
-
-
-  photoResult.style.display =
-    "flex";
-
-}
-
-/* =========================================
-   RETAKE
-   ========================================= */
-
-
-retakeButton.addEventListener(
-  "click",
-  () => {
-
-
-    photoResult
-      .style
-      .display =
-      "none";
-
-
-    finishedPhoto.src =
-      "";
-
-
-    finishedPhotoURL =
-      null;
-
-
-  }
-);
-
-
-
-/* =========================================
-   SAVE PHOTO
-   ========================================= */
-
-
-savePhotoButton.addEventListener(
-  "click",
-  () => {
-
-
-    if (
-      !finishedPhotoURL
-    ) {
-
-      return;
-
-    }
-
-
-
-    const link =
-      document.createElement(
-        "a"
-      );
-
-
-    const today =
-      new Date();
-
-
-
-    const filename =
-
-      "the-hook-" +
-
-      today
-        .getFullYear() +
-
-      "-" +
-
-      String(
-        today.getMonth() + 1
-      )
-      .padStart(
-        2,
-        "0"
-      ) +
-
-      "-" +
-
-      String(
-        today.getDate()
-      )
-      .padStart(
-        2,
-        "0"
-      ) +
-
-      ".png";
-
-
-
-    link.href =
-      finishedPhotoURL;
-
-
-    link.download =
-      filename;
-
-
-
-    document.body
-      .appendChild(
-        link
-      );
-
-
-    link.click();
-
-
-    link.remove();
-
-
-  }
-);
-
-
-</script>
-
+  </script>
 
 </body>
-
 </html>
