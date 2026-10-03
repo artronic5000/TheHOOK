@@ -118,26 +118,22 @@
       pointer-events: none;
     }
 
-   .bubble {
+  .bubble {
   position: absolute;
-
-  width: 18px;
-  height: 18px;
 
   border-radius: 50%;
 
-  /* VERY THIN WHITE BUBBLE EDGE */
-  border: 1px solid rgba(255, 255, 255, 0.75);
+  /* thin but brighter white rim */
+  border: 1.5px solid rgba(255, 255, 255, 0.90);
 
-  /* CLEAR INSIDE */
-  background: rgba(255, 255, 255, 0.03);
+  /* still transparent, but more visible */
+  background: rgba(255, 255, 255, 0.10);
 
-  /* VERY SUBTLE SHINE */
   box-shadow:
-    inset 2px 2px 2px rgba(255, 255, 255, 0.22),
-    0 0 3px rgba(255, 255, 255, 0.15);
+    inset 3px 3px 3px rgba(255, 255, 255, 0.38),
+    0 0 4px rgba(255, 255, 255, 0.22);
 
-  animation: floatBubble 2.8s ease-out forwards;
+  animation: floatBubble 3.2s ease-out forwards;
 }
 
     @keyframes floatBubble {
@@ -385,7 +381,47 @@
 
 
       bubbleLayer.appendChild(bubble);
+/* RANDOM BUBBLE POP */
 
+const willPop = Math.random() < 0.65;
+
+if (willPop) {
+
+  const popTime =
+    900 + Math.random() * 1600;
+
+  setTimeout(() => {
+
+    if (!bubble.isConnected) return;
+
+    bubble.style.animation = "none";
+
+    bubble.animate(
+      [
+        {
+          transform: "scale(1)",
+          opacity: 1
+        },
+
+        {
+          transform: "scale(1.25)",
+          opacity: 0
+        }
+      ],
+      {
+        duration: 120,
+        easing: "ease-out",
+        fill: "forwards"
+      }
+    );
+
+    setTimeout(() => {
+      bubble.remove();
+    }, 130);
+
+  }, popTime);
+
+}
 
       setTimeout(() => {
         bubble.remove();
@@ -403,11 +439,11 @@
       .getElementById("bubbleButton")
       .addEventListener("click", () => {
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 6; i++) {
 
           setTimeout(() => {
             makeBubble();
-          }, i * 80);
+          }, i * 180);
 
         }
 
