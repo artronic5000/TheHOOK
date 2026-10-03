@@ -265,95 +265,30 @@ button:active {
     0 4px 12px
     rgba(0,0,0,.4);
 }
-/* =========================
-   TIP POPUP
-   ========================= */
+<!-- =========================
+     TIP INFO IMAGE POPUP
+     ========================= -->
 
-#tipOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 5000;
+<div id="tipOverlay">
 
-  display: none;
-  justify-content: center;
-  align-items: center;
+  <div id="tipImageBox">
 
-  background:
-    rgba(0,0,0,.72);
-}
+    <img
+      id="tipInfoImage"
+      src="./tipinfo.png"
+      alt="Tip The Hook"
+    >
 
-#tipBox {
-  width: min(82vw,330px);
+    <button
+      id="closeTipButton"
+      type="button"
+    >
+      CLOSE
+    </button>
 
-  padding: 28px 22px;
+  </div>
 
-  text-align: center;
-
-  color: #fff5e6;
-
-  background:
-    rgba(20,20,20,.96);
-
-  border:
-    2px solid #cf6537;
-
-  border-radius: 24px;
-
-  box-shadow:
-    0 8px 30px
-    rgba(0,0,0,.55);
-}
-
-#tipThankYou {
-  font-size: 24px;
-  font-weight: bold;
-  letter-spacing: 2px;
-  margin-bottom: 18px;
-}
-
-#tipFind {
-  font-size: 17px;
-  font-weight: bold;
-  letter-spacing: 2px;
-  line-height: 1.35;
-}
-
-#tipOr {
-  margin: 14px 0;
-  font-size: 13px;
-  opacity: .75;
-}
-
-#tipTransfer {
-  margin-bottom: 7px;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-#emailButton {
-  font-size: 12px;
-  padding: 10px 12px;
-}
-
-#copiedMessage {
-  min-height: 18px;
-  margin-top: 8px;
-
-  color: #fff5e6;
-
-  font-size: 11px;
-  font-weight: bold;
-
-  opacity: 0;
-}
-
-#closeTipButton {
-  margin-top: 15px;
-  background: rgba(0,0,0,.55);
-}
-
-
+</div>
 /* =========================
    COUNTDOWN
    ========================= */
@@ -545,88 +480,173 @@ a-scene {
      BOTTOM CONTROL BAR
      ========================= -->
 
-<div id="controls">
+/* =========================
+   ANIMATED TIP KITTY
+   ========================= */
 
-  <!-- CLICK KITTY / TIP JAR -->
-  <button
-    id="kittyButton"
-    type="button"
-  >
-    <img
-      id="kittyImage"
-      src="./tip1.png"
-      alt="Tip The Hook"
-    >
-    <span>CLICK KITTY</span>
-  </button>
+#kittyImage {
+  width: 58px;
+  height: 58px;
 
+  object-fit: contain;
 
-  <!-- BUBBLES -->
-  <button
-    id="bubbleButton"
-    type="button"
-  >
-    BUBBLES
-  </button>
+  transform-origin: 50% 85%;
+
+  filter:
+    drop-shadow(
+      0 3px 5px
+      rgba(0,0,0,.6)
+    );
+
+  animation:
+    kittyIdle 2.4s ease-in-out infinite;
+}
 
 
-  <!-- PHOTO -->
-  <button
-    id="photoButton"
-    type="button"
-  >
-    📷 PHOTO
-  </button>
+@keyframes kittyIdle {
 
-</div>
+  0% {
+    transform:
+      translateY(0)
+      rotate(0deg)
+      scale(1);
+  }
 
-<!-- =========================
-     TIP POPUP
-     ========================= -->
+  25% {
+    transform:
+      translateY(-4px)
+      rotate(-3deg)
+      scale(1.03);
+  }
 
-<div id="tipOverlay">
+  50% {
+    transform:
+      translateY(0)
+      rotate(0deg)
+      scale(1);
+  }
 
-  <div id="tipBox">
+  75% {
+    transform:
+      translateY(-3px)
+      rotate(3deg)
+      scale(1.03);
+  }
 
-    <div id="tipThankYou">
-      THANK YOU!
-    </div>
+  100% {
+    transform:
+      translateY(0)
+      rotate(0deg)
+      scale(1);
+  }
+}
 
-    <div id="tipFind">
-      FIND THE KITTY
-      <br>
-      ON STAGE
-    </div>
 
-    <div id="tipOr">
-      or
-    </div>
+/* A little extra movement when tapped */
 
-    <div id="tipTransfer">
-      E-TRANSFER:
-    </div>
+#kittyImage.kittyClicked {
+  animation:
+    kittyClick .55s ease-out;
+}
 
-    <button
-      id="emailButton"
-      type="button"
-    >
-      thehooksechelt@gmail.com
-    </button>
 
-    <div id="copiedMessage">
-      EMAIL COPIED ✓
-    </div>
+@keyframes kittyClick {
 
-    <button
-      id="closeTipButton"
-      type="button"
-    >
-      CLOSE
-    </button>
+  0% {
+    transform:
+      scale(1)
+      rotate(0deg);
+  }
 
-  </div>
+  30% {
+    transform:
+      scale(1.20)
+      rotate(-8deg);
+  }
 
-</div>
+  60% {
+    transform:
+      scale(.92)
+      rotate(7deg);
+  }
+
+  100% {
+    transform:
+      scale(1)
+      rotate(0deg);
+  }
+}
+
+
+/* =========================
+   TIP IMAGE POPUP
+   ========================= */
+
+#tipOverlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 5000;
+
+  display: none;
+
+  justify-content: center;
+  align-items: center;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  background:
+    rgba(0,0,0,.78);
+}
+
+
+#tipImageBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: min(90vw, 430px);
+}
+
+
+#tipInfoImage {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  max-height: 72vh;
+
+  object-fit: contain;
+
+  filter:
+    drop-shadow(
+      0 8px 25px
+      rgba(0,0,0,.65)
+    );
+}
+
+
+#closeTipButton {
+  margin-top: 14px;
+
+  padding: 11px 22px;
+
+  border:
+    2px solid #fff5e6;
+
+  border-radius: 24px;
+
+  background: #cf6537;
+
+  color: #fff5e6;
+
+  font-weight: bold;
+
+  letter-spacing: 1px;
+}
 
 
 <!-- =========================
@@ -956,78 +976,77 @@ kittyButton.addEventListener(
   "click",
   () => {
 
-    if (kittyRunning) {
-      return;
-    }
+    /* Stop idle animation and do quick click animation */
 
-    kittyRunning = true;
+    kittyImage.classList.add(
+      "kittyClicked"
+    );
 
-    kittyImage.src =
-      "./tip1.png";
 
+    /* Open tip information after the little bounce */
 
     setTimeout(
       () => {
 
-        kittyImage.src =
-          "./tip2.png";
+        tipOverlay.style.display =
+          "flex";
 
       },
       350
     );
 
 
-    setTimeout(
-      () => {
-
-        kittyImage.src =
-          "./tip3.png";
-
-      },
-      700
-    );
-
+    /* Return kitty to normal idle animation */
 
     setTimeout(
       () => {
 
-        kittyImage.src =
-          "./tip4.png";
+        kittyImage.classList.remove(
+          "kittyClicked"
+        );
 
       },
-      1120
-    );
-
-
-    setTimeout(
-      () => {
-
-        kittyImage.src =
-          "./tip5.png";
-
-      },
-      1540
-    );
-
-
-    setTimeout(
-      () => {
-
-        kittyImage.src =
-          "./tip1.png";
-
-        kittyRunning = false;
-
-        tipOverlay.style.display =
-          "flex";
-
-      },
-      2040
+      600
     );
 
   }
 );
 
+
+/* CLOSE TIP IMAGE */
+
+document
+  .getElementById(
+    "closeTipButton"
+  )
+  .addEventListener(
+    "click",
+    () => {
+
+      tipOverlay.style.display =
+        "none";
+
+    }
+  );
+
+
+/* Tap dark area outside image to close */
+
+tipOverlay.addEventListener(
+  "click",
+  event => {
+
+    if (
+      event.target === tipOverlay
+    ) {
+
+      tipOverlay.style.display =
+        "none";
+
+    }
+
+  }
+);
 
 /* =========================================
    TIP POPUP
