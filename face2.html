@@ -226,7 +226,8 @@
         id="flowerGraphic"
         src="./bubblesAMPflower.png"
       />
-
+<img id="hairAsset" src="./hair.png" crossorigin="anonymous">
+      
     </a-assets>
 
 
@@ -251,28 +252,35 @@
          each piece independently.
          ================================================== -->
 
-    <a-entity
-      mindar-face-target="anchorIndex: 10"
-    >
+ <!-- ==================================================
+     HAIR + CAT EARS + FLOWER
+     ================================================== -->
 
-      <a-image
-        src="#flowerGraphic"
+<a-entity
+  id="hairAnchor"
+  mindar-face-target="anchorIndex: 10"
+>
 
-        position="-0.90 .25 0.05"
+  <a-image
+    id="hairOverlay"
 
-        width="0.55"
-        height="0.55"
+    src="#hairAsset"
 
-        material="
-          shader: flat;
-          transparent: true;
-          side: double;
-          depthWrite: false;
-        "
-      >
-      </a-image>
+    position="0 0.32 0.04"
 
-    </a-entity>
+    width="1.75"
+    height="1.75"
+
+    material="
+      shader: flat;
+      transparent: true;
+      side: double;
+      depthWrite: false;
+    "
+  >
+  </a-image>
+
+</a-entity>
 
 
     <!-- ==================================================
