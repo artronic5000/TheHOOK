@@ -179,49 +179,92 @@ button:active {
 
 
 /* =========================
-   CLICK KITTY
+   BOTTOM CONTROL BAR
    ========================= */
 
-#kittyPanel {
+#controls {
   position: fixed;
-  left: 18px;
-  bottom: 82px;
+
+  left: 10px;
+  right: 10px;
+  bottom: 18px;
+
   z-index: 2000;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 14px;
 }
+
+
+/* =========================
+   CLICK KITTY
+   ========================= */
 
 #kittyButton {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 3px;
 
-  padding: 5px 8px;
+  gap: 1px;
+
+  padding: 0 6px;
 
   border: none;
   background: transparent;
 
+  box-shadow: none;
+
   color: #fff5e6;
 
-  font-size: 10px;
+  font-size: 9px;
   font-weight: bold;
   letter-spacing: 1px;
-
-  box-shadow: none;
 }
 
+
 #kittyImage {
-  width: 82px;
-  height: 82px;
+  width: 58px;
+  height: 58px;
+
   object-fit: contain;
 
   filter:
     drop-shadow(
       0 3px 5px
-      rgba(0,0,0,.55)
+      rgba(0,0,0,.6)
     );
 }
 
 
+/* =========================
+   BUBBLE + PHOTO BUTTONS
+   ========================= */
+
+#bubbleButton,
+#photoButton {
+  min-width: 92px;
+
+  padding: 12px 14px;
+
+  border: 2px solid #fff5e6;
+
+  border-radius: 24px;
+
+  background: #cf6537;
+  color: #fff5e6;
+
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+
+  box-shadow:
+    0 4px 12px
+    rgba(0,0,0,.4);
+}
 /* =========================
    TIP POPUP
    ========================= */
@@ -499,30 +542,43 @@ a-scene {
 
 
 <!-- =========================
-     CLICK KITTY
+     BOTTOM CONTROL BAR
      ========================= -->
 
-<div id="kittyPanel">
+<div id="controls">
 
+  <!-- CLICK KITTY / TIP JAR -->
   <button
     id="kittyButton"
     type="button"
   >
-
     <img
       id="kittyImage"
       src="./tip1.png"
       alt="Tip The Hook"
     >
+    <span>CLICK KITTY</span>
+  </button>
 
-    <span>
-      CLICK KITTY
-    </span>
 
+  <!-- BUBBLES -->
+  <button
+    id="bubbleButton"
+    type="button"
+  >
+    BUBBLES
+  </button>
+
+
+  <!-- PHOTO -->
+  <button
+    id="photoButton"
+    type="button"
+  >
+    📷 PHOTO
   </button>
 
 </div>
-
 
 <!-- =========================
      TIP POPUP
