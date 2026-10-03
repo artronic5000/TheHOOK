@@ -17,6 +17,7 @@
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
 
   <style>
+
     html,
     body {
       margin: 0;
@@ -28,14 +29,17 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    /* -------------------------------
+
+    /* =========================================
        TOP TITLE
-       ------------------------------- */
+       ========================================= */
 
     #title {
       position: fixed;
+
       top: 18px;
       left: 50%;
+
       transform: translateX(-50%);
 
       z-index: 1000;
@@ -57,25 +61,83 @@
       pointer-events: none;
     }
 
-    /* -------------------------------
+
+    /* =========================================
+       BACK BUTTON
+       ========================================= */
+
+    #backButton {
+      position: fixed;
+
+      top: 18px;
+      left: 16px;
+
+      z-index: 2000;
+
+      border: 2px solid #fff5e6;
+
+      background: rgba(0, 0, 0, 0.70);
+      color: #fff5e6;
+
+      padding: 10px 14px;
+
+      border-radius: 22px;
+
+      font-size: 13px;
+      font-weight: bold;
+
+      letter-spacing: 1px;
+    }
+
+
+    /* =========================================
+       CAMERA FLIP BUTTON
+       ========================================= */
+
+    #cameraButton {
+      position: fixed;
+
+      top: 18px;
+      right: 16px;
+
+      z-index: 2000;
+
+      border: 2px solid #fff5e6;
+
+      background: rgba(0, 0, 0, 0.70);
+      color: #fff5e6;
+
+      padding: 10px 14px;
+
+      border-radius: 22px;
+
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+
+    /* =========================================
        BOTTOM CONTROLS
-       ------------------------------- */
+       ========================================= */
 
     #controls {
       position: fixed;
 
       left: 0;
       right: 0;
+
       bottom: 25px;
 
-      z-index: 1000;
+      z-index: 2000;
 
       display: flex;
+
       justify-content: center;
       align-items: center;
 
-      gap: 14px;
+      gap: 12px;
     }
+
 
     button {
       appearance: none;
@@ -86,25 +148,28 @@
       background: #cf6537;
       color: #fff5e6;
 
-      padding: 12px 19px;
+      padding: 12px 17px;
 
       border-radius: 24px;
 
-      font-size: 13px;
+      font-size: 12px;
       font-weight: bold;
 
       letter-spacing: 1px;
 
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.4);
     }
+
 
     button:active {
       transform: scale(0.96);
     }
 
-    /* -------------------------------
-       BUBBLES
-       ------------------------------- */
+
+    /* =========================================
+       BUBBLE LAYER
+       ========================================= */
 
     #bubbleLayer {
       position: fixed;
@@ -118,127 +183,273 @@
       pointer-events: none;
     }
 
-/* -------------------------------
-   BUBBLES
-   ------------------------------- */
 
-.bubble {
-  position: absolute;
+    /* =========================================
+       BUBBLES
+       ========================================= */
 
-  border-radius: 50%;
+    .bubble {
+      position: absolute;
 
-  border: 1.5px solid rgba(255, 255, 255, 0.90);
+      border-radius: 50%;
 
-  background: rgba(255, 255, 255, 0.10);
+      border:
+        1.5px solid
+        rgba(255, 255, 255, 0.90);
 
-  box-shadow:
-    inset 3px 3px 3px rgba(255, 255, 255, 0.38),
-    0 0 4px rgba(255, 255, 255, 0.22);
+      background:
+        rgba(255, 255, 255, 0.10);
 
-  animation: floatBubble 3.2s ease-out forwards;
-}
+      box-shadow:
+        inset 3px 3px 3px
+        rgba(255, 255, 255, 0.38),
 
+        0 0 4px
+        rgba(255, 255, 255, 0.22);
 
-/* LITTLE RING WHEN BUBBLE POPS */
-
-.pop-ring {
-  position: fixed;
-
-  border-radius: 50%;
-
-  border: 1.5px solid rgba(255, 255, 255, 0.9);
-
-  background: transparent;
-
-  pointer-events: none;
-
-  z-index: 801;
-
-  animation: bubblePopRing 220ms ease-out forwards;
-}
+      animation:
+        floatBubble 3.2s ease-out forwards;
+    }
 
 
-@keyframes bubblePopRing {
+    /* =========================================
+       BUBBLE POP RING
+       ========================================= */
 
-  0% {
-    opacity: 1;
-    transform: scale(0.7);
-  }
+    .pop-ring {
+      position: fixed;
 
-  60% {
-    opacity: 0.8;
-  }
+      border-radius: 50%;
 
-  100% {
-    opacity: 0;
-    transform: scale(1.45);
-  }
-}
+      border:
+        1.5px solid
+        rgba(255, 255, 255, 0.9);
+
+      background: transparent;
+
+      pointer-events: none;
+
+      z-index: 801;
+
+      animation:
+        bubblePopRing 220ms ease-out forwards;
+    }
 
 
-@keyframes floatBubble {
+    @keyframes bubblePopRing {
 
-  0% {
-    opacity: 0;
+      0% {
+        opacity: 1;
+        transform: scale(0.7);
+      }
 
-    transform:
-      translate(0, 0)
-      scale(0.35);
-  }
+      60% {
+        opacity: 0.8;
+      }
 
-  12% {
-    opacity: 1;
-  }
+      100% {
+        opacity: 0;
+        transform: scale(1.45);
+      }
 
-  100% {
-    opacity: 0;
+    }
 
-    transform:
-      translate(
-        var(--drift),
-        var(--rise)
-      )
-      scale(1.35);
-  }
-}
 
-    /* MindAR/A-Frame needs the scene full screen */
+    @keyframes floatBubble {
+
+      0% {
+        opacity: 0;
+
+        transform:
+          translate(0, 0)
+          scale(0.35);
+      }
+
+      12% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+
+        transform:
+          translate(
+            var(--drift),
+            var(--rise)
+          )
+          scale(1.35);
+      }
+
+    }
+
+
+    /* =========================================
+       CLICK KITTY
+       ========================================= */
+
+    #kittyPanel {
+      position: fixed;
+
+      left: 18px;
+      bottom: 82px;
+
+      z-index: 2000;
+
+      display: flex;
+      flex-direction: column;
+
+      align-items: center;
+
+      gap: 4px;
+    }
+
+
+    #kittyImage {
+      width: 82px;
+      height: 82px;
+
+      object-fit: contain;
+
+      cursor: pointer;
+
+      filter:
+        drop-shadow(
+          0 3px 5px
+          rgba(0, 0, 0, 0.55)
+        );
+    }
+
+
+    #kittyText {
+      color: #fff5e6;
+
+      background:
+        rgba(0, 0, 0, 0.68);
+
+      border:
+        1px solid #cf6537;
+
+      border-radius: 15px;
+
+      padding: 5px 9px;
+
+      font-size: 10px;
+      font-weight: bold;
+
+      letter-spacing: 1px;
+
+      pointer-events: none;
+    }
+
+
+    /* MindAR scene full screen */
 
     a-scene {
       position: fixed !important;
       inset: 0 !important;
     }
+
   </style>
 </head>
 
 
 <body>
 
+
+  <!-- =========================================
+       TITLE
+       ========================================= -->
+
   <div id="title">
     THE HOOK • FACE FILTER
   </div>
 
 
+  <!-- =========================================
+       BACK
+       ========================================= -->
+
+  <button
+    id="backButton"
+    type="button"
+  >
+    ← BACK
+  </button>
+
+
+  <!-- =========================================
+       CAMERA FLIP
+       ========================================= -->
+
+  <button
+    id="cameraButton"
+    type="button"
+  >
+    ↻
+  </button>
+
+
+  <!-- =========================================
+       BUBBLES
+       ========================================= -->
+
   <div id="bubbleLayer"></div>
 
 
+  <!-- =========================================
+       CLICK KITTY
+       ========================================= -->
+
+  <div id="kittyPanel">
+
+    <img
+      id="kittyImage"
+      src="./tip1.png"
+      alt="Click Kitty"
+    >
+
+    <div id="kittyText">
+      CLICK KITTY
+    </div>
+
+  </div>
+
+
+  <!-- =========================================
+       BOTTOM BUTTONS
+       ========================================= -->
+
   <div id="controls">
 
-    <button id="bubbleButton">
+    <button
+      id="bubbleButton"
+      type="button"
+    >
       BUBBLES
     </button>
 
   </div>
 
 
-  <!-- ==================================================
-       FACE FILTER
-       ================================================== -->
 
- <a-scene
-  mindar-face="autoStart: true; uiLoading: no; uiScanning: no; uiError: no;"
-  embedded
-  color-space="sRGB"
+  <!-- =========================================
+       FACE FILTER
+       ========================================= -->
+
+  <a-scene
+
+    id="faceScene"
+
+    mindar-face="
+      autoStart: true;
+      uiLoading: no;
+      uiScanning: no;
+      uiError: no;
+    "
+
+    embedded
+
+    color-space="sRGB"
 
     renderer="
       colorManagement: true;
@@ -248,33 +459,37 @@
 
     vr-mode-ui="enabled: false"
 
-    device-orientation-permission-ui="enabled: false"
+    device-orientation-permission-ui="
+      enabled: false
+    "
   >
 
 
-    <!-- ==================================================
+    <!-- =========================================
          ASSETS
-         ================================================== -->
+         ========================================= -->
 
-  <a-assets>
+    <a-assets>
 
-  <img
-    id="earsGraphic"
-    src="./ears.png"
-    crossorigin="anonymous"
-  />
+      <img
+        id="earsGraphic"
+        src="./ears.png"
+        crossorigin="anonymous"
+      />
 
-  <img
-    id="mouthGraphic"
-    src="./mouth.png"
-    crossorigin="anonymous"
-  />
+      <img
+        id="mouthGraphic"
+        src="./mouth.png"
+        crossorigin="anonymous"
+      />
 
-</a-assets>
+    </a-assets>
 
-    <!-- ==================================================
+
+
+    <!-- =========================================
          CAMERA
-         ================================================== -->
+         ========================================= -->
 
     <a-camera
       active="true"
@@ -283,96 +498,212 @@
     </a-camera>
 
 
-   <!-- ==============================
-     CAT EARS
-     ============================== -->
 
-<a-entity
-  id="earsAnchor"
-  mindar-face-target="anchorIndex: 10"
->
+    <!-- =========================================
+         CAT EARS
+         ========================================= -->
 
-  <a-image
-    id="earsOverlay"
-    src="#earsGraphic"
+    <a-entity
+      id="earsAnchor"
+      mindar-face-target="anchorIndex: 10"
+    >
 
-    position="-.3 0.25 0.04"
+      <a-image
+        id="earsOverlay"
 
-    width="1.15"
-    height="0.65"
+        src="#earsGraphic"
 
-    material="
-      shader: flat;
-      transparent: true;
-      side: double;
-      depthWrite: false;
-    "
-  >
-  </a-image>
+        position="-.3 0.25 0.04"
 
-</a-entity>
-   
-<!-- ==============================
-     MOUTH + WHISKERS
-     ============================== -->
+        width="1.15"
+        height="0.65"
 
-<a-entity
-  id="mouthAnchor"
-  mindar-face-target="anchorIndex: 1"
->
+        material="
+          shader: flat;
+          transparent: true;
+          side: double;
+          depthWrite: false;
+        "
+      >
+      </a-image>
 
-  <a-image
-    id="mouthOverlay"
-    src="#mouthGraphic"
+    </a-entity>
 
-    position="-.25 -0.20 0.06"
 
-    width="1.65"
-    height="0.59"
-    material="
-      shader: flat;
-      transparent: true;
-      side: double;
-      depthWrite: false;
-    "
-  >
-  </a-image>
 
-</a-entity>
+    <!-- =========================================
+         MOUTH + WHISKERS + CIGARETTE
+         ========================================= -->
+
+    <a-entity
+      id="mouthAnchor"
+      mindar-face-target="anchorIndex: 1"
+    >
+
+      <a-image
+        id="mouthOverlay"
+
+        src="#mouthGraphic"
+
+        position="-.25 -0.20 0.06"
+
+        width="1.65"
+        height="0.59"
+
+        material="
+          shader: flat;
+          transparent: true;
+          side: double;
+          depthWrite: false;
+        "
+      >
+      </a-image>
+
+    </a-entity>
+
 
   </a-scene>
 
 
+
   <script>
 
-    /* ==================================================
-       BUBBLE EFFECT
-
-       These are screen-space bubbles.
-       They appear primarily from the right side of
-       the face, approximately where the cigarette
-       tip appears.
-
-       Once we see it on your actual phone we can
-       fine-tune the origin.
-       ================================================== */
+    /* =========================================
+       ELEMENTS
+       ========================================= */
 
     const bubbleLayer =
-      document.getElementById("bubbleLayer");
+      document.getElementById(
+        "bubbleLayer"
+      );
 
+
+    const scene =
+      document.getElementById(
+        "faceScene"
+      );
+
+
+    /* =========================================
+       BACK BUTTON
+       ========================================= */
+
+    document
+      .getElementById("backButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          window.location.href =
+            "./index.html";
+
+        }
+      );
+
+
+
+    /* =========================================
+       CLICK KITTY ANIMATION
+
+       Uses:
+       tip1.png
+       tip2.png
+       tip3.png
+       tip4.png
+       tip5.png
+       ========================================= */
+
+    const kittyImage =
+      document.getElementById(
+        "kittyImage"
+      );
+
+
+    const kittyFrames = [
+
+      "./tip1.png",
+      "./tip2.png",
+      "./tip3.png",
+      "./tip4.png",
+      "./tip5.png"
+
+    ];
+
+
+    let kittyRunning = false;
+
+
+    kittyImage.addEventListener(
+      "click",
+      () => {
+
+        if (kittyRunning) return;
+
+        kittyRunning = true;
+
+        let frame = 0;
+
+
+        const kittyTimer =
+          setInterval(() => {
+
+            kittyImage.src =
+              kittyFrames[frame];
+
+            frame++;
+
+
+            if (
+              frame >=
+              kittyFrames.length
+            ) {
+
+              clearInterval(
+                kittyTimer
+              );
+
+              setTimeout(() => {
+
+                kittyImage.src =
+                  kittyFrames[0];
+
+                kittyRunning =
+                  false;
+
+              }, 450);
+
+            }
+
+          }, 220);
+
+      }
+    );
+
+
+
+    /* =========================================
+       BUBBLE CREATOR
+       ========================================= */
 
     function makeBubble() {
 
+
       const bubble =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
-      bubble.className = "bubble";
+
+      bubble.className =
+        "bubble";
 
 
-      /* random bubble size */
+      /* RANDOM BUBBLE SIZE */
 
       const size =
-       28 + Math.random() * 42;
+        28 +
+        Math.random() * 42;
+
 
       bubble.style.width =
         size + "px";
@@ -381,69 +712,127 @@
         size + "px";
 
 
-  /* =========================================
-   BUBBLES FOLLOW THE CIGARETTE TIP
-   ========================================= */
 
-const mouth =
-  document.getElementById("mouthOverlay");
+      /* =====================================
+         FOLLOW CIGARETTE TIP
+         ===================================== */
 
-const mouthObject =
-  mouth.object3D;
-
-const tipPosition =
-  new THREE.Vector3();
-
-/*
-  Position of cigarette tip RELATIVE
-  to the centre of mouth.png.
-
-  We can fine-tune these two numbers.
-*/
-
-tipPosition.set(
-  0.72,   // left/right
-  -0.05,  // up/down
-  0
-);
+      const mouth =
+        document.getElementById(
+          "mouthOverlay"
+        );
 
 
-/* Convert that point into world position */
-
-mouthObject.localToWorld(tipPosition);
-
-
-/* Convert world position to screen position */
-
-const camera =
-  document.querySelector("a-camera")
-    .getObject3D("camera");
-
-tipPosition.project(camera);
+      const cameraElement =
+        document.querySelector(
+          "a-camera"
+        );
 
 
-const startX =
-  (tipPosition.x * 0.5 + 0.5)
-  * window.innerWidth;
+      if (
+        !mouth ||
+        !mouth.object3D ||
+        !cameraElement
+      ) {
+        return;
+      }
 
-const startY =
-  (-tipPosition.y * 0.5 + 0.5)
-  * window.innerHeight;
+
+      const camera =
+        cameraElement.getObject3D(
+          "camera"
+        );
+
+
+      if (!camera) {
+        return;
+      }
+
+
+      const tipPosition =
+        new THREE.Vector3();
+
+
+      /*
+       CIGARETTE TIP LOCATION
+
+       First number = left/right
+       Second number = up/down
+      */
+
+      tipPosition.set(
+
+        0.72,
+
+        -0.05,
+
+        0
+
+      );
+
+
+      mouth
+        .object3D
+        .localToWorld(
+          tipPosition
+        );
+
+
+      tipPosition.project(
+        camera
+      );
+
+
+      const startX =
+
+        (
+          tipPosition.x *
+          0.5 +
+          0.5
+        )
+
+        *
+
+        window.innerWidth;
+
+
+      const startY =
+
+        (
+          -tipPosition.y *
+          0.5 +
+          0.5
+        )
+
+        *
+
+        window.innerHeight;
+
+
 
       bubble.style.left =
         startX + "px";
+
 
       bubble.style.top =
         startY + "px";
 
 
-      /* float upward/right */
+
+      /* =====================================
+         BUBBLE MOVEMENT
+         ===================================== */
 
       const drift =
-        35 + Math.random() * 100;
+        35 +
+        Math.random() * 100;
+
 
       const rise =
-        -(100 + Math.random() * 190);
+        -(
+          100 +
+          Math.random() * 190
+        );
 
 
       bubble.style.setProperty(
@@ -451,131 +840,261 @@ const startY =
         drift + "px"
       );
 
+
       bubble.style.setProperty(
         "--rise",
         rise + "px"
       );
 
 
-      bubbleLayer.appendChild(bubble);
-/* =========================================
-   RANDOM BUBBLE POP
-   ========================================= */
-
-const willPop =
-  Math.random() < 0.65;
-
-if (willPop) {
-
-  const popTime =
-    900 + Math.random() * 1600;
-
-  setTimeout(() => {
-
-    if (!bubble.isConnected) return;
+      bubbleLayer.appendChild(
+        bubble
+      );
 
 
-    /* GET BUBBLE POSITION BEFORE REMOVING IT */
 
-    const rect =
-      bubble.getBoundingClientRect();
+      /* =====================================
+         RANDOM POP
+         ===================================== */
 
-
-    /* CREATE THE LITTLE POP RING */
-
-    const ring =
-      document.createElement("div");
-
-    ring.className =
-      "pop-ring";
-
-    ring.style.width =
-      rect.width + "px";
-
-    ring.style.height =
-      rect.height + "px";
-
-    ring.style.left =
-      rect.left + "px";
-
-    ring.style.top =
-      rect.top + "px";
+      const willPop =
+        Math.random() < 0.65;
 
 
-    bubbleLayer.appendChild(ring);
+      if (willPop) {
 
 
-    /* POP THE ACTUAL BUBBLE */
+        const popTime =
 
-    bubble.style.animation =
-      "none";
+          900 +
 
-    bubble.animate(
-      [
-        {
-          transform: "scale(1)",
-          opacity: 1
-        },
-
-        {
-          transform: "scale(1.18)",
-          opacity: 0
-        }
-      ],
-      {
-        duration: 100,
-        easing: "ease-out",
-        fill: "forwards"
-      }
-    );
+          Math.random() *
+          1600;
 
 
-    /* REMOVE BUBBLE */
-
-    setTimeout(() => {
-
-      bubble.remove();
-
-    }, 110);
+        setTimeout(() => {
 
 
-    /* REMOVE POP RING */
-
-    setTimeout(() => {
-
-      ring.remove();
-
-    }, 240);
+          if (
+            !bubble.isConnected
+          ) {
+            return;
+          }
 
 
-  }, popTime);
-
-} // END willPop
-
-
-} // END makeBubble
-
-    /* automatic bubbles OFF */
-/* bubbles only appear when BUBBLES button is pressed */
+          const rect =
+            bubble
+              .getBoundingClientRect();
 
 
-    /* BUBBLES button creates a burst */
 
-    document
-      .getElementById("bubbleButton")
-      .addEventListener("click", () => {
+          /* POP RING */
 
-        for (let i = 0; i < 6; i++) {
+          const ring =
+            document.createElement(
+              "div"
+            );
+
+
+          ring.className =
+            "pop-ring";
+
+
+          ring.style.width =
+            rect.width + "px";
+
+
+          ring.style.height =
+            rect.height + "px";
+
+
+          ring.style.left =
+            rect.left + "px";
+
+
+          ring.style.top =
+            rect.top + "px";
+
+
+          bubbleLayer.appendChild(
+            ring
+          );
+
+
+
+          /* POP BUBBLE */
+
+          bubble.style.animation =
+            "none";
+
+
+          bubble.animate(
+
+            [
+
+              {
+                transform:
+                  "scale(1)",
+
+                opacity: 1
+              },
+
+              {
+                transform:
+                  "scale(1.18)",
+
+                opacity: 0
+              }
+
+            ],
+
+            {
+              duration: 100,
+
+              easing:
+                "ease-out",
+
+              fill:
+                "forwards"
+            }
+
+          );
+
 
           setTimeout(() => {
-            makeBubble();
-          }, i * 180);
+
+            bubble.remove();
+
+          }, 110);
+
+
+          setTimeout(() => {
+
+            ring.remove();
+
+          }, 240);
+
+
+        }, popTime);
+
+      }
+
+
+
+      /* REMOVE SURVIVING BUBBLE */
+
+      setTimeout(() => {
+
+        if (
+          bubble.isConnected
+        ) {
+
+          bubble.remove();
 
         }
 
-      });
+      }, 3300);
+
+
+    }
+
+
+
+    /* =========================================
+       BUBBLES BUTTON
+       ========================================= */
+
+    document
+      .getElementById(
+        "bubbleButton"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+
+          for (
+            let i = 0;
+            i < 6;
+            i++
+          ) {
+
+
+            setTimeout(
+              () => {
+
+                makeBubble();
+
+              },
+
+              i * 180
+            );
+
+
+          }
+
+
+        }
+      );
+
+
+
+    /* =========================================
+       CAMERA FLIP
+
+       MindAR provides switchCamera().
+       ========================================= */
+
+    document
+      .getElementById(
+        "cameraButton"
+      )
+      .addEventListener(
+        "click",
+        async () => {
+
+
+          try {
+
+
+            const system =
+              scene.systems[
+                "mindar-face-system"
+              ];
+
+
+            if (
+              system &&
+              system.switchCamera
+            ) {
+
+
+              await system.switchCamera();
+
+
+            }
+
+
+          }
+
+          catch (error) {
+
+
+            console.log(
+              "Camera switch:",
+              error
+            );
+
+
+          }
+
+
+        }
+      );
+
 
   </script>
+
 
 </body>
 </html>
