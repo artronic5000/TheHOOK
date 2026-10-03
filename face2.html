@@ -2338,45 +2338,92 @@ async function createPolaroid() {
   }
 
 
-  /* =========================
-     DRAW SELFIE
-     ========================= */
+/* =========================
+   DRAW SELFIE - ZOOMED OUT
+   ========================= */
 
-  ctx.save();
+ctx.save();
 
+ctx.beginPath();
 
-  ctx.beginPath();
+ctx.rect(
+  photoX,
+  photoY,
+  photoW,
+  photoH
+);
 
-
-  ctx.rect(
-    photoX,
-    photoY,
-    photoW,
-    photoH
-  );
-
-
-  ctx.clip();
+ctx.clip();
 
 
-  ctx.drawImage(
+/*
+  SCALE THE SELFIE DOWN INSIDE THE POLAROID
 
-    illustratedSelfie,
+  0.78 = 78% of the old size.
 
-    csx,
-    csy,
-    csw,
-    csh,
+  Smaller number = MORE of you visible
+  Larger number = closer / more zoomed in
+*/
 
-    photoX,
-    photoY,
-    photoW,
-    photoH
-
-  );
+const selfieScale = 0.78;
 
 
-  ctx.restore();
+const drawW =
+  photoW * selfieScale;
+
+const drawH =
+  photoH * selfieScale;
+
+
+/*
+  Centre the smaller selfie
+*/
+
+const drawX =
+  photoX +
+  (photoW - drawW) / 2;
+
+const drawY =
+  photoY +
+  (photoH - drawH) / 2;
+
+
+/*
+  Fill behind it so reducing the selfie
+  doesn't leave transparent areas.
+*/
+
+ctx.fillStyle = "#111";
+
+ctx.fillRect(
+  photoX,
+  photoY,
+  photoW,
+  photoH
+);
+
+
+/*
+  Draw the illustrated selfie smaller
+*/
+
+ctx.drawImage(
+
+  illustratedSelfie,
+
+  csx,
+  csy,
+  csw,
+  csh,
+
+  drawX,
+  drawY,
+  drawW,
+  drawH
+
+);
+
+ctx.restore();
 
 
   /* =========================
