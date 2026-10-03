@@ -2219,65 +2219,21 @@ const photoH =
   screenCtx.restore();
 
 
-  /* =========================
-     DRAW LIVE AR FILTER
-     ========================= */
-
-  const aframeCanvas =
-    scene.canvas;
-
-
-  if (aframeCanvas) {
-
-    if (
-      scene.renderer &&
-      scene.object3D &&
-      scene.camera
-    ) {
-
-      scene.renderer.render(
-        scene.object3D,
-        scene.camera
-      );
-
-    }
-
-
-    screenCtx.drawImage(
-
-      aframeCanvas,
-
-      0,
-      0,
-      aframeCanvas.width,
-      aframeCanvas.height,
-
-      0,
-      0,
-      sw,
-      sh
-
-    );
-
-  }
+ 
 
 
   /* =========================
      MAKE ILLUSTRATED COPY
      ========================= */
 
-  const illustratedSelfie =
-    comicIllustrationFilter(
-      screenCanvas
-    );
-
+ 
 
   const illustratedW =
-    illustratedSelfie.width;
+    screenCanvas.width;
 
 
   const illustratedH =
-    illustratedSelfie.height;
+    screenCanvas.height;
 
 
   /* =========================
@@ -2409,7 +2365,7 @@ ctx.fillRect(
 
 ctx.drawImage(
 
-  illustratedSelfie,
+  screenCanvas,
 
   csx,
   csy,
