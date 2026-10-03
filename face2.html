@@ -215,15 +215,21 @@
          ASSETS
          ================================================== -->
 
-    <a-assets>
+  <a-assets>
 
-      <img
-        id="faceGraphic"
-        src="./bubblesAMPface.png"
-      />
-      
-    </a-assets>
+  <img
+    id="earsGraphic"
+    src="./ears.png"
+    crossorigin="anonymous"
+  />
 
+  <img
+    id="mouthGraphic"
+    src="./mouth.png"
+    crossorigin="anonymous"
+  />
+
+</a-assets>
 
     <!-- ==================================================
          CAMERA
@@ -236,38 +242,63 @@
     </a-camera>
 
 
+   <!-- ==============================
+     CAT EARS
+     ============================== -->
 
-    <!-- ==================================================
-         NOSE + WHISKERS + BUBBLE CIGARETTE
+<a-entity
+  id="earsAnchor"
+  mindar-face-target="anchorIndex: 10"
+>
 
-         Landmark 1 = nose region.
-         ================================================== -->
+  <a-image
+    id="earsOverlay"
+    src="#earsGraphic"
 
-    <a-entity
-      id="faceFilterAnchor"
-      mindar-face-target="anchorIndex: 1"
-    >
+    position="0 0.30 0.04"
 
-      <a-image
-        id="faceFilterGraphic"
+    width="1.15"
+    height="0.65"
 
-        src="#faceGraphic"
+    material="
+      shader: flat;
+      transparent: true;
+      side: double;
+      depthWrite: false;
+    "
+  >
+  </a-image>
 
-        position=" -.4 .35 0.06"
+</a-entity>
+   
+<!-- ==============================
+     MOUTH + WHISKERS
+     ============================== -->
 
-        width="2"
-        height="2"
-        material="
-          shader: flat;
-          transparent: true;
-          side: double;
-          depthWrite: false;
-        "
-      >
-      </a-image>
+<a-entity
+  id="mouthAnchor"
+  mindar-face-target="anchorIndex: 1"
+>
 
-    </a-entity>
+  <a-image
+    id="mouthOverlay"
+    src="#mouthGraphic"
 
+    position="0 -0.10 0.06"
+
+    width="1.65"
+    height="0.59"
+
+    material="
+      shader: flat;
+      transparent: true;
+      side: double;
+      depthWrite: false;
+    "
+  >
+  </a-image>
+
+</a-entity>
 
   </a-scene>
 
