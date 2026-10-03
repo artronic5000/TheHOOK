@@ -2097,6 +2097,7 @@ photoButton.addEventListener(
   }
 );
 
+
 async function createPolaroid() {
 
   const outputSize = 1400;
@@ -2122,14 +2123,11 @@ async function createPolaroid() {
 
 
   /* =====================================
-     GET CAMERA + FILTER
+     GET LIVE CAMERA
      ===================================== */
 
   const video =
     document.querySelector("video");
-
-  const mouthOverlay =
-    document.getElementById("mouthOverlay");
 
   if (
     !video ||
@@ -2137,30 +2135,38 @@ async function createPolaroid() {
     !video.videoHeight
   ) {
 
-    alert("Camera is still loading. Try again.");
-    return;
+    alert(
+      "Camera is still loading. Try again."
+    );
 
+    return;
   }
 
 
   /* =====================================
-     SCREEN CANVAS
-     ===================================== */
+     CREATE A SCREEN-SHAPED COMPOSITE
 
-  const pixelRatio =
-    window.devicePixelRatio || 1;
+     This canvas combines:
+     CAMERA
+     +
+     A-FRAME FILTER
+     ===================================== */
 
   const screenCanvas =
     document.createElement("canvas");
 
   screenCanvas.width =
-    window.innerWidth * pixelRatio;
+    window.innerWidth *
+    window.devicePixelRatio;
 
   screenCanvas.height =
-    window.innerHeight * pixelRatio;
+    window.innerHeight *
+    window.devicePixelRatio;
+
 
   const screenCtx =
     screenCanvas.getContext("2d");
+
 
   const sw =
     screenCanvas.width;
@@ -2170,7 +2176,7 @@ async function createPolaroid() {
 
 
   /* =====================================
-     DRAW CAMERA
+     DRAW CAMERA AS IT APPEARS ON SCREEN
      ===================================== */
 
   const videoRatio =
@@ -2179,6 +2185,7 @@ async function createPolaroid() {
 
   const screenRatio =
     sw / sh;
+
 
   let sx = 0;
   let sy = 0;
@@ -2219,10 +2226,20 @@ async function createPolaroid() {
   }
 
 
+  /* MIRROR FRONT CAMERA */
+
   screenCtx.save();
 
-  screenCtx.translate(sw, 0);
-  screenCtx.scale(-1, 1);
+  screenCtx.translate(
+    sw,
+    0
+  );
+
+  screenCtx.scale(
+    -1,
+    1
+  );
+
 
   screenCtx.drawImage(
 
@@ -2240,49 +2257,38 @@ async function createPolaroid() {
 
   );
 
+
   screenCtx.restore();
 
 
   /* =====================================
-     HIDE MOUTH TEMPORARILY
-
-     We want ears in the base capture,
-     but NOT the mouth.
-
-     Mouth gets drawn later ON TOP
-     of the Polaroid.
+     NOW DRAW THE FILTER OVER THE CAMERA
      ===================================== */
-
-  const originalMouthVisible =
-    mouthOverlay.object3D.visible;
-
-  mouthOverlay.object3D.visible =
-    false;
-
-
-  /* =====================================
-     RENDER FILTER WITHOUT MOUTH
-     ===================================== */
-
-  if (
-    scene.renderer &&
-    scene.object3D &&
-    scene.camera
-  ) {
-
-    scene.renderer.render(
-      scene.object3D,
-      scene.camera
-    );
-
-  }
-
 
   const aframeCanvas =
     scene.canvas;
 
 
   if (aframeCanvas) {
+
+    /*
+      Force one fresh A-Frame render before
+      grabbing the canvas.
+    */
+
+    if (
+      scene.renderer &&
+      scene.object3D &&
+      scene.camera
+    ) {
+
+      scene.renderer.render(
+        scene.object3D,
+        scene.camera
+      );
+
+    }
+
 
     screenCtx.drawImage(
 
@@ -2304,36 +2310,38 @@ async function createPolaroid() {
 
 
   /* =====================================
-     RESTORE LIVE MOUTH IMMEDIATELY
+     PUT COMBINED SELFIE INTO POLAROID
      ===================================== */
 
-  mouthOverlay.object3D.visible =
-    originalMouthVisible;
+  ctx.save();
 
 
-  if (
-    scene.renderer &&
-    scene.object3D &&
-    scene.camera
-  ) {
+  ctx.beginPath();
 
-    scene.renderer.render(
-      scene.object3D,
-      scene.camera
-    );
+  ctx.rect(
+    photoX,
+    photoY,
+    photoW,
+    photoH
+  );
 
-  }
+  ctx.clip();
 
 
-  /* =====================================
-     CALCULATE SCREEN → POLAROID CROP
-     ===================================== */
+  /*
+    Crop the SCREEN composite rather than
+    cropping the raw video.
+
+    This is important because the face filter
+    now stays aligned with the person's face.
+  */
 
   const compositeRatio =
     sw / sh;
 
   const targetRatio =
     photoW / photoH;
+
 
   let csx = 0;
   let csy = 0;
@@ -2374,24 +2382,6 @@ async function createPolaroid() {
   }
 
 
-  /* =====================================
-     DRAW SELFIE INTO PHOTO OPENING
-     ===================================== */
-
-  ctx.save();
-
-  ctx.beginPath();
-
-  ctx.rect(
-    photoX,
-    photoY,
-    photoW,
-    photoH
-  );
-
-  ctx.clip();
-
-
   ctx.drawImage(
 
     screenCanvas,
@@ -2413,7 +2403,7 @@ async function createPolaroid() {
 
 
   /* =====================================
-     DRAW POLAROID + BAND CATS
+     POLAROID ART ON TOP
      ===================================== */
 
   const polaroid =
@@ -2446,132 +2436,6 @@ async function createPolaroid() {
     outputSize,
     outputSize
 
-  );
-
-
-  /* =====================================
-     NOW CAPTURE MOUTH ALONE
-
-     This gives us its REAL MindAR
-     position, scale and head rotation.
-     ===================================== */
-
-  const mouthCanvas =
-    document.createElement("canvas");
-
-  mouthCanvas.width =
-    sw;
-
-  mouthCanvas.height =
-    sh;
-
-  const mouthCtx =
-    mouthCanvas.getContext("2d");
-
-
-  /* hide ears */
-
-  const earsOverlay =
-    document.getElementById(
-      "earsOverlay"
-    );
-
-  const originalEarsVisible =
-    earsOverlay.object3D.visible;
-
-
-  earsOverlay.object3D.visible =
-    false;
-
-  mouthOverlay.object3D.visible =
-    true;
-
-
-  /*
-    Clear the WebGL canvas before rendering
-    the mouth-only layer.
-  */
-
-  scene.renderer.setClearColor(
-    0x000000,
-    0
-  );
-
-  scene.renderer.clear();
-
-
-  scene.renderer.render(
-    scene.object3D,
-    scene.camera
-  );
-
-
-  /* copy transparent mouth render */
-
-  mouthCtx.drawImage(
-
-    scene.canvas,
-
-    0,
-    0,
-    scene.canvas.width,
-    scene.canvas.height,
-
-    0,
-    0,
-    sw,
-    sh
-
-  );
-
-
-  /* restore ears */
-
-  earsOverlay.object3D.visible =
-    originalEarsVisible;
-
-
-  /* =====================================
-     DRAW MOUTH OVER POLAROID
-
-     IMPORTANT:
-     NO CLIPPING HERE.
-
-     That lets the whiskers/cigarette
-     extend over the cats and frame.
-     ===================================== */
-
-  ctx.drawImage(
-
-    mouthCanvas,
-
-    csx,
-    csy,
-    csw,
-    csh,
-
-    photoX,
-    photoY,
-    photoW,
-    photoH
-
-  );
-
-
-  /* =====================================
-     RESTORE NORMAL LIVE FILTER
-     ===================================== */
-
-  mouthOverlay.object3D.visible =
-    originalMouthVisible;
-
-  earsOverlay.object3D.visible =
-    originalEarsVisible;
-
-
-  scene.renderer.render(
-    scene.object3D,
-    scene.camera
   );
 
 
@@ -2612,14 +2476,18 @@ async function createPolaroid() {
 
   ctx.save();
 
+
   ctx.fillStyle =
     "#111";
+
 
   ctx.font =
     "bold 30px Arial";
 
+
   ctx.textAlign =
     "left";
+
 
   ctx.textBaseline =
     "middle";
@@ -2640,7 +2508,7 @@ async function createPolaroid() {
 
 
   /* =====================================
-     FINISHED PHOTO
+     FINISHED POLAROID
      ===================================== */
 
   finishedPhotoURL =
