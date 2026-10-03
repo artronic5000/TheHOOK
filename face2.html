@@ -126,13 +126,13 @@
 
       border-radius: 50%;
 
-      border: 3px solid #e9ffff;
+      border: 3px solid rgba(233, 255, 255, 0.65);
 
-      background: rgba(0, 174, 205, 0.75);
+      background: rgba(0, 174, 205, 0.30);
 
       box-shadow:
-        inset 3px 3px 0 rgba(255, 255, 255, 0.75),
-        0 0 7px rgba(0, 220, 255, 0.45);
+        inset 3px 3px 0 rgba(255, 255, 255, 0.50),
+        0 0 7px rgba(0, 220, 255, 0.30);
 
       animation: floatBubble 2.8s ease-out forwards;
     }
@@ -331,7 +331,7 @@
       /* random bubble size */
 
       const size =
-        9 + Math.random() * 22;
+       18 + Math.random() * 32;
 
       bubble.style.width =
         size + "px";
@@ -351,7 +351,7 @@
         window.innerWidth * (0.64 + Math.random() * 0.06);
 
       const startY =
-        window.innerHeight * (0.7 + Math.random() * 0.07);
+        window.innerHeight * (0.65 + Math.random() * 0.07);
 
 
       bubble.style.left =
