@@ -773,6 +773,11 @@ a-scene {
     src="./sunglasses.png"
     crossorigin="anonymous"
   >
+  <img
+  id="cigyBubblesGraphic"
+  src="./cigybubbles.png"
+  crossorigin="anonymous"
+/>
 
   <img
     id="polaroidGraphic"
@@ -827,26 +832,18 @@ a-scene {
 </a-entity>
 
 
-<!-- MOUTH / WHISKERS / CIGARETTE -->
-
 <a-entity
   id="mouthAnchor"
-  mindar-face-target="
-    anchorIndex: 1
-  "
+  mindar-face-target="anchorIndex: 1"
 >
 
+  <!-- NOSE / WHISKERS / MOUTH -->
+
   <a-image
-
     id="mouthOverlay"
-
     src="#mouthGraphic"
 
-    position="
-      -.3
-      -0.20
-      0.06
-    "
+    position="-.25 -0.20 0.06"
 
     width="1.65"
     height="0.59"
@@ -857,7 +854,27 @@ a-scene {
       side: double;
       depthWrite: false;
     "
+  >
+  </a-image>
 
+
+  <!-- BUBBLE CIGARETTE -->
+
+  <a-image
+    id="cigyBubblesOverlay"
+    src="#cigyBubblesGraphic"
+
+    position="0.43 -0.25 0.07"
+
+    width="1.05"
+    height="0.70"
+
+    material="
+      shader: flat;
+      transparent: true;
+      side: double;
+      depthWrite: false;
+    "
   >
   </a-image>
 
