@@ -381,19 +381,54 @@
         size + "px";
 
 
-      /*
-       Start near centre-right of screen.
+  /* =========================================
+   BUBBLES FOLLOW THE CIGARETTE TIP
+   ========================================= */
 
-       This approximates the end of the cigarette
-       when the face is centred.
-      */
+const mouth =
+  document.getElementById("mouthOverlay");
 
-      const startX =
-        window.innerWidth * (0.64 + Math.random() * 0.06);
+const mouthObject =
+  mouth.object3D;
 
-      const startY =
-        window.innerHeight * (0.65 + Math.random() * 0.07);
+const tipPosition =
+  new THREE.Vector3();
 
+/*
+  Position of cigarette tip RELATIVE
+  to the centre of mouth.png.
+
+  We can fine-tune these two numbers.
+*/
+
+tipPosition.set(
+  0.72,   // left/right
+  -0.05,  // up/down
+  0
+);
+
+
+/* Convert that point into world position */
+
+mouthObject.localToWorld(tipPosition);
+
+
+/* Convert world position to screen position */
+
+const camera =
+  document.querySelector("a-camera")
+    .getObject3D("camera");
+
+tipPosition.project(camera);
+
+
+const startX =
+  (tipPosition.x * 0.5 + 0.5)
+  * window.innerWidth;
+
+const startY =
+  (-tipPosition.y * 0.5 + 0.5)
+  * window.innerHeight;
 
       bubble.style.left =
         startX + "px";
