@@ -118,7 +118,44 @@
       pointer-events: none;
     }
 
-  .bubble {
+  .bubble 
+    /* LITTLE RING CREATED WHEN A BUBBLE POPS */
+
+.pop-ring {
+  position: fixed;
+
+  border-radius: 50%;
+
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+
+  background: transparent;
+
+  pointer-events: none;
+
+  z-index: 801;
+
+  animation: bubblePopRing 220ms ease-out forwards;
+}
+
+
+@keyframes bubblePopRing {
+
+  0% {
+    opacity: 1;
+    transform: scale(0.7);
+  }
+
+  60% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+
+}
+    {
   position: absolute;
 
   border-radius: 50%;
@@ -381,9 +418,12 @@
 
 
       bubbleLayer.appendChild(bubble);
-/* RANDOM BUBBLE POP */
+/* =========================================
+   RANDOM BUBBLE POP
+   ========================================= */
 
-const willPop = Math.random() < 0.65;
+const willPop =
+  Math.random() < 0.65;
 
 if (willPop) {
 
@@ -394,7 +434,41 @@ if (willPop) {
 
     if (!bubble.isConnected) return;
 
-    bubble.style.animation = "none";
+
+    /* GET BUBBLE POSITION BEFORE REMOVING IT */
+
+    const rect =
+      bubble.getBoundingClientRect();
+
+
+    /* CREATE THE LITTLE POP RING */
+
+    const ring =
+      document.createElement("div");
+
+    ring.className =
+      "pop-ring";
+
+    ring.style.width =
+      rect.width + "px";
+
+    ring.style.height =
+      rect.height + "px";
+
+    ring.style.left =
+      rect.left + "px";
+
+    ring.style.top =
+      rect.top + "px";
+
+
+    bubbleLayer.appendChild(ring);
+
+
+    /* POP THE ACTUAL BUBBLE */
+
+    bubble.style.animation =
+      "none";
 
     bubble.animate(
       [
@@ -404,31 +478,39 @@ if (willPop) {
         },
 
         {
-          transform: "scale(1.25)",
+          transform: "scale(1.18)",
           opacity: 0
         }
       ],
       {
-        duration: 120,
+        duration: 100,
         easing: "ease-out",
         fill: "forwards"
       }
     );
 
+
+    /* REMOVE BUBBLE */
+
     setTimeout(() => {
+
       bubble.remove();
-    }, 130);
+
+    }, 110);
+
+
+    /* REMOVE POP RING */
+
+    setTimeout(() => {
+
+      ring.remove();
+
+    }, 240);
+
 
   }, popTime);
 
 }
-
-      setTimeout(() => {
-        bubble.remove();
-      }, 3000);
-    }
-
-
     /* automatic bubbles OFF */
 /* bubbles only appear when BUBBLES button is pressed */
 
