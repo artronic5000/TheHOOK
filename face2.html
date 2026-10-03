@@ -1477,151 +1477,487 @@ photoButton.addEventListener(
 );
 
 
-/* =========================================
-   LIGHTWEIGHT ILLUSTRATION FILTER
-
-   This only affects the SAVED selfie.
-   It does NOT affect the live camera.
-   ========================================= */
-
-function comicIllustrationFilter(
-  sourceCanvas
-) {
+function comicIllustrationFilter(sourceCanvas) {
 
   /*
-    Make a smaller copy.
+    LOCAL ILLUSTRATION FILTER
+    -------------------------
+    Nothing is uploaded.
+    No API.
+    No charges.
 
-    Maximum width of 700 pixels keeps
-    processing light on a phone.
+    We deliberately process a smaller copy so this
+    remains reasonable on an iPhone.
   */
 
-  const maxWidth =
-    700;
+  const MAX_WIDTH = 650;
 
-
-  const scale =
-    Math.min(
-      1,
-      maxWidth /
-      sourceCanvas.width
-    );
-
+  const scale = Math.min(
+    1,
+    MAX_WIDTH / sourceCanvas.width
+  );
 
   const canvas =
-    document.createElement(
-      "canvas"
-    );
+    document.createElement("canvas");
 
+  canvas.width = Math.max(
+    1,
+    Math.round(sourceCanvas.width * scale)
+  );
 
-  canvas.width =
-    Math.max(
-      1,
-      Math.round(
-        sourceCanvas.width *
-        scale
-      )
-    );
-
-
-  canvas.height =
-    Math.max(
-      1,
-      Math.round(
-        sourceCanvas.height *
-        scale
-      )
-    );
-
+  canvas.height = Math.max(
+    1,
+    Math.round(sourceCanvas.height * scale)
+  );
 
   const ctx =
     canvas.getContext(
-      "2d"
+      "2d",
+      { willReadFrequently: true }
     );
 
+  const w = canvas.width;
+  const h = canvas.height;
 
-  /*
-    Illustration-style colour treatment.
 
-    This is deliberately much lighter
-    than the old pixel-by-pixel filter.
-  */
+  /* =========================================
+     1. MAKE A SOFTER SOURCE COPY
+
+     Slight blur removes tiny photographic
+     details before we flatten the colours.
+     ========================================= */
+
+  ctx.save();
 
   ctx.filter =
-    "contrast(1.28) saturate(1.15) brightness(1.06) sepia(0.12)";
-
+    "blur(0.7px) contrast(1.12) saturate(0.90)";
 
   ctx.drawImage(
     sourceCanvas,
     0,
     0,
-    canvas.width,
-    canvas.height
+    w,
+    h
   );
 
-
-  ctx.filter =
-    "none";
+  ctx.restore();
 
 
-  /*
-    Warm cream/copper wash.
-  */
+  /* =========================================
+     2. FLATTEN INTO ILLUSTRATED COLOURS
+     ========================================= */
 
-  ctx.fillStyle =
-    "rgba(207,101,55,0.055)";
+  const image =
+    ctx.getImageData(
+      0,
+      0,
+      w,
+      h
+    );
 
-
-  ctx.fillRect(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
-
-  /*
-    Fine grain.
-  */
-
-  ctx.save();
-
-  ctx.globalAlpha =
-    .05;
+  const data =
+    image.data;
 
 
   for (
     let i = 0;
-    i < 300;
+    i < data.length;
+    i += 4
+  ) {
+
+    let r = data[i];
+    let g = data[i + 1];
+    let b = data[i + 2];
+
+
+    /* Brightness */
+
+    const light =
+      (
+        r * 0.299 +
+        g * 0.587 +
+        b * 0.114
+      );
+
+
+    /*
+      Posterize into broad tonal bands.
+
+      We preserve some original colour so skin,
+      hair and clothing are still recognizable.
+    */
+
+    let level;
+
+    if (light < 48) {
+      level = 28;
+    }
+
+    else if (light < 90) {
+      level = 70;
+    }
+
+    else if (light < 135) {
+      level = 115;
+    }
+
+    else if (light < 180) {
+      level = 165;
+    }
+
+    else if (light < 220) {
+      level = 210;
+    }
+
+    else {
+      level = 242;
+    }
+
+
+    /*
+      Blend flattened tone with original colour.
+    */
+
+    r =
+      r * 0.48 +
+      level * 0.52;
+
+    g =
+      g * 0.45 +
+      level * 0.55;
+
+    b =
+      b * 0.42 +
+      level * 0.58;
+
+
+    /*
+      Warm cream/copper treatment.
+
+      This pushes the selfie toward the palette
+      of your illustrated band artwork.
+    */
+
+    r += 15;
+    g += 4;
+    b -= 9;
+
+
+    /*
+      Posterize each colour channel.
+    */
+
+    const step = 34;
+
+    r =
+      Math.round(r / step) * step;
+
+    g =
+      Math.round(g / step) * step;
+
+    b =
+      Math.round(b / step) * step;
+
+
+    data[i] =
+      Math.max(
+        0,
+        Math.min(255, r)
+      );
+
+    data[i + 1] =
+      Math.max(
+        0,
+        Math.min(255, g)
+      );
+
+    data[i + 2] =
+      Math.max(
+        0,
+        Math.min(255, b)
+      );
+
+  }
+
+
+  ctx.putImageData(
+    image,
+    0,
+    0
+  );
+
+
+  /* =========================================
+     3. CREATE INK OUTLINES
+
+     We calculate edges on a SMALLER copy.
+     This is considerably lighter than doing
+     edge detection at the phone's full
+     screen resolution.
+     ========================================= */
+
+  const edgeScale = 0.5;
+
+  const ew =
+    Math.max(
+      1,
+      Math.round(w * edgeScale)
+    );
+
+  const eh =
+    Math.max(
+      1,
+      Math.round(h * edgeScale)
+    );
+
+
+  const edgeSource =
+    document.createElement("canvas");
+
+  edgeSource.width = ew;
+  edgeSource.height = eh;
+
+
+  const edgeSourceCtx =
+    edgeSource.getContext(
+      "2d",
+      { willReadFrequently: true }
+    );
+
+
+  edgeSourceCtx.drawImage(
+    canvas,
+    0,
+    0,
+    ew,
+    eh
+  );
+
+
+  const edgeData =
+    edgeSourceCtx.getImageData(
+      0,
+      0,
+      ew,
+      eh
+    );
+
+  const src =
+    edgeData.data;
+
+
+  const edgeCanvas =
+    document.createElement("canvas");
+
+  edgeCanvas.width = ew;
+  edgeCanvas.height = eh;
+
+
+  const edgeCtx =
+    edgeCanvas.getContext("2d");
+
+
+  const output =
+    edgeCtx.createImageData(
+      ew,
+      eh
+    );
+
+  const out =
+    output.data;
+
+
+  for (
+    let y = 1;
+    y < eh - 1;
+    y++
+  ) {
+
+    for (
+      let x = 1;
+      x < ew - 1;
+      x++
+    ) {
+
+      const p =
+        (y * ew + x) * 4;
+
+      const right =
+        (y * ew + x + 1) * 4;
+
+      const down =
+        ((y + 1) * ew + x) * 4;
+
+
+      const lum =
+        src[p] * 0.299 +
+        src[p + 1] * 0.587 +
+        src[p + 2] * 0.114;
+
+
+      const lumRight =
+        src[right] * 0.299 +
+        src[right + 1] * 0.587 +
+        src[right + 2] * 0.114;
+
+
+      const lumDown =
+        src[down] * 0.299 +
+        src[down + 1] * 0.587 +
+        src[down + 2] * 0.114;
+
+
+      const edge =
+        Math.abs(
+          lum - lumRight
+        )
+        +
+        Math.abs(
+          lum - lumDown
+        );
+
+
+      /*
+        Higher threshold prevents every skin
+        detail from becoming a black line.
+      */
+
+      if (edge > 37) {
+
+        const strength =
+          Math.min(
+            185,
+            (edge - 37) * 4
+          );
+
+
+        out[p] = 17;
+        out[p + 1] = 14;
+        out[p + 2] = 12;
+
+        out[p + 3] =
+          strength;
+
+      }
+
+      else {
+
+        out[p + 3] = 0;
+
+      }
+
+    }
+
+  }
+
+
+  edgeCtx.putImageData(
+    output,
+    0,
+    0
+  );
+
+
+  /*
+    Enlarge the ink drawing over the portrait.
+
+    imageSmoothingEnabled=false makes the lines
+    slightly rougher and more screen-print-like.
+  */
+
+  ctx.save();
+
+  ctx.imageSmoothingEnabled =
+    false;
+
+  ctx.globalAlpha =
+    0.88;
+
+  ctx.drawImage(
+    edgeCanvas,
+    0,
+    0,
+    ew,
+    eh,
+    0,
+    0,
+    w,
+    h
+  );
+
+  ctx.restore();
+
+
+  /* =========================================
+     4. CREAM HIGHLIGHT WASH
+     ========================================= */
+
+  ctx.save();
+
+  ctx.globalCompositeOperation =
+    "screen";
+
+  ctx.fillStyle =
+    "rgba(255,235,205,0.055)";
+
+  ctx.fillRect(
+    0,
+    0,
+    w,
+    h
+  );
+
+  ctx.restore();
+
+
+  /* =========================================
+     5. PRINT TEXTURE
+
+     Very restrained so the person's face
+     doesn't become speckled.
+     ========================================= */
+
+  ctx.save();
+
+  ctx.globalAlpha =
+    0.065;
+
+
+  const grainCount =
+    Math.round(
+      (w * h) / 1800
+    );
+
+
+  for (
+    let i = 0;
+    i < grainCount;
     i++
   ) {
 
     const x =
-      Math.random() *
-      canvas.width;
-
+      Math.random() * w;
 
     const y =
-      Math.random() *
-      canvas.height;
+      Math.random() * h;
 
 
-    const grainSize =
-      .5 +
-      Math.random() *
-      1.5;
+    const dot =
+      0.7 +
+      Math.random() * 1.2;
 
 
     ctx.fillStyle =
-      Math.random() > .5
-        ? "#111111"
-        : "#fff0d2";
+      Math.random() > 0.60
+        ? "#17130f"
+        : "#f2d8b4";
 
 
     ctx.fillRect(
       x,
       y,
-      grainSize,
-      grainSize
+      dot,
+      dot
     );
 
   }
@@ -1630,8 +1966,37 @@ function comicIllustrationFilter(
   ctx.restore();
 
 
-  return canvas;
+  /* =========================================
+     6. FINAL CONTRAST PASS
+     ========================================= */
 
+  const finished =
+    document.createElement("canvas");
+
+  finished.width = w;
+  finished.height = h;
+
+
+  const finishedCtx =
+    finished.getContext("2d");
+
+
+  finishedCtx.filter =
+    "contrast(1.10) saturate(1.04)";
+
+
+  finishedCtx.drawImage(
+    canvas,
+    0,
+    0
+  );
+
+
+  finishedCtx.filter =
+    "none";
+
+
+  return finished;
 }
 
 
