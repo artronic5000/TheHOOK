@@ -2437,7 +2437,108 @@ async function createPolaroid() {
     outputSize
 
   );
+/* =====================================
+   DRAW WHISKERS + CIGARETTE
+   OVER THE POLAROID
+   ===================================== */
 
+const mouthImage =
+  document.getElementById("mouthGraphic");
+
+const mouthOverlay =
+  document.getElementById("mouthOverlay");
+
+const camera3D =
+  document
+    .querySelector("a-camera")
+    .getObject3D("camera");
+
+
+if (
+  mouthImage &&
+  mouthOverlay &&
+  camera3D
+) {
+
+  /*
+    Find the centre of the mouth overlay
+    on the live screen.
+  */
+
+  const mouthPosition =
+    new THREE.Vector3();
+
+  mouthOverlay.object3D
+    .getWorldPosition(
+      mouthPosition
+    );
+
+  mouthPosition.project(
+    camera3D
+  );
+
+
+  const screenX =
+    (
+      mouthPosition.x * 0.5 +
+      0.5
+    );
+
+  const screenY =
+    (
+      -mouthPosition.y * 0.5 +
+      0.5
+    );
+
+
+  /*
+    Convert screen position into the
+    Polaroid photo opening.
+  */
+
+  const mouthX =
+    photoX +
+    screenX * photoW;
+
+  const mouthY =
+    photoY +
+    screenY * photoH;
+
+
+  /*
+    Size of mouth.png on finished Polaroid.
+
+    Adjust this one number if needed.
+  */
+
+  const mouthWidth =
+    photoW * 0.55;
+
+  const mouthHeight =
+    mouthWidth *
+    (
+      mouthImage.naturalHeight /
+      mouthImage.naturalWidth
+    );
+
+
+  ctx.drawImage(
+
+    mouthImage,
+
+    mouthX -
+    mouthWidth / 2,
+
+    mouthY -
+    mouthHeight / 2,
+
+    mouthWidth,
+
+    mouthHeight
+
+  );
+
+}
 
   /* =====================================
      CURRENT DATE
