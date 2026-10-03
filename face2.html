@@ -283,65 +283,169 @@
     }
 
 
-    /* =========================================
-       CLICK KITTY
-       ========================================= */
+   /* =========================================
+   CLICK KITTY
+   ========================================= */
 
-    #kittyPanel {
-      position: fixed;
+#kittyPanel {
+  position: fixed;
 
-      left: 18px;
-      bottom: 82px;
+  left: 18px;
+  bottom: 82px;
 
-      z-index: 2000;
-
-      display: flex;
-      flex-direction: column;
-
-      align-items: center;
-
-      gap: 4px;
-    }
+  z-index: 2000;
+}
 
 
-    #kittyImage {
-      width: 82px;
-      height: 82px;
+#kittyButton {
+  display: flex;
+  flex-direction: column;
 
-      object-fit: contain;
+  align-items: center;
 
-      cursor: pointer;
+  gap: 3px;
 
-      filter:
-        drop-shadow(
-          0 3px 5px
-          rgba(0, 0, 0, 0.55)
-        );
-    }
+  padding: 5px 8px;
 
+  border: none;
 
-    #kittyText {
-      color: #fff5e6;
+  background: transparent;
 
-      background:
-        rgba(0, 0, 0, 0.68);
+  color: #fff5e6;
 
-      border:
-        1px solid #cf6537;
+  font-size: 10px;
+  font-weight: bold;
 
-      border-radius: 15px;
+  letter-spacing: 1px;
 
-      padding: 5px 9px;
-
-      font-size: 10px;
-      font-weight: bold;
-
-      letter-spacing: 1px;
-
-      pointer-events: none;
-    }
+  box-shadow: none;
+}
 
 
+#kittyImage {
+  width: 82px;
+  height: 82px;
+
+  object-fit: contain;
+
+  filter:
+    drop-shadow(
+      0 3px 5px
+      rgba(0, 0, 0, 0.55)
+    );
+}
+
+
+/* =========================================
+   TIP POPUP
+   ========================================= */
+
+#tipOverlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 5000;
+
+  display: none;
+
+  justify-content: center;
+  align-items: center;
+
+  background:
+    rgba(0, 0, 0, 0.72);
+}
+
+
+#tipBox {
+  width: min(82vw, 330px);
+
+  padding: 28px 22px;
+
+  text-align: center;
+
+  color: #fff5e6;
+
+  background:
+    rgba(20, 20, 20, 0.96);
+
+  border:
+    2px solid #cf6537;
+
+  border-radius: 24px;
+
+  box-shadow:
+    0 8px 30px
+    rgba(0, 0, 0, 0.55);
+}
+
+
+#tipThankYou {
+  font-size: 24px;
+  font-weight: bold;
+
+  letter-spacing: 2px;
+
+  margin-bottom: 18px;
+}
+
+
+#tipFind {
+  font-size: 17px;
+  font-weight: bold;
+
+  letter-spacing: 2px;
+
+  line-height: 1.35;
+}
+
+
+#tipOr {
+  margin: 14px 0;
+
+  font-size: 13px;
+
+  opacity: 0.75;
+}
+
+
+#tipTransfer {
+  margin-bottom: 7px;
+
+  font-size: 12px;
+  font-weight: bold;
+
+  letter-spacing: 1px;
+}
+
+
+#emailButton {
+  font-size: 12px;
+
+  padding: 10px 12px;
+}
+
+
+#copiedMessage {
+  min-height: 18px;
+
+  margin-top: 8px;
+
+  color: #fff5e6;
+
+  font-size: 11px;
+  font-weight: bold;
+
+  opacity: 0;
+}
+
+
+#closeTipButton {
+  margin-top: 15px;
+
+  background:
+    rgba(0, 0, 0, 0.55);
+}
     /* MindAR scene full screen */
 
     a-scene {
@@ -355,14 +459,6 @@
 
 <body>
 
-
-  <!-- =========================================
-       TITLE
-       ========================================= -->
-
-  <div id="title">
-    THE HOOK • FACE FILTER
-  </div>
 
 
   <!-- =========================================
@@ -400,19 +496,74 @@
        CLICK KITTY
        ========================================= -->
 
-  <div id="kittyPanel">
+ <div id="kittyPanel">
+
+  <button
+    id="kittyButton"
+    type="button"
+  >
 
     <img
       id="kittyImage"
       src="./tip1.png"
-      alt="Click Kitty"
+      alt="Tip The Hook"
     >
 
-    <div id="kittyText">
+    <span>
       CLICK KITTY
+    </span>
+
+  </button>
+
+</div>
+
+
+<!-- =========================================
+     TIP INFORMATION POPUP
+     ========================================= -->
+
+<div id="tipOverlay">
+
+  <div id="tipBox">
+
+    <div id="tipThankYou">
+      THANK YOU!
     </div>
 
+    <div id="tipFind">
+      FIND THE KITTY<br>
+      ON STAGE
+    </div>
+
+    <div id="tipOr">
+      or
+    </div>
+
+    <div id="tipTransfer">
+      E-TRANSFER:
+    </div>
+
+    <button
+      id="emailButton"
+      type="button"
+    >
+      thehooksechelt@gmail.com
+    </button>
+
+    <div id="copiedMessage">
+      EMAIL COPIED ✓
+    </div>
+
+    <button
+      id="closeTipButton"
+      type="button"
+    >
+      CLOSE
+    </button>
+
   </div>
+
+</div>
 
 
   <!-- =========================================
@@ -602,82 +753,157 @@
 
 
 
-    /* =========================================
-       CLICK KITTY ANIMATION
+  /* =========================================
+   CLICK KITTY
+   ========================================= */
 
-       Uses:
-       tip1.png
-       tip2.png
-       tip3.png
-       tip4.png
-       tip5.png
-       ========================================= */
+const kittyButton =
+  document.getElementById("kittyButton");
 
-    const kittyImage =
-      document.getElementById(
-        "kittyImage"
+const kittyImage =
+  document.getElementById("kittyImage");
+
+const tipOverlay =
+  document.getElementById("tipOverlay");
+
+const closeTipButton =
+  document.getElementById("closeTipButton");
+
+const emailButton =
+  document.getElementById("emailButton");
+
+const copiedMessage =
+  document.getElementById("copiedMessage");
+
+
+let kittyRunning = false;
+
+
+kittyButton.addEventListener(
+  "click",
+  () => {
+
+    if (kittyRunning) return;
+
+    kittyRunning = true;
+
+
+    /* FRAME 1 */
+
+    kittyImage.src =
+      "./tip1.png";
+
+
+    /* FRAME 2 */
+
+    setTimeout(() => {
+
+      kittyImage.src =
+        "./tip2.png";
+
+    }, 350);
+
+
+    /* FRAME 3 */
+
+    setTimeout(() => {
+
+      kittyImage.src =
+        "./tip3.png";
+
+    }, 700);
+
+
+    /* FRAME 4 */
+
+    setTimeout(() => {
+
+      kittyImage.src =
+        "./tip4.png";
+
+    }, 1120);
+
+
+    /* FRAME 5 */
+
+    setTimeout(() => {
+
+      kittyImage.src =
+        "./tip5.png";
+
+    }, 1540);
+
+
+    /* RETURN TO KITTY + OPEN TIP INFO */
+
+    setTimeout(() => {
+
+      kittyImage.src =
+        "./tip1.png";
+
+      kittyRunning = false;
+
+      tipOverlay.style.display =
+        "flex";
+
+    }, 2040);
+
+  }
+);
+
+
+/* =========================================
+   COPY E-TRANSFER EMAIL
+   ========================================= */
+
+emailButton.addEventListener(
+  "click",
+  async () => {
+
+    try {
+
+      await navigator.clipboard.writeText(
+        "thehooksechelt@gmail.com"
       );
 
+      copiedMessage.style.opacity =
+        "1";
 
-    const kittyFrames = [
+      setTimeout(() => {
 
-      "./tip1.png",
-      "./tip2.png",
-      "./tip3.png",
-      "./tip4.png",
-      "./tip5.png"
+        copiedMessage.style.opacity =
+          "0";
 
-    ];
+      }, 1800);
 
+    }
 
-    let kittyRunning = false;
+    catch (error) {
 
+      console.log(
+        "Clipboard error:",
+        error
+      );
 
-    kittyImage.addEventListener(
-      "click",
-      () => {
+    }
 
-        if (kittyRunning) return;
-
-        kittyRunning = true;
-
-        let frame = 0;
-
-
-        const kittyTimer =
-          setInterval(() => {
-
-            kittyImage.src =
-              kittyFrames[frame];
-
-            frame++;
+  }
+);
 
 
-            if (
-              frame >=
-              kittyFrames.length
-            ) {
+/* =========================================
+   CLOSE TIP INFO
+   ========================================= */
 
-              clearInterval(
-                kittyTimer
-              );
+closeTipButton.addEventListener(
+  "click",
+  () => {
 
-              setTimeout(() => {
+    tipOverlay.style.display =
+      "none";
 
-                kittyImage.src =
-                  kittyFrames[0];
-
-                kittyRunning =
-                  false;
-
-              }, 450);
-
-            }
-
-          }, 220);
-
-      }
-    );
+  }
+);
 
 
 
