@@ -774,115 +774,6 @@ a-scene {
   inset: 0 !important;
 
 }
-/* =====================================================
-   LOADING SCREEN
-   ===================================================== */
-
-#loadingScreen {
-
-  position: fixed;
-  inset: 0;
-
-  z-index: 20000;
-
-  display: flex;
-
-  flex-direction: column;
-
-  justify-content: center;
-  align-items: center;
-
-  background: #111;
-
-  color: #fff5e6;
-
-  transition:
-    opacity .45s ease;
-
-}
-
-
-#loadingScreen.hide {
-
-  opacity: 0;
-
-  pointer-events: none;
-
-}
-
-
-#loadingLogo {
-
-  font-size:
-    clamp(
-      32px,
-      10vw,
-      58px
-    );
-
-  font-weight: 900;
-
-  letter-spacing: 5px;
-
-}
-
-
-#loadingMessage {
-
-  margin-top: 14px;
-
-  font-size: 12px;
-
-  font-weight: bold;
-
-  letter-spacing: 2px;
-
-  opacity: .85;
-
-}
-
-
-#loadingDots {
-
-  display: flex;
-
-  gap: 7px;
-
-  margin-top: 20px;
-
-}
-
-
-#loadingDots span {
-
-  width: 8px;
-  height: 8px;
-
-  border-radius: 50%;
-
-  background: #cf6537;
-
-  animation:
-    loadingDot
-    1.2s
-    infinite ease-in-out;
-
-}
-
-
-#loadingDots span:nth-child(2) {
-
-  animation-delay: .15s;
-
-}
-
-
-#loadingDots span:nth-child(3) {
-
-  animation-delay: .30s;
-
-}
-
 
 @keyframes loadingDot {
 
@@ -913,27 +804,6 @@ a-scene {
 
 
 <body>
-<!-- =========================
-     FAST LOADING SCREEN
-     ========================= -->
-
-<div id="loadingScreen">
-
-  <div id="loadingLogo">
-    THE HOOK
-  </div>
-
-  <div id="loadingMessage">
-    Warming up the camera…
-  </div>
-
-  <div id="loadingDots">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-
-</div>
 
 <!-- =====================================================
      TOP CONTROLS
@@ -1413,45 +1283,7 @@ const cameraFlash =
 
 let finishedPhotoURL = null;
 
-/* =====================================================
-   CAMERA READY
-   ===================================================== */
 
-const loadingScreen =
-  document.getElementById(
-    "loadingScreen"
-  );
-
-
-function hideLoadingScreen() {
-
-  if (
-    loadingScreen.classList.contains(
-      "hide"
-    )
-  ) {
-
-    return;
-
-  }
-
-
-  loadingScreen.classList.add(
-    "hide"
-  );
-
-
-  setTimeout(
-    () => {
-
-      loadingScreen.style.display =
-        "none";
-
-    },
-    500
-  );
-
-}
 
 /* =====================================================
    BACK BUTTON
