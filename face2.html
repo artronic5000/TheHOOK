@@ -486,79 +486,350 @@ button:active {
 
 
 /* =====================================================
-   TIP INFORMATION OVERLAY
+   TIP OVERLAY
    ===================================================== */
 
 #tipOverlay {
 
-  position: fixed;
+  display: none;
 
+  position: fixed;
   inset: 0;
 
   z-index: 7000;
 
-  display: none;
+  background:
+    rgba(0,0,0,0.88);
 
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 
-  padding: 20px;
+  padding: 18px;
 
   box-sizing: border-box;
 
-  background:
-    rgba(0,0,0,.82);
-
 }
 
 
-#tipImageBox {
+/* =====================================================
+   TIP PANEL
+   ===================================================== */
 
-  display: flex;
-
-  flex-direction: column;
-
-  justify-content: center;
-  align-items: center;
+#tipPanel {
 
   width:
     min(
-      90vw,
-      430px
+      90%,
+      390px
     );
+
+  padding:
+    30px
+    18px
+    26px
+    18px;
+
+  box-sizing: border-box;
+
+  background: #050505;
+
+  border-radius: 20px;
+
+  text-align: center;
+
+  color: white;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  box-shadow:
+    0 8px 40px
+    rgba(0,0,0,0.65);
 
 }
 
 
-#tipInfoImage {
+#tipPanel h1 {
+
+  margin:
+    0 0 6px 0;
+
+  color: #f6b93b;
+
+  font-family:
+    "Brush Script MT",
+    "Segoe Script",
+    cursive;
+
+  font-size: 56px;
+
+  font-weight: normal;
+
+  line-height: .95;
+
+  transform:
+    rotate(-2deg);
+
+  text-shadow:
+    0 2px 6px
+    rgba(246,185,59,.18);
+
+}
+
+
+.tipHeart {
+
+  margin:
+    6px 0 8px 0;
+
+  color: #f6b93b;
+
+  font-size: 28px;
+
+  line-height: 1;
+
+}
+
+
+.findKitty {
+
+  position: relative;
+
+  display: inline-block;
+
+  color: #f7d36c;
+
+  font-size: 19px;
+
+  font-weight: 900;
+
+  letter-spacing: 1px;
+
+  line-height: 1.25;
+
+}
+
+
+.findKitty::before {
+
+  content: "✦";
+
+  position: absolute;
+
+  left: -34px;
+  top: 14px;
+
+  color: #f6b93b;
+
+  font-size: 18px;
+
+}
+
+
+.findKitty::after {
+
+  content: "✦";
+
+  position: absolute;
+
+  right: -34px;
+  top: 14px;
+
+  color: #f6b93b;
+
+  font-size: 18px;
+
+}
+
+
+.or {
+
+  margin:
+    6px 0 4px 0;
+
+  color: #f6b93b;
+
+  font-family:
+    "Brush Script MT",
+    "Segoe Script",
+    cursive;
+
+  font-size: 27px;
+
+  font-style: italic;
+
+}
+
+
+.transferTitle {
+
+  margin-bottom: 9px;
+
+  color: #f7d36c;
+
+  font-size: 19px;
+
+  font-weight: 900;
+
+  letter-spacing: 1px;
+
+}
+
+
+/* EMAIL BUTTON */
+
+#copyEmail {
 
   display: block;
 
   width: 100%;
-  height: auto;
 
-  max-height: 75vh;
+  padding:
+    11px 12px;
 
-  object-fit: contain;
+  border: none;
 
-  filter:
-    drop-shadow(
-      0 8px 25px
-      rgba(0,0,0,.65)
-    );
+  border-radius: 28px;
+
+  background: #f6d675;
+
+  color: #111;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 17px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 2px 8px
+    rgba(0,0,0,.25);
+
+}
+
+
+#copyEmail:active {
+
+  transform:
+    scale(.97);
+
+}
+
+
+#copyMessage {
+
+  min-height: 18px;
+
+  margin-top: 7px;
+
+  color: #f6b93b;
+
+  font-size: 11px;
+
+  font-weight: bold;
+
+  letter-spacing: 1px;
+
+}
+
+
+#paw {
+
+  margin:
+    4px 0;
+
+  color: #f6d675;
+
+  font-size: 30px;
+
+}
+
+
+.tipMessage {
+
+  margin:
+    7px 0 5px 0;
+
+  color: #f6d675;
+
+  font-family:
+    "Trebuchet MS",
+    "Arial Narrow",
+    Arial,
+    sans-serif;
+
+  font-size: 23px;
+
+  font-weight: 900;
+
+  font-style: italic;
+
+  letter-spacing: .8px;
+
+  line-height: 1.1;
+
+  transform:
+    rotate(-2deg);
+
+  text-shadow:
+    2px 2px 0
+    rgba(0,0,0,.8);
+
+}
+
+
+.bottomHeart {
+
+  margin:
+    4px 0 18px 0;
+
+  color: #f6b93b;
+
+  font-size: 28px;
 
 }
 
 
 #closeTipButton {
 
-  margin-top: 14px;
+  width: 58%;
 
   padding:
-    11px 24px;
+    10px 16px;
+
+  border:
+    2px solid #f6d675;
+
+  border-radius: 28px;
+
+  background: transparent;
+
+  color: #f6d675;
+
+  font-size: 15px;
+
+  font-weight: 900;
+
+  letter-spacing: 2px;
+
+  cursor: pointer;
 
 }
 
+
+#closeTipButton:active {
+
+  transform:
+    scale(.96);
+
+}
 
 /* =====================================================
    COUNTDOWN
@@ -902,12 +1173,54 @@ a-scene {
 
 <div id="tipOverlay">
 
-  <div id="tipImageBox">
+  <div id="tipPanel">
 
-    <img
-      id="tipInfoImage"
-      alt="Tip The Hook"
+    <h1>
+      Thank You!
+    </h1>
+
+    <div class="tipHeart">
+      ♥
+    </div>
+
+    <div class="findKitty">
+      FIND THE KITTY
+      <br>
+      TIP JAR
+      <br>
+      ON STAGE
+    </div>
+
+    <div class="or">
+      or
+    </div>
+
+    <div class="transferTitle">
+      E-TRANSFER:
+    </div>
+
+    <button
+      id="copyEmail"
+      type="button"
     >
+      thehooksechelt@gmail.com
+    </button>
+
+    <div id="copyMessage">
+      TAP EMAIL TO COPY
+    </div>
+
+    <div id="paw">
+      🐾
+    </div>
+
+    <div class="tipMessage">
+      Tips keep the music alive!
+    </div>
+
+    <div class="bottomHeart">
+      ♥
+    </div>
 
     <button
       id="closeTipButton"
@@ -1324,22 +1637,6 @@ kittyButton.addEventListener(
     );
 
 
-    const tipImage =
-      document.getElementById(
-        "tipInfoImage"
-      );
-
-
-    /* Load tip image only when needed */
-
-    if (!tipImage.src) {
-
-      tipImage.src =
-        "./tipinfo.png";
-
-    }
-
-
     setTimeout(
       () => {
 
@@ -1365,8 +1662,99 @@ kittyButton.addEventListener(
   }
 );
 
+  /* =====================================================
+   COPY E-TRANSFER EMAIL
+   ===================================================== */
+
+const copyEmail =
+  document.getElementById(
+    "copyEmail"
+  );
 
 
+const copyMessage =
+  document.getElementById(
+    "copyMessage"
+  );
+
+
+copyEmail.addEventListener(
+  "click",
+  async () => {
+
+    const email =
+      "thehooksechelt@gmail.com";
+
+
+    try {
+
+      await navigator.clipboard
+        .writeText(
+          email
+        );
+
+
+      copyMessage.textContent =
+        "EMAIL COPIED ✓";
+
+    }
+
+    catch (error) {
+
+      const textArea =
+        document.createElement(
+          "textarea"
+        );
+
+
+      textArea.value =
+        email;
+
+
+      textArea.style.position =
+        "fixed";
+
+
+      textArea.style.opacity =
+        "0";
+
+
+      document.body.appendChild(
+        textArea
+      );
+
+
+      textArea.focus();
+
+      textArea.select();
+
+
+      try {
+
+        document.execCommand(
+          "copy"
+        );
+
+
+        copyMessage.textContent =
+          "EMAIL COPIED ✓";
+
+      }
+
+      catch (copyError) {
+
+        copyMessage.textContent =
+          "COPY: " + email;
+
+      }
+
+
+      textArea.remove();
+
+    }
+
+  }
+);
 /* =====================================================
    CLOSE TIP INFORMATION
    ===================================================== */
