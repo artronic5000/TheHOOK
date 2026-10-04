@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta
   name="viewport"
   content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
@@ -9,98 +12,363 @@
 
 <title>HOOKED Face Filter</title>
 
+
+<!-- =========================
+     A-FRAME + MINDAR
+     ========================= -->
+
 <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
+
 
 <style>
 
+/* =====================================================
+   PAGE
+   ===================================================== */
+
 html,
 body {
+
   margin: 0;
   padding: 0;
+
   width: 100%;
   height: 100%;
+
   overflow: hidden;
+
   background: transparent;
-  font-family: Arial, Helvetica, sans-serif;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
 }
+
+
+/* =====================================================
+   GENERAL BUTTON
+   ===================================================== */
 
 button {
+
   appearance: none;
   -webkit-appearance: none;
+
   border: 2px solid #fff5e6;
+
   background: #cf6537;
   color: #fff5e6;
-  padding: 12px 17px;
+
+  padding: 11px 16px;
+
   border-radius: 24px;
+
   font-size: 12px;
   font-weight: bold;
+
   letter-spacing: 1px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.4);
+
+  box-shadow:
+    0 4px 12px
+    rgba(0,0,0,.4);
+
+  cursor: pointer;
 }
+
 
 button:active {
+
   transform: scale(.96);
+
 }
 
 
-/* =========================
+/* =====================================================
    TOP BUTTONS
-   ========================= */
+   ===================================================== */
 
 #backButton,
 #cameraButton {
+
   position: fixed;
+
   top: 18px;
-  z-index: 2000;
-  background: rgba(0,0,0,.70);
+
+  z-index: 3000;
+
+  background:
+    rgba(0,0,0,.68);
+
 }
+
 
 #backButton {
+
   left: 16px;
-  padding: 10px 14px;
-  font-size: 13px;
+
 }
+
 
 #cameraButton {
+
   right: 16px;
-  padding: 10px 14px;
-  font-size: 18px;
+
+  width: 46px;
+  height: 46px;
+
+  padding: 0;
+
+  font-size: 22px;
+
+  border-radius: 50%;
+
 }
 
 
-/* =========================
-   BOTTOM BUTTONS
-   ========================= */
+/* =====================================================
+   BOTTOM CONTROL BAR
+   ===================================================== */
 
 #controls {
+
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 25px;
-  z-index: 2000;
+
+  left: 8px;
+  right: 8px;
+
+  bottom:
+    max(
+      14px,
+      env(safe-area-inset-bottom)
+    );
+
+  z-index: 3000;
 
   display: flex;
+
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
+
   gap: 12px;
+
 }
 
 
-/* =========================
+/* =====================================================
+   KITTY BUTTON
+   ===================================================== */
+
+#kittyButton {
+
+  width: 92px;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  box-shadow: none;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: flex-end;
+  align-items: center;
+
+  gap: 2px;
+
+}
+
+
+#kittyImage {
+
+  display: block;
+
+  width: 68px;
+  height: 68px;
+
+  object-fit: contain;
+
+  transform-origin:
+    50% 85%;
+
+  filter:
+    drop-shadow(
+      0 4px 6px
+      rgba(0,0,0,.65)
+    );
+
+  animation:
+    kittyIdle
+    2.4s
+    ease-in-out
+    infinite;
+
+}
+
+
+#kittyLabel {
+
+  color: #fff5e6;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  letter-spacing: 1px;
+
+  text-shadow:
+    0 2px 5px
+    rgba(0,0,0,.9);
+
+  white-space: nowrap;
+
+}
+
+
+@keyframes kittyIdle {
+
+  0% {
+
+    transform:
+      translateY(0)
+      rotate(0deg)
+      scale(1);
+
+  }
+
+  25% {
+
+    transform:
+      translateY(-5px)
+      rotate(-3deg)
+      scale(1.04);
+
+  }
+
+  50% {
+
+    transform:
+      translateY(0)
+      rotate(0deg)
+      scale(1);
+
+  }
+
+  75% {
+
+    transform:
+      translateY(-4px)
+      rotate(3deg)
+      scale(1.04);
+
+  }
+
+  100% {
+
+    transform:
+      translateY(0)
+      rotate(0deg)
+      scale(1);
+
+  }
+
+}
+
+
+#kittyImage.kittyClicked {
+
+  animation:
+    kittyClick
+    .55s
+    ease-out;
+
+}
+
+
+@keyframes kittyClick {
+
+  0% {
+
+    transform:
+      scale(1)
+      rotate(0deg);
+
+  }
+
+  30% {
+
+    transform:
+      scale(1.22)
+      rotate(-8deg);
+
+  }
+
+  60% {
+
+    transform:
+      scale(.92)
+      rotate(7deg);
+
+  }
+
+  100% {
+
+    transform:
+      scale(1)
+      rotate(0deg);
+
+  }
+
+}
+
+
+/* =====================================================
+   BUBBLE + PHOTO BUTTONS
+   ===================================================== */
+
+#bubbleButton,
+#photoButton {
+
+  min-width: 92px;
+
+  min-height: 46px;
+
+  padding:
+    11px 13px;
+
+  margin-bottom: 8px;
+
+}
+
+
+/* =====================================================
    BUBBLES
-   ========================= */
+   ===================================================== */
 
 #bubbleLayer {
+
   position: fixed;
+
   inset: 0;
+
   z-index: 800;
+
   overflow: hidden;
+
   pointer-events: none;
+
 }
 
+
 .bubble {
+
   position: absolute;
+
   border-radius: 50%;
 
   border:
@@ -111,44 +379,69 @@ button:active {
     rgba(255,255,255,.10);
 
   box-shadow:
-    inset 3px 3px 3px rgba(255,255,255,.38),
-    0 0 4px rgba(255,255,255,.22);
+
+    inset
+    3px 3px 3px
+    rgba(255,255,255,.38),
+
+    0 0 4px
+    rgba(255,255,255,.22);
 
   animation:
-    floatBubble 3.2s ease-out forwards;
+    floatBubble
+    3.2s
+    ease-out
+    forwards;
+
 }
 
+
 .pop-ring {
+
   position: fixed;
+
   border-radius: 50%;
 
   border:
     1.5px solid
-    rgba(255,255,255,.9);
+    rgba(255,255,255,.90);
 
-  background: transparent;
+  background:
+    transparent;
 
   pointer-events: none;
+
   z-index: 801;
 
   animation:
-    bubblePopRing 220ms ease-out forwards;
+    bubblePopRing
+    220ms
+    ease-out
+    forwards;
+
 }
+
 
 @keyframes floatBubble {
 
   0% {
+
     opacity: 0;
+
     transform:
       translate(0,0)
       scale(.35);
+
   }
 
   12% {
+
     opacity: 1;
+
   }
 
   100% {
+
     opacity: 0;
 
     transform:
@@ -157,117 +450,433 @@ button:active {
         var(--rise)
       )
       scale(1.35);
+
   }
+
 }
+
 
 @keyframes bubblePopRing {
 
   0% {
+
     opacity: 1;
-    transform: scale(.7);
+
+    transform:
+      scale(.7);
+
   }
 
   60% {
+
     opacity: .8;
+
   }
 
   100% {
+
     opacity: 0;
-    transform: scale(1.45);
+
+    transform:
+      scale(1.45);
+
   }
+
 }
 
 
-/* =========================
-   BOTTOM CONTROL BAR
-   ========================= */
+/* =====================================================
+   TIP INFORMATION OVERLAY
+   ===================================================== */
 
-#controls {
+#tipOverlay {
+
   position: fixed;
 
-  left: 10px;
-  right: 10px;
-  bottom: 18px;
+  inset: 0;
 
-  z-index: 2000;
+  z-index: 7000;
 
-  display: flex;
+  display: none;
+
   justify-content: center;
   align-items: center;
 
-  gap: 14px;
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  background:
+    rgba(0,0,0,.82);
+
 }
 
 
-/* =========================
-   CLICK KITTY
-   ========================= */
+#tipImageBox {
 
-#kittyButton {
   display: flex;
+
   flex-direction: column;
+
   justify-content: center;
   align-items: center;
 
-  gap: 1px;
+  width:
+    min(
+      90vw,
+      430px
+    );
 
-  padding: 0 6px;
-
-  border: none;
-  background: transparent;
-
-  box-shadow: none;
-
-  color: #fff5e6;
-
-  font-size: 9px;
-  font-weight: bold;
-  letter-spacing: 1px;
 }
 
 
-#kittyImage {
-  width: 58px;
-  height: 58px;
+#tipInfoImage {
+
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  max-height: 75vh;
 
   object-fit: contain;
 
   filter:
     drop-shadow(
-      0 3px 5px
-      rgba(0,0,0,.6)
+      0 8px 25px
+      rgba(0,0,0,.65)
     );
+
 }
 
 
-/* =========================
-   BUBBLE + PHOTO BUTTONS
-   ========================= */
+#closeTipButton {
 
-#bubbleButton,
-#photoButton {
-  min-width: 92px;
+  margin-top: 14px;
 
-  padding: 12px 14px;
+  padding:
+    11px 24px;
 
-  border: 2px solid #fff5e6;
+}
 
-  border-radius: 24px;
+
+/* =====================================================
+   COUNTDOWN
+   ===================================================== */
+
+#countdownOverlay {
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 8000;
+
+  display: none;
+
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+
+  pointer-events: none;
+
+  color: white;
+
+  text-align: center;
+
+  background:
+    rgba(0,0,0,.12);
+
+  text-shadow:
+    0 3px 12px
+    rgba(0,0,0,.9);
+
+}
+
+
+#lookText {
+
+  font-size:
+    clamp(
+      22px,
+      6vw,
+      38px
+    );
+
+  font-weight: 900;
+
+  letter-spacing: 3px;
+
+  line-height: 1.2;
+
+  margin-bottom: 25px;
+
+}
+
+
+#countdownNumber {
+
+  font-size:
+    clamp(
+      90px,
+      30vw,
+      180px
+    );
+
+  font-weight: 900;
+
+  line-height: 1;
+
+}
+
+
+/* =====================================================
+   CAMERA FLASH
+   ===================================================== */
+
+#cameraFlash {
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 8500;
+
+  background: white;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+}
+
+
+#cameraFlash.flash {
+
+  animation:
+    cameraFlashAnimation
+    260ms
+    ease-out;
+
+}
+
+
+@keyframes cameraFlashAnimation {
+
+  0% {
+
+    opacity: 0;
+
+  }
+
+  20% {
+
+    opacity: .95;
+
+  }
+
+  100% {
+
+    opacity: 0;
+
+  }
+
+}
+
+
+/* =====================================================
+   FINISHED POLAROID
+   ===================================================== */
+
+#photoResult {
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9000;
+
+  display: none;
+
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+
+  padding: 18px;
+
+  box-sizing: border-box;
+
+  background:
+    rgba(0,0,0,.94);
+
+}
+
+
+#finishedPhoto {
+
+  display: block;
+
+  max-width: 94vw;
+  max-height: 76vh;
+
+  width: auto;
+  height: auto;
+
+  object-fit: contain;
+
+  filter:
+    drop-shadow(
+      0 10px 24px
+      rgba(0,0,0,.65)
+    );
+
+}
+
+
+#photoButtons {
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  margin-top: 18px;
+
+}
+
+
+#savePhotoButton {
 
   background: #cf6537;
-  color: #fff5e6;
 
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 1px;
-
-  box-shadow:
-    0 4px 12px
-    rgba(0,0,0,.4);
 }
-<!-- =========================
-     TIP INFO IMAGE POPUP
-     ========================= -->
+
+
+#retakeButton {
+
+  background:
+    rgba(0,0,0,.65);
+
+}
+
+
+/* =====================================================
+   A-FRAME
+   ===================================================== */
+
+a-scene {
+
+  position: fixed !important;
+
+  inset: 0 !important;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     TOP CONTROLS
+     ===================================================== -->
+
+<button
+  id="backButton"
+  type="button"
+>
+  ← BACK
+</button>
+
+
+<button
+  id="cameraButton"
+  type="button"
+  aria-label="Reverse camera"
+>
+  ↻
+</button>
+
+
+
+<!-- =====================================================
+     SCREEN BUBBLES
+     ===================================================== -->
+
+<div id="bubbleLayer"></div>
+
+
+
+<!-- =====================================================
+     CAMERA FLASH
+     ===================================================== -->
+
+<div id="cameraFlash"></div>
+
+
+
+<!-- =====================================================
+     BOTTOM CONTROLS
+     ===================================================== -->
+
+<div id="controls">
+
+
+  <!-- CLICK KITTY -->
+
+  <button
+    id="kittyButton"
+    type="button"
+  >
+
+    <img
+      id="kittyImage"
+      src="./tip1.png"
+      alt="Tip The Hook"
+    >
+
+    <span id="kittyLabel">
+      CLICK KITTY
+    </span>
+
+  </button>
+
+
+
+  <!-- BUBBLES -->
+
+  <button
+    id="bubbleButton"
+    type="button"
+  >
+    BUBBLES
+  </button>
+
+
+
+  <!-- PHOTO -->
+
+  <button
+    id="photoButton"
+    type="button"
+  >
+    📷 PHOTO
+  </button>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     TIP INFORMATION
+     ===================================================== -->
 
 <div id="tipOverlay">
 
@@ -289,399 +898,21 @@ button:active {
   </div>
 
 </div>
-/* =========================
-   COUNTDOWN
-   ========================= */
 
-#countdownOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 8000;
 
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 
-  pointer-events: none;
-
-  color: white;
-  text-align: center;
-
-  background:
-    rgba(0,0,0,.12);
-
-  text-shadow:
-    0 3px 12px
-    rgba(0,0,0,.9);
-}
-
-#lookText {
-  font-size:
-    clamp(22px,6vw,38px);
-
-  font-weight: 900;
-  letter-spacing: 3px;
-  line-height: 1.2;
-
-  margin-bottom: 25px;
-}
-
-#countdownNumber {
-  font-size:
-    clamp(90px,30vw,180px);
-
-  font-weight: 900;
-  line-height: 1;
-}
-
-
-/* =========================
-   FINISHED PHOTO
-   ========================= */
-
-#photoResult {
-  position: fixed;
-  inset: 0;
-  z-index: 9000;
-
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  background:
-    rgba(0,0,0,.92);
-
-  padding: 18px;
-  box-sizing: border-box;
-}
-
-#finishedPhoto {
-  display: block;
-
-  max-width: 94vw;
-  max-height: 76vh;
-
-  width: auto;
-  height: auto;
-
-  object-fit: contain;
-
-  filter:
-    drop-shadow(
-      0 10px 24px
-      rgba(0,0,0,.65)
-    );
-}
-
-#photoButtons {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-
-  margin-top: 18px;
-}
-
-#savePhotoButton {
-  background: #cf6537;
-}
-
-#retakeButton {
-  background:
-    rgba(0,0,0,.65);
-}
-
-
-/* =========================
-   CAMERA FLASH
-   ========================= */
-
-#cameraFlash {
-  position: fixed;
-  inset: 0;
-
-  z-index: 8500;
-
-  background: white;
-
-  opacity: 0;
-
-  pointer-events: none;
-}
-
-#cameraFlash.flash {
-  animation:
-    cameraFlashAnimation
-    260ms ease-out;
-}
-
-@keyframes cameraFlashAnimation {
-
-  0% {
-    opacity: 0;
-  }
-
-  20% {
-    opacity: .95;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-
-/* A-FRAME FULL SCREEN */
-
-a-scene {
-  position: fixed !important;
-  inset: 0 !important;
-}
-
-</style>
-</head>
-
-
-<body>
-
-
-<!-- =========================
-     TOP CONTROLS
-     ========================= -->
-
-<button
-  id="backButton"
-  type="button"
->
-  ← BACK
-</button>
-
-
-<button
-  id="cameraButton"
-  type="button"
->
-  ↻
-</button>
-
-
-<!-- BUBBLES -->
-
-<div id="bubbleLayer"></div>
-
-
-<!-- FLASH -->
-
-<div id="cameraFlash"></div>
-
-
-<!-- =========================
-     BOTTOM CONTROL BAR
-     ========================= -->
-
-/* =========================
-   ANIMATED TIP KITTY
-   ========================= */
-
-#kittyImage {
-  width: 58px;
-  height: 58px;
-
-  object-fit: contain;
-
-  transform-origin: 50% 85%;
-
-  filter:
-    drop-shadow(
-      0 3px 5px
-      rgba(0,0,0,.6)
-    );
-
-  animation:
-    kittyIdle 2.4s ease-in-out infinite;
-}
-
-
-@keyframes kittyIdle {
-
-  0% {
-    transform:
-      translateY(0)
-      rotate(0deg)
-      scale(1);
-  }
-
-  25% {
-    transform:
-      translateY(-4px)
-      rotate(-3deg)
-      scale(1.03);
-  }
-
-  50% {
-    transform:
-      translateY(0)
-      rotate(0deg)
-      scale(1);
-  }
-
-  75% {
-    transform:
-      translateY(-3px)
-      rotate(3deg)
-      scale(1.03);
-  }
-
-  100% {
-    transform:
-      translateY(0)
-      rotate(0deg)
-      scale(1);
-  }
-}
-
-
-/* A little extra movement when tapped */
-
-#kittyImage.kittyClicked {
-  animation:
-    kittyClick .55s ease-out;
-}
-
-
-@keyframes kittyClick {
-
-  0% {
-    transform:
-      scale(1)
-      rotate(0deg);
-  }
-
-  30% {
-    transform:
-      scale(1.20)
-      rotate(-8deg);
-  }
-
-  60% {
-    transform:
-      scale(.92)
-      rotate(7deg);
-  }
-
-  100% {
-    transform:
-      scale(1)
-      rotate(0deg);
-  }
-}
-
-
-/* =========================
-   TIP IMAGE POPUP
-   ========================= */
-
-#tipOverlay {
-  position: fixed;
-  inset: 0;
-
-  z-index: 5000;
-
-  display: none;
-
-  justify-content: center;
-  align-items: center;
-
-  padding: 20px;
-
-  box-sizing: border-box;
-
-  background:
-    rgba(0,0,0,.78);
-}
-
-
-#tipImageBox {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  width: min(90vw, 430px);
-}
-
-
-#tipInfoImage {
-  display: block;
-
-  width: 100%;
-  height: auto;
-
-  max-height: 72vh;
-
-  object-fit: contain;
-
-  filter:
-    drop-shadow(
-      0 8px 25px
-      rgba(0,0,0,.65)
-    );
-}
-
-
-#closeTipButton {
-  margin-top: 14px;
-
-  padding: 11px 22px;
-
-  border:
-    2px solid #fff5e6;
-
-  border-radius: 24px;
-
-  background: #cf6537;
-
-  color: #fff5e6;
-
-  font-weight: bold;
-
-  letter-spacing: 1px;
-}
-
-
-<!-- =========================
-     BOTTOM CONTROLS
-     ========================= -->
-
-<div id="controls">
-
-  <button
-    id="bubbleButton"
-    type="button"
-  >
-    BUBBLES
-  </button>
-
-  <button
-    id="photoButton"
-    type="button"
-  >
-    📷 PHOTO
-  </button>
-
-</div>
-
-
-<!-- =========================
+<!-- =====================================================
      COUNTDOWN
-     ========================= -->
+     ===================================================== -->
 
 <div id="countdownOverlay">
 
   <div id="lookText">
+
     LOOK AT THE
     <br>
     CAMERA LENS
+
   </div>
 
   <div id="countdownNumber">
@@ -691,9 +922,10 @@ a-scene {
 </div>
 
 
-<!-- =========================
+
+<!-- =====================================================
      FINISHED PHOTO
-     ========================= -->
+     ===================================================== -->
 
 <div id="photoResult">
 
@@ -723,9 +955,10 @@ a-scene {
 </div>
 
 
-<!-- =========================
+
+<!-- =====================================================
      FACE FILTER
-     ========================= -->
+     ===================================================== -->
 
 <a-scene
 
@@ -760,7 +993,14 @@ a-scene {
 >
 
 
+<!-- =====================================================
+     ASSETS
+     ===================================================== -->
+
 <a-assets>
+
+
+  <!-- EARS -->
 
   <img
     id="earsGraphic"
@@ -768,16 +1008,26 @@ a-scene {
     crossorigin="anonymous"
   >
 
+
+  <!-- SUNGLASSES -->
+
   <img
-    id="mouthGraphic"
+    id="sunglassesGraphic"
     src="./sunglasses.png"
     crossorigin="anonymous"
   >
+
+
+  <!-- BUBBLE CIGARETTE -->
+
   <img
-  id="cigyBubblesGraphic"
-  src="./cigybubbles.png"
-  crossorigin="anonymous"
-/>
+    id="cigyBubblesGraphic"
+    src="./cigybubbles.png"
+    crossorigin="anonymous"
+  >
+
+
+  <!-- FINAL POLAROID FRAME -->
 
   <img
     id="polaroidGraphic"
@@ -785,23 +1035,38 @@ a-scene {
     crossorigin="anonymous"
   >
 
+
 </a-assets>
 
 
+
+<!-- =====================================================
+     A-FRAME CAMERA
+     ===================================================== -->
+
 <a-camera
+
   active="true"
+
   position="0 0 0"
+
 >
 </a-camera>
 
 
-<!-- EARS -->
+
+<!-- =====================================================
+     CAT EARS
+     ===================================================== -->
 
 <a-entity
+
   id="earsAnchor"
+
   mindar-face-target="
     anchorIndex: 10
   "
+
 >
 
   <a-image
@@ -817,6 +1082,7 @@ a-scene {
     "
 
     width="1.15"
+
     height="0.65"
 
     material="
@@ -832,20 +1098,38 @@ a-scene {
 </a-entity>
 
 
+
+<!-- =====================================================
+     FACE / MOUTH ANCHOR
+     ===================================================== -->
+
 <a-entity
+
   id="mouthAnchor"
-  mindar-face-target="anchorIndex: 1"
+
+  mindar-face-target="
+    anchorIndex: 1
+  "
+
 >
 
-  <!-- NOSE / WHISKERS / MOUTH -->
+
+  <!-- SUNGLASSES -->
 
   <a-image
-    id="mouthOverlay"
-    src="#mouthGraphic"
 
-    position="-.25 -0.20 0.06"
+    id="sunglassesOverlay"
+
+    src="#sunglassesGraphic"
+
+    position="
+      -.25
+      0.16
+      0.06
+    "
 
     width="1.65"
+
     height="0.59"
 
     material="
@@ -854,19 +1138,28 @@ a-scene {
       side: double;
       depthWrite: false;
     "
+
   >
   </a-image>
+
 
 
   <!-- BUBBLE CIGARETTE -->
 
   <a-image
+
     id="cigyBubblesOverlay"
+
     src="#cigyBubblesGraphic"
 
-    position="0.43 -0.25 0.07"
+    position="
+      0.43
+      -0.25
+      0.07
+    "
 
     width="1.05"
+
     height="0.70"
 
     material="
@@ -875,8 +1168,10 @@ a-scene {
       side: double;
       depthWrite: false;
     "
+
   >
   </a-image>
+
 
 </a-entity>
 
@@ -884,77 +1179,90 @@ a-scene {
 </a-scene>
 
 
+
 <script>
 
-
-/* =========================================
-   MAIN ELEMENTS
-   ========================================= */
+/* =====================================================
+   ELEMENTS
+   ===================================================== */
 
 const bubbleLayer =
   document.getElementById(
     "bubbleLayer"
   );
 
+
 const scene =
   document.getElementById(
     "faceScene"
   );
+
 
 const kittyButton =
   document.getElementById(
     "kittyButton"
   );
 
+
 const kittyImage =
   document.getElementById(
     "kittyImage"
   );
+
 
 const tipOverlay =
   document.getElementById(
     "tipOverlay"
   );
 
-const copiedMessage =
+
+const closeTipButton =
   document.getElementById(
-    "copiedMessage"
+    "closeTipButton"
   );
+
 
 const photoButton =
   document.getElementById(
     "photoButton"
   );
 
+
 const countdownOverlay =
   document.getElementById(
     "countdownOverlay"
   );
+
 
 const countdownNumber =
   document.getElementById(
     "countdownNumber"
   );
 
+
 const photoResult =
   document.getElementById(
     "photoResult"
   );
+
 
 const finishedPhoto =
   document.getElementById(
     "finishedPhoto"
   );
 
+
 const savePhotoButton =
   document.getElementById(
     "savePhotoButton"
   );
 
+
 const retakeButton =
   document.getElementById(
     "retakeButton"
   );
+
 
 const cameraFlash =
   document.getElementById(
@@ -963,12 +1271,12 @@ const cameraFlash =
 
 
 let finishedPhotoURL = null;
-let kittyRunning = false;
 
 
-/* =========================================
+
+/* =====================================================
    BACK BUTTON
-   ========================================= */
+   ===================================================== */
 
 document
   .getElementById(
@@ -985,22 +1293,25 @@ document
   );
 
 
-/* =========================================
+
+/* =====================================================
    CLICK KITTY
-   ========================================= */
+   ===================================================== */
 
 kittyButton.addEventListener(
   "click",
   () => {
 
-    /* Stop idle animation and do quick click animation */
+    kittyImage.classList.remove(
+      "kittyClicked"
+    );
+
+    void kittyImage.offsetWidth;
 
     kittyImage.classList.add(
       "kittyClicked"
     );
 
-
-    /* Open tip information after the little bounce */
 
     setTimeout(
       () => {
@@ -1012,8 +1323,6 @@ kittyButton.addEventListener(
       350
     );
 
-
-    /* Return kitty to normal idle animation */
 
     setTimeout(
       () => {
@@ -1030,24 +1339,21 @@ kittyButton.addEventListener(
 );
 
 
-/* CLOSE TIP IMAGE */
 
-document
-  .getElementById(
-    "closeTipButton"
-  )
-  .addEventListener(
-    "click",
-    () => {
+/* =====================================================
+   CLOSE TIP INFORMATION
+   ===================================================== */
 
-      tipOverlay.style.display =
-        "none";
+closeTipButton.addEventListener(
+  "click",
+  () => {
 
-    }
-  );
+    tipOverlay.style.display =
+      "none";
 
+  }
+);
 
-/* Tap dark area outside image to close */
 
 tipOverlay.addEventListener(
   "click",
@@ -1065,71 +1371,11 @@ tipOverlay.addEventListener(
   }
 );
 
-/* =========================================
-   TIP POPUP
-   ========================================= */
-
-document
-  .getElementById(
-    "closeTipButton"
-  )
-  .addEventListener(
-    "click",
-    () => {
-
-      tipOverlay.style.display =
-        "none";
-
-    }
-  );
 
 
-document
-  .getElementById(
-    "emailButton"
-  )
-  .addEventListener(
-    "click",
-    async () => {
-
-      try {
-
-        await navigator.clipboard
-          .writeText(
-            "thehooksechelt@gmail.com"
-          );
-
-        copiedMessage.style.opacity =
-          "1";
-
-        setTimeout(
-          () => {
-
-            copiedMessage.style.opacity =
-              "0";
-
-          },
-          1800
-        );
-
-      }
-
-      catch (error) {
-
-        console.log(
-          "Clipboard error:",
-          error
-        );
-
-      }
-
-    }
-  );
-
-
-/* =========================================
-   BUBBLES
-   ========================================= */
+/* =====================================================
+   CREATE SCREEN BUBBLE
+   ===================================================== */
 
 function makeBubble() {
 
@@ -1138,29 +1384,34 @@ function makeBubble() {
       "div"
     );
 
+
   bubble.className =
     "bubble";
 
-
-  /* Bubble size */
 
   const size =
     28 +
     Math.random() * 42;
 
+
   bubble.style.width =
     size + "px";
+
 
   bubble.style.height =
     size + "px";
 
 
-  /* Find mouth graphic */
 
-  const mouth =
+  /* -----------------------------------------
+     FOLLOW BUBBLE CIGARETTE
+     ----------------------------------------- */
+
+  const cigy =
     document.getElementById(
-      "mouthOverlay"
+      "cigyBubblesOverlay"
     );
+
 
   const cameraElement =
     document.querySelector(
@@ -1169,8 +1420,8 @@ function makeBubble() {
 
 
   if (
-    !mouth ||
-    !mouth.object3D ||
+    !cigy ||
+    !cigy.object3D ||
     !cameraElement
   ) {
 
@@ -1186,24 +1437,31 @@ function makeBubble() {
 
 
   if (!camera) {
+
     return;
+
   }
 
-
-  /* Cigarette tip */
 
   const tipPosition =
     new THREE.Vector3();
 
 
+  /*
+    Cigarette tip position relative
+    to cigybubbles.png.
+
+    These can be fine-tuned later.
+  */
+
   tipPosition.set(
-    0.72,
-    -0.05,
+    0.40,
+    0.02,
     0
   );
 
 
-  mouth.object3D.localToWorld(
+  cigy.object3D.localToWorld(
     tipPosition
   );
 
@@ -1214,31 +1472,40 @@ function makeBubble() {
 
 
   const startX =
+
     (
       tipPosition.x *
       .5 +
       .5
-    ) *
+    )
+
+    *
+
     window.innerWidth;
 
 
   const startY =
+
     (
       -tipPosition.y *
       .5 +
       .5
-    ) *
+    )
+
+    *
+
     window.innerHeight;
+
 
 
   bubble.style.left =
     startX + "px";
 
+
   bubble.style.top =
     startY + "px";
 
 
-  /* Movement */
 
   const drift =
     35 +
@@ -1269,7 +1536,10 @@ function makeBubble() {
   );
 
 
-  /* Random pop */
+
+  /* -----------------------------------------
+     RANDOM POP
+     ----------------------------------------- */
 
   const willPop =
     Math.random() < .65;
@@ -1288,13 +1558,14 @@ function makeBubble() {
         if (
           !bubble.isConnected
         ) {
+
           return;
+
         }
 
 
         const rect =
-          bubble
-            .getBoundingClientRect();
+          bubble.getBoundingClientRect();
 
 
         const ring =
@@ -1310,11 +1581,14 @@ function makeBubble() {
         ring.style.width =
           rect.width + "px";
 
+
         ring.style.height =
           rect.height + "px";
 
+
         ring.style.left =
           rect.left + "px";
+
 
         ring.style.top =
           rect.top + "px";
@@ -1332,25 +1606,37 @@ function makeBubble() {
         bubble.animate(
 
           [
+
             {
+
               transform:
                 "scale(1)",
 
               opacity: 1
+
             },
 
             {
+
               transform:
                 "scale(1.18)",
 
               opacity: 0
+
             }
+
           ],
 
           {
+
             duration: 100,
-            easing: "ease-out",
-            fill: "forwards"
+
+            easing:
+              "ease-out",
+
+            fill:
+              "forwards"
+
           }
 
         );
@@ -1376,10 +1662,13 @@ function makeBubble() {
         );
 
       },
+
       popTime
+
     );
 
   }
+
 
 
   setTimeout(
@@ -1400,7 +1689,10 @@ function makeBubble() {
 }
 
 
-/* Bubble button */
+
+/* =====================================================
+   BUBBLES BUTTON
+   ===================================================== */
 
 document
   .getElementById(
@@ -1412,7 +1704,7 @@ document
 
       for (
         let i = 0;
-        i < 6;
+        i < 7;
         i++
       ) {
 
@@ -1422,7 +1714,9 @@ document
             makeBubble();
 
           },
-          i * 180
+
+          i * 170
+
         );
 
       }
@@ -1431,9 +1725,10 @@ document
   );
 
 
-/* =========================================
-   CAMERA FLIP
-   ========================================= */
+
+/* =====================================================
+   CAMERA REVERSE
+   ===================================================== */
 
 document
   .getElementById(
@@ -1476,9 +1771,10 @@ document
   );
 
 
-/* =========================================
+
+/* =====================================================
    WAIT
-   ========================================= */
+   ===================================================== */
 
 function wait(ms) {
 
@@ -1496,9 +1792,10 @@ function wait(ms) {
 }
 
 
-/* =========================================
+
+/* =====================================================
    PHOTO BUTTON
-   ========================================= */
+   ===================================================== */
 
 photoButton.addEventListener(
   "click",
@@ -1511,17 +1808,20 @@ photoButton.addEventListener(
     countdownNumber.textContent =
       "3";
 
+
     await wait(800);
 
 
     countdownNumber.textContent =
       "2";
 
+
     await wait(800);
 
 
     countdownNumber.textContent =
       "1";
+
 
     await wait(800);
 
@@ -1559,6 +1859,7 @@ photoButton.addEventListener(
         error
       );
 
+
       alert(
         "The photo could not be created. Please try again."
       );
@@ -1569,534 +1870,28 @@ photoButton.addEventListener(
 );
 
 
-function comicIllustrationFilter(sourceCanvas) {
 
-  /*
-    LOCAL ILLUSTRATION FILTER
-    -------------------------
-    Nothing is uploaded.
-    No API.
-    No charges.
-
-    We deliberately process a smaller copy so this
-    remains reasonable on an iPhone.
-  */
-
-  const MAX_WIDTH = 650;
-
-  const scale = Math.min(
-    1,
-    MAX_WIDTH / sourceCanvas.width
-  );
-
-  const canvas =
-    document.createElement("canvas");
-
-  canvas.width = Math.max(
-    1,
-    Math.round(sourceCanvas.width * scale)
-  );
-
-  canvas.height = Math.max(
-    1,
-    Math.round(sourceCanvas.height * scale)
-  );
-
-  const ctx =
-    canvas.getContext(
-      "2d",
-      { willReadFrequently: true }
-    );
-
-  const w = canvas.width;
-  const h = canvas.height;
-
-
-  /* =========================================
-     1. MAKE A SOFTER SOURCE COPY
-
-     Slight blur removes tiny photographic
-     details before we flatten the colours.
-     ========================================= */
-
-  ctx.save();
-
-  ctx.filter =
-    "blur(0.7px) contrast(1.12) saturate(0.90)";
-
-  ctx.drawImage(
-    sourceCanvas,
-    0,
-    0,
-    w,
-    h
-  );
-
-  ctx.restore();
-
-
-  /* =========================================
-     2. FLATTEN INTO ILLUSTRATED COLOURS
-     ========================================= */
-
-  const image =
-    ctx.getImageData(
-      0,
-      0,
-      w,
-      h
-    );
-
-  const data =
-    image.data;
-
-
-  for (
-    let i = 0;
-    i < data.length;
-    i += 4
-  ) {
-
-    let r = data[i];
-    let g = data[i + 1];
-    let b = data[i + 2];
-
-
-    /* Brightness */
-
-    const light =
-      (
-        r * 0.299 +
-        g * 0.587 +
-        b * 0.114
-      );
-
-
-    /*
-      Posterize into broad tonal bands.
-
-      We preserve some original colour so skin,
-      hair and clothing are still recognizable.
-    */
-
-    let level;
-
-    if (light < 48) {
-      level = 28;
-    }
-
-    else if (light < 90) {
-      level = 70;
-    }
-
-    else if (light < 135) {
-      level = 115;
-    }
-
-    else if (light < 180) {
-      level = 165;
-    }
-
-    else if (light < 220) {
-      level = 210;
-    }
-
-    else {
-      level = 242;
-    }
-
-
-    /*
-      Blend flattened tone with original colour.
-    */
-
-    r =
-      r * 0.48 +
-      level * 0.52;
-
-    g =
-      g * 0.45 +
-      level * 0.55;
-
-    b =
-      b * 0.42 +
-      level * 0.58;
-
-
-    /*
-      Warm cream/copper treatment.
-
-      This pushes the selfie toward the palette
-      of your illustrated band artwork.
-    */
-
-    r += 15;
-    g += 4;
-    b -= 9;
-
-
-    /*
-      Posterize each colour channel.
-    */
-
-    const step = 34;
-
-    r =
-      Math.round(r / step) * step;
-
-    g =
-      Math.round(g / step) * step;
-
-    b =
-      Math.round(b / step) * step;
-
-
-    data[i] =
-      Math.max(
-        0,
-        Math.min(255, r)
-      );
-
-    data[i + 1] =
-      Math.max(
-        0,
-        Math.min(255, g)
-      );
-
-    data[i + 2] =
-      Math.max(
-        0,
-        Math.min(255, b)
-      );
-
-  }
-
-
-  ctx.putImageData(
-    image,
-    0,
-    0
-  );
-
-
-  /* =========================================
-     3. CREATE INK OUTLINES
-
-     We calculate edges on a SMALLER copy.
-     This is considerably lighter than doing
-     edge detection at the phone's full
-     screen resolution.
-     ========================================= */
-
-  const edgeScale = 0.5;
-
-  const ew =
-    Math.max(
-      1,
-      Math.round(w * edgeScale)
-    );
-
-  const eh =
-    Math.max(
-      1,
-      Math.round(h * edgeScale)
-    );
-
-
-  const edgeSource =
-    document.createElement("canvas");
-
-  edgeSource.width = ew;
-  edgeSource.height = eh;
-
-
-  const edgeSourceCtx =
-    edgeSource.getContext(
-      "2d",
-      { willReadFrequently: true }
-    );
-
-
-  edgeSourceCtx.drawImage(
-    canvas,
-    0,
-    0,
-    ew,
-    eh
-  );
-
-
-  const edgeData =
-    edgeSourceCtx.getImageData(
-      0,
-      0,
-      ew,
-      eh
-    );
-
-  const src =
-    edgeData.data;
-
-
-  const edgeCanvas =
-    document.createElement("canvas");
-
-  edgeCanvas.width = ew;
-  edgeCanvas.height = eh;
-
-
-  const edgeCtx =
-    edgeCanvas.getContext("2d");
-
-
-  const output =
-    edgeCtx.createImageData(
-      ew,
-      eh
-    );
-
-  const out =
-    output.data;
-
-
-  for (
-    let y = 1;
-    y < eh - 1;
-    y++
-  ) {
-
-    for (
-      let x = 1;
-      x < ew - 1;
-      x++
-    ) {
-
-      const p =
-        (y * ew + x) * 4;
-
-      const right =
-        (y * ew + x + 1) * 4;
-
-      const down =
-        ((y + 1) * ew + x) * 4;
-
-
-      const lum =
-        src[p] * 0.299 +
-        src[p + 1] * 0.587 +
-        src[p + 2] * 0.114;
-
-
-      const lumRight =
-        src[right] * 0.299 +
-        src[right + 1] * 0.587 +
-        src[right + 2] * 0.114;
-
-
-      const lumDown =
-        src[down] * 0.299 +
-        src[down + 1] * 0.587 +
-        src[down + 2] * 0.114;
-
-
-      const edge =
-        Math.abs(
-          lum - lumRight
-        )
-        +
-        Math.abs(
-          lum - lumDown
-        );
-
-
-      /*
-        Higher threshold prevents every skin
-        detail from becoming a black line.
-      */
-
-      if (edge > 37) {
-
-        const strength =
-          Math.min(
-            185,
-            (edge - 37) * 4
-          );
-
-
-        out[p] = 17;
-        out[p + 1] = 14;
-        out[p + 2] = 12;
-
-        out[p + 3] =
-          strength;
-
-      }
-
-      else {
-
-        out[p + 3] = 0;
-
-      }
-
-    }
-
-  }
-
-
-  edgeCtx.putImageData(
-    output,
-    0,
-    0
-  );
-
-
-  /*
-    Enlarge the ink drawing over the portrait.
-
-    imageSmoothingEnabled=false makes the lines
-    slightly rougher and more screen-print-like.
-  */
-
-  ctx.save();
-
-  ctx.imageSmoothingEnabled =
-    false;
-
-  ctx.globalAlpha =
-    0.88;
-
-  ctx.drawImage(
-    edgeCanvas,
-    0,
-    0,
-    ew,
-    eh,
-    0,
-    0,
-    w,
-    h
-  );
-
-  ctx.restore();
-
-
-  /* =========================================
-     4. CREAM HIGHLIGHT WASH
-     ========================================= */
-
-  ctx.save();
-
-  ctx.globalCompositeOperation =
-    "screen";
-
-  ctx.fillStyle =
-    "rgba(255,235,205,0.055)";
-
-  ctx.fillRect(
-    0,
-    0,
-    w,
-    h
-  );
-
-  ctx.restore();
-
-
-  /* =========================================
-     5. PRINT TEXTURE
-
-     Very restrained so the person's face
-     doesn't become speckled.
-     ========================================= */
-
-  ctx.save();
-
-  ctx.globalAlpha =
-    0.065;
-
-
-  const grainCount =
-    Math.round(
-      (w * h) / 1800
-    );
-
-
-  for (
-    let i = 0;
-    i < grainCount;
-    i++
-  ) {
-
-    const x =
-      Math.random() * w;
-
-    const y =
-      Math.random() * h;
-
-
-    const dot =
-      0.7 +
-      Math.random() * 1.2;
-
-
-    ctx.fillStyle =
-      Math.random() > 0.60
-        ? "#17130f"
-        : "#f2d8b4";
-
-
-    ctx.fillRect(
-      x,
-      y,
-      dot,
-      dot
-    );
-
-  }
-
-
-  ctx.restore();
-
-
-  /* =========================================
-     6. FINAL CONTRAST PASS
-     ========================================= */
-
-  const finished =
-    document.createElement("canvas");
-
-  finished.width = w;
-  finished.height = h;
-
-
-  const finishedCtx =
-    finished.getContext("2d");
-
-
-  finishedCtx.filter =
-    "contrast(1.10) saturate(1.04)";
-
-
-  finishedCtx.drawImage(
-    canvas,
-    0,
-    0
-  );
-
-
-  finishedCtx.filter =
-    "none";
-
-
-  return finished;
-}
-
-
-/* =========================================
+/* =====================================================
    CREATE POLAROID
-   ========================================= */
+
+   IMPORTANT:
+
+   This captures ONLY the regular camera image.
+
+   It does NOT put:
+   - ears
+   - sunglasses
+   - cigarette
+   - AR graphics
+   - illustration filter
+
+   into the saved selfie.
+
+   polaroid.png is then drawn over the photo.
+   ===================================================== */
 
 async function createPolaroid() {
+
 
   const outputSize =
     1400;
@@ -2111,6 +1906,7 @@ async function createPolaroid() {
   outputCanvas.width =
     outputSize;
 
+
   outputCanvas.height =
     outputSize;
 
@@ -2121,26 +1917,31 @@ async function createPolaroid() {
     );
 
 
-/* =========================================
-   SELFIE AREA FOR BUBBLES AMP FRAME
-   ========================================= */
 
-const photoX =
-  outputSize * 0.075;
+  /* -----------------------------------------
+     OPEN PHOTO AREA IN POLAROID.PNG
+     ----------------------------------------- */
 
-const photoY =
-  outputSize * 0.075;
-
-const photoW =
-  outputSize * 0.85;
-
-const photoH =
-  outputSize * 0.72;
+  const photoX =
+    outputSize * .075;
 
 
-  /* =========================
-     GET LIVE CAMERA
-     ========================= */
+  const photoY =
+    outputSize * .075;
+
+
+  const photoW =
+    outputSize * .85;
+
+
+  const photoH =
+    outputSize * .72;
+
+
+
+  /* -----------------------------------------
+     LIVE CAMERA
+     ----------------------------------------- */
 
   const video =
     document.querySelector(
@@ -2163,178 +1964,17 @@ const photoH =
   }
 
 
-  /*
-    Keep the capture canvas at a
-    reasonable resolution.
 
-    This is enough for the Polaroid
-    without creating a huge phone canvas.
-  */
+  /* -----------------------------------------
+     CAMERA SOURCE SIZE
+     ----------------------------------------- */
 
-  const captureScale =
-    Math.min(
-      2,
-      window.devicePixelRatio || 1
-    );
-
-
-  const screenCanvas =
-    document.createElement(
-      "canvas"
-    );
-
-
-  screenCanvas.width =
-    Math.round(
-      window.innerWidth *
-      captureScale
-    );
-
-
-  screenCanvas.height =
-    Math.round(
-      window.innerHeight *
-      captureScale
-    );
-
-
-  const screenCtx =
-    screenCanvas.getContext(
-      "2d"
-    );
-
-
-  const sw =
-    screenCanvas.width;
-
-  const sh =
-    screenCanvas.height;
-
-
-  /* =========================
-     CAMERA CROP
-     ========================= */
-
-  const videoRatio =
-    video.videoWidth /
-    video.videoHeight;
-
-
-  const screenRatio =
-    sw / sh;
-
-
-  let sx = 0;
-  let sy = 0;
-
-  let sWidth =
+  const sourceW =
     video.videoWidth;
 
-  let sHeight =
+
+  const sourceH =
     video.videoHeight;
-
-
-  if (
-    videoRatio >
-    screenRatio
-  ) {
-
-    sWidth =
-      video.videoHeight *
-      screenRatio;
-
-
-    sx =
-      (
-        video.videoWidth -
-        sWidth
-      ) / 2;
-
-  }
-
-  else {
-
-    sHeight =
-      video.videoWidth /
-      screenRatio;
-
-
-    sy =
-      (
-        video.videoHeight -
-        sHeight
-      ) / 2;
-
-  }
-
-
-  /* =========================
-     DRAW CAMERA
-     ========================= */
-
-  screenCtx.save();
-
-
-  /*
-    Front camera selfie mirror.
-  */
-
-  screenCtx.translate(
-    sw,
-    0
-  );
-
-
-  screenCtx.scale(
-    -1,
-    1
-  );
-
-
-  screenCtx.drawImage(
-
-    video,
-
-    sx,
-    sy,
-    sWidth,
-    sHeight,
-
-    0,
-    0,
-    sw,
-    sh
-
-  );
-
-
-  screenCtx.restore();
-
-
- 
-
-
-  /* =========================
-     MAKE ILLUSTRATED COPY
-     ========================= */
-
- 
-
-  const illustratedW =
-    screenCanvas.width;
-
-
-  const illustratedH =
-    screenCanvas.height;
-
-
-  /* =========================
-     CROP FOR POLAROID
-     ========================= */
-
-  const compositeRatio =
-    illustratedW /
-    illustratedH;
 
 
   const targetRatio =
@@ -2342,141 +1982,175 @@ const photoH =
     photoH;
 
 
-  let csx = 0;
-  let csy = 0;
+  const sourceRatio =
+    sourceW /
+    sourceH;
 
-  let csw =
-    illustratedW;
 
-  let csh =
-    illustratedH;
+  let sx = 0;
+  let sy = 0;
 
+  let sw =
+    sourceW;
+
+  let sh =
+    sourceH;
+
+
+
+  /*
+    Crop camera to the Polaroid opening.
+  */
 
   if (
-    compositeRatio >
+    sourceRatio >
     targetRatio
   ) {
 
-    csw =
-      illustratedH *
+    sw =
+      sourceH *
       targetRatio;
 
 
-    csx =
+    sx =
       (
-        illustratedW -
-        csw
+        sourceW -
+        sw
       ) / 2;
 
   }
 
   else {
 
-    csh =
-      illustratedW /
+    sh =
+      sourceW /
       targetRatio;
 
 
-    csy =
+    sy =
       (
-        illustratedH -
-        csh
+        sourceH -
+        sh
       ) / 2;
 
   }
 
 
-/* =========================
-   DRAW SELFIE - ZOOMED OUT
-   ========================= */
 
-ctx.save();
+  /* -----------------------------------------
+     DARK BACKGROUND BEHIND PHOTO
+     ----------------------------------------- */
 
-ctx.beginPath();
-
-ctx.rect(
-  photoX,
-  photoY,
-  photoW,
-  photoH
-);
-
-ctx.clip();
+  ctx.fillStyle =
+    "#111";
 
 
-/*
-  SCALE THE SELFIE DOWN INSIDE THE POLAROID
-
-  0.78 = 78% of the old size.
-
-  Smaller number = MORE of you visible
-  Larger number = closer / more zoomed in
-*/
-
-const selfieScale = 0.78;
+  ctx.fillRect(
+    photoX,
+    photoY,
+    photoW,
+    photoH
+  );
 
 
-const drawW =
-  photoW * selfieScale;
 
-const drawH =
-  photoH * selfieScale;
+  /* -----------------------------------------
+     REGULAR SELFIE
 
+     0.88 leaves a little more of the person
+     visible rather than zooming tightly into
+     the face.
+     ----------------------------------------- */
 
-/*
-  Centre the smaller selfie
-*/
-
-const drawX =
-  photoX +
-  (photoW - drawW) / 2;
-
-const drawY =
-  photoY +
-  (photoH - drawH) / 2;
+  const selfieScale =
+    .88;
 
 
-/*
-  Fill behind it so reducing the selfie
-  doesn't leave transparent areas.
-*/
-
-ctx.fillStyle = "#111";
-
-ctx.fillRect(
-  photoX,
-  photoY,
-  photoW,
-  photoH
-);
+  const drawW =
+    photoW *
+    selfieScale;
 
 
-/*
-  Draw the illustrated selfie smaller
-*/
-
-ctx.drawImage(
-
-  screenCanvas,
-
-  csx,
-  csy,
-  csw,
-  csh,
-
-  drawX,
-  drawY,
-  drawW,
-  drawH
-
-);
-
-ctx.restore();
+  const drawH =
+    photoH *
+    selfieScale;
 
 
-  /* =========================
-     DRAW POLAROID + BAND
-     ========================= */
+  const drawX =
+    photoX +
+    (
+      photoW -
+      drawW
+    ) / 2;
+
+
+  const drawY =
+    photoY +
+    (
+      photoH -
+      drawH
+    ) / 2;
+
+
+
+  ctx.save();
+
+
+  ctx.beginPath();
+
+
+  ctx.rect(
+    photoX,
+    photoY,
+    photoW,
+    photoH
+  );
+
+
+  ctx.clip();
+
+
+
+  /*
+    Mirror front-camera selfie.
+  */
+
+  ctx.translate(
+    drawX + drawW,
+    drawY
+  );
+
+
+  ctx.scale(
+    -1,
+    1
+  );
+
+
+  ctx.drawImage(
+
+    video,
+
+    sx,
+    sy,
+    sw,
+    sh,
+
+    0,
+    0,
+    drawW,
+    drawH
+
+  );
+
+
+  ctx.restore();
+
+
+
+  /* -----------------------------------------
+     POLAROID + BAND FRAME
+     ----------------------------------------- */
 
   const polaroid =
     document.getElementById(
@@ -2484,20 +2158,20 @@ ctx.restore();
     );
 
 
-  /*
-    Wait for image if necessary.
-  */
-
   if (
     !polaroid.complete ||
     !polaroid.naturalWidth
   ) {
 
     await new Promise(
-      (resolve,reject) => {
+      (
+        resolve,
+        reject
+      ) => {
 
         polaroid.onload =
           resolve;
+
 
         polaroid.onerror =
           reject;
@@ -2509,17 +2183,22 @@ ctx.restore();
 
 
   ctx.drawImage(
+
     polaroid,
+
     0,
     0,
+
     outputSize,
     outputSize
+
   );
 
 
-  /* =========================
+
+  /* -----------------------------------------
      CURRENT DATE
-     ========================= */
+     ----------------------------------------- */
 
   const today =
     new Date();
@@ -2558,6 +2237,7 @@ ctx.restore();
     ).slice(-2);
 
 
+
   ctx.save();
 
 
@@ -2591,9 +2271,10 @@ ctx.restore();
   ctx.restore();
 
 
-  /* =========================
-     FINISHED PHOTO
-     ========================= */
+
+  /* -----------------------------------------
+     SHOW RESULT
+     ----------------------------------------- */
 
   finishedPhotoURL =
     outputCanvas.toDataURL(
@@ -2611,9 +2292,10 @@ ctx.restore();
 }
 
 
-/* =========================================
+
+/* =====================================================
    RETAKE
-   ========================================= */
+   ===================================================== */
 
 retakeButton.addEventListener(
   "click",
@@ -2634,9 +2316,10 @@ retakeButton.addEventListener(
 );
 
 
-/* =========================================
+
+/* =====================================================
    SAVE PHOTO
-   ========================================= */
+   ===================================================== */
 
 savePhotoButton.addEventListener(
   "click",
@@ -2716,5 +2399,7 @@ savePhotoButton.addEventListener(
 
 </script>
 
+
 </body>
+
 </html>
