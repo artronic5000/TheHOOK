@@ -371,27 +371,94 @@ button:active {
 
   border-radius: 50%;
 
-  border:
-    1.5px solid
-    rgba(255,255,255,.90);
-
+  /* translucent soap-bubble centre */
   background:
-    rgba(255,255,255,.10);
+    radial-gradient(
+      circle at 30% 25%,
+
+      rgba(255,255,255,.85) 0%,
+      rgba(255,255,255,.32) 5%,
+      rgba(255,255,255,.05) 12%,
+
+      rgba(191,250,255,.10) 32%,
+      rgba(255,214,244,.10) 52%,
+      rgba(255,245,184,.08) 68%,
+
+      rgba(255,255,255,.02) 82%,
+      rgba(255,255,255,.10) 100%
+    );
+
+  border:
+    2px solid
+    rgba(210,248,255,.72);
 
   box-shadow:
 
     inset
-    3px 3px 3px
-    rgba(255,255,255,.38),
+    3px 3px 5px
+    rgba(255,255,255,.48),
+
+    inset
+    -3px -2px 5px
+    rgba(255,190,230,.16),
 
     0 0 4px
-    rgba(255,255,255,.22);
+    rgba(190,245,255,.30);
+
+  opacity: .88;
 
   animation:
     floatBubble
-    3.2s
+    3.8s
     ease-out
     forwards;
+
+}
+
+
+/* little shine */
+
+.bubble::before {
+
+  content: "";
+
+  position: absolute;
+
+  width: 18%;
+  height: 18%;
+
+  left: 21%;
+  top: 18%;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255,255,255,.90);
+
+  filter:
+    blur(.3px);
+
+}
+
+
+/* second softer reflection */
+
+.bubble::after {
+
+  content: "";
+
+  position: absolute;
+
+  width: 12%;
+  height: 22%;
+
+  right: 18%;
+  bottom: 18%;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255,210,240,.30);
 
 }
 
@@ -421,7 +488,6 @@ button:active {
 
 }
 
-
 @keyframes floatBubble {
 
   0% {
@@ -430,15 +496,41 @@ button:active {
 
     transform:
       translate(0,0)
-      scale(.35);
+      scale(.25);
 
   }
 
-  12% {
 
-    opacity: 1;
+  10% {
+
+    opacity: .90;
 
   }
+
+
+  45% {
+
+    transform:
+      translate(
+        calc(var(--drift) * .35),
+        calc(var(--rise) * .40)
+      )
+      scale(.85);
+
+  }
+
+
+  75% {
+
+    transform:
+      translate(
+        calc(var(--drift) * .75),
+        calc(var(--rise) * .72)
+      )
+      scale(1.05);
+
+  }
+
 
   100% {
 
@@ -449,7 +541,7 @@ button:active {
         var(--drift),
         var(--rise)
       )
-      scale(1.35);
+      scale(1.18);
 
   }
 
@@ -1805,8 +1897,8 @@ function makeBubble() {
 
 
   const size =
-    28 +
-    Math.random() * 42;
+    22 +
+    Math.random() * 55;
 
 
   bubble.style.width =
@@ -1816,7 +1908,39 @@ function makeBubble() {
   bubble.style.height =
     size + "px";
 
+/* -----------------------------------------
+   IRIDESCENT BUBBLE COLOURS
+   ----------------------------------------- */
 
+const bubbleColours = [
+
+  "rgba(191,250,255,.78)",  // aqua
+
+  "rgba(255,214,244,.72)",  // pink
+
+  "rgba(255,245,184,.72)",  // pale gold
+
+  "rgba(217,210,255,.72)",  // lavender
+
+  "rgba(191,255,240,.72)",  // mint
+
+  "rgba(205,232,255,.72)"   // pale blue
+
+];
+
+
+const bubbleColour =
+
+  bubbleColours[
+    Math.floor(
+      Math.random() *
+      bubbleColours.length
+    )
+  ];
+
+
+bubble.style.borderColor =
+  bubbleColour;
 
   /* -----------------------------------------
      FOLLOW BUBBLE CIGARETTE
