@@ -774,14 +774,166 @@ a-scene {
   inset: 0 !important;
 
 }
+/* =====================================================
+   LOADING SCREEN
+   ===================================================== */
 
+#loadingScreen {
+
+  position: fixed;
+  inset: 0;
+
+  z-index: 20000;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+
+  background: #111;
+
+  color: #fff5e6;
+
+  transition:
+    opacity .45s ease;
+
+}
+
+
+#loadingScreen.hide {
+
+  opacity: 0;
+
+  pointer-events: none;
+
+}
+
+
+#loadingLogo {
+
+  font-size:
+    clamp(
+      32px,
+      10vw,
+      58px
+    );
+
+  font-weight: 900;
+
+  letter-spacing: 5px;
+
+}
+
+
+#loadingMessage {
+
+  margin-top: 14px;
+
+  font-size: 12px;
+
+  font-weight: bold;
+
+  letter-spacing: 2px;
+
+  opacity: .85;
+
+}
+
+
+#loadingDots {
+
+  display: flex;
+
+  gap: 7px;
+
+  margin-top: 20px;
+
+}
+
+
+#loadingDots span {
+
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #cf6537;
+
+  animation:
+    loadingDot
+    1.2s
+    infinite ease-in-out;
+
+}
+
+
+#loadingDots span:nth-child(2) {
+
+  animation-delay: .15s;
+
+}
+
+
+#loadingDots span:nth-child(3) {
+
+  animation-delay: .30s;
+
+}
+
+
+@keyframes loadingDot {
+
+  0%,
+  80%,
+  100% {
+
+    opacity: .3;
+
+    transform:
+      translateY(0);
+
+  }
+
+  40% {
+
+    opacity: 1;
+
+    transform:
+      translateY(-7px);
+
+  }
+
+}
 </style>
 
 </head>
 
 
 <body>
+<!-- =========================
+     FAST LOADING SCREEN
+     ========================= -->
 
+<div id="loadingScreen">
+
+  <div id="loadingLogo">
+    THE HOOK
+  </div>
+
+  <div id="loadingMessage">
+    Warming up the camera…
+  </div>
+
+  <div id="loadingDots">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+</div>
 
 <!-- =====================================================
      TOP CONTROLS
@@ -884,7 +1036,6 @@ a-scene {
 
     <img
       id="tipInfoImage"
-      src="./tipinfo.png"
       alt="Tip The Hook"
     >
 
@@ -1025,16 +1176,6 @@ a-scene {
     src="./cigybubbles.png"
     crossorigin="anonymous"
   >
-
-
-  <!-- FINAL POLAROID FRAME -->
-
-  <img
-    id="polaroidGraphic"
-    src="./polaroid.png"
-    crossorigin="anonymous"
-  >
-
 
 </a-assets>
 
@@ -1272,7 +1413,45 @@ const cameraFlash =
 
 let finishedPhotoURL = null;
 
+/* =====================================================
+   CAMERA READY
+   ===================================================== */
 
+const loadingScreen =
+  document.getElementById(
+    "loadingScreen"
+  );
+
+
+function hideLoadingScreen() {
+
+  if (
+    loadingScreen.classList.contains(
+      "hide"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  loadingScreen.classList.add(
+    "hide"
+  );
+
+
+  setTimeout(
+    () => {
+
+      loadingScreen.style.display =
+        "none";
+
+    },
+    500
+  );
+
+}
 
 /* =====================================================
    BACK BUTTON
@@ -1311,6 +1490,22 @@ kittyButton.addEventListener(
     kittyImage.classList.add(
       "kittyClicked"
     );
+
+
+    const tipImage =
+      document.getElementById(
+        "tipInfoImage"
+      );
+
+
+    /* Load tip image only when needed */
+
+    if (!tipImage.src) {
+
+      tipImage.src =
+        "./tipinfo.png";
+
+    }
 
 
     setTimeout(
@@ -2148,53 +2343,52 @@ async function createPolaroid() {
 
 
 
-  /* -----------------------------------------
-     POLAROID + BAND FRAME
-     ----------------------------------------- */
+/* -----------------------------------------
+   LOAD POLAROID ONLY NOW
+   ----------------------------------------- */
 
-  const polaroid =
-    document.getElementById(
-      "polaroidGraphic"
-    );
+const polaroid =
+  new Image();
 
 
-  if (
-    !polaroid.complete ||
-    !polaroid.naturalWidth
-  ) {
-
-    await new Promise(
-      (
-        resolve,
-        reject
-      ) => {
-
-        polaroid.onload =
-          resolve;
+polaroid.crossOrigin =
+  "anonymous";
 
 
-        polaroid.onerror =
-          reject;
+const polaroidReady =
+  new Promise(
+    (resolve, reject) => {
 
-      }
-    );
+      polaroid.onload =
+        resolve;
 
-  }
+      polaroid.onerror =
+        reject;
 
-
-  ctx.drawImage(
-
-    polaroid,
-
-    0,
-    0,
-
-    outputSize,
-    outputSize
-
+    }
   );
 
 
+polaroid.src =
+  "./polaroid.png";
+
+
+await polaroidReady;
+
+
+/* Draw Polaroid over selfie */
+
+ctx.drawImage(
+
+  polaroid,
+
+  0,
+  0,
+
+  outputSize,
+  outputSize
+
+);
 
   /* -----------------------------------------
      CURRENT DATE
@@ -2401,5 +2595,6 @@ savePhotoButton.addEventListener(
 
 
 </body>
+  
 
 </html>
